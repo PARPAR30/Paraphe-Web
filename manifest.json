@@ -1,0 +1,16 @@
+{
+  "name": "Mes Logiciels — Outils juridiques",
+  "short_name": "Mes Logiciels",
+  "description": "Fiches mémo, fiches d'arrêt, codes & articles, Suivi Juridique, Considérant, Quantième.",
+  "start_url": "Hub.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F7F6F2",
+  "theme_color": "#131316",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-180.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}

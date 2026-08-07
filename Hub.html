@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Hub — Mes logiciels</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mes Logiciels">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#131316">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Zilla+Slab:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23131316%22%2F%3E%3Cg%20stroke%3D%22%23F7F6F2%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%3E%3Cline%20x1%3D%2216%22%20y1%3D%227%22%20x2%3D%2216%22%20y2%3D%2224%22%2F%3E%3Cline%20x1%3D%228%22%20y1%3D%2210%22%20x2%3D%2224%22%20y2%3D%2210%22%2F%3E%3Cline%20x1%3D%2216%22%20y1%3D%2224%22%20x2%3D%2211%22%20y2%3D%2224%22%2F%3E%3Cline%20x1%3D%2216%22%20y1%3D%2224%22%20x2%3D%2221%22%20y2%3D%2224%22%2F%3E%3Cpath%20d%3D%22M6%2010a4%205%200%200%200%208%200%22%2F%3E%3Cpath%20d%3D%22M18%2010a4%205%200%200%200%208%200%22%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%227%22%20r%3D%221.6%22%20fill%3D%22%233B2FE8%22%2F%3E%3C%2Fsvg%3E">
+<link rel="stylesheet" href="style.css">
+<style>
+  .hub-header{ text-align:center; padding:var(--e8) var(--pad) var(--e6); }
+  .hub-mark{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:52px; height:52px; color:var(--encre);
+    margin-bottom:var(--e4);
+  }
+  .hub-topbar{ display:flex; justify-content:flex-end; padding:var(--e3) var(--pad) 0; }
+  section.groupe{ margin-bottom:var(--e8); }
+  .groupe-tete{ display:flex; align-items:baseline; justify-content:space-between; gap:var(--e3); margin-bottom:var(--e4); flex-wrap:wrap; }
+  .groupe-tete h2{ margin:0; font-size:1.3rem; }
+  .groupe-tete a{ font-size:13px; font-weight:600; color:rgb(var(--acc)); text-decoration:none; }
+  .groupe-tete a:hover{ text-decoration:underline; }
+</style>
+</head>
+<body>
+  <script src="theme.js"></script>
+  <div class="hub-topbar"><button id="theme-toggle" aria-pressed="false">Nuit</button></div>
+  <div class="hub-header">
+    <div class="hub-mark" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 32 32"><line x1="16" y1="7" x2="16" y2="24" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><line x1="8" y1="10" x2="24" y2="10" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><line x1="16" y1="24" x2="11" y2="24" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><line x1="16" y1="24" x2="21" y2="24" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M6 10a4 5 0 0 0 8 0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/><path d="M18 10a4 5 0 0 0 8 0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/><circle cx="16" cy="7" r="2.1" fill="rgb(59,47,232)"/></svg></div>
+    <p class="eyebrow">Tout au même endroit</p>
+    <h1>Mes logiciels</h1>
+    <p class="muted">Un seul point d'accès pour les outils d'études et les outils de pratique du droit.</p>
+  </div>
+
+  <main style="padding-top:0;">
+
+    <section class="groupe">
+      <div class="groupe-tete">
+        <h2>Études de droit — Droit Toolkit</h2>
+        <a href="index.html">Voir le portail →</a>
+      </div>
+      <div class="grid-links">
+        <a class="tool" href="flashcards.html">
+          <h3><span class="tool-num" aria-hidden="true">1</span>Fiches mémo</h3>
+          <p>Révision par répétition espacée pour mémoriser définitions, articles et notions.</p>
+        </a>
+        <a class="tool" href="fiches-arret.html">
+          <h3><span class="tool-num" aria-hidden="true">2</span>Fiches d'arrêt</h3>
+          <p>Fiches structurées (faits, procédure, problème, solution, portée) avec recherche par matière.</p>
+        </a>
+        <a class="tool" href="codes.html">
+          <h3><span class="tool-num" aria-hidden="true">3</span>Codes &amp; articles</h3>
+          <p>Articles de loi classés par matière et par code, avec annotations personnelles.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="groupe">
+      <div class="groupe-tete">
+        <h2>Pratique &amp; rédaction</h2>
+      </div>
+      <div class="grid-links">
+        <a class="tool" href="Suivijuridique.html">
+          <h3><span class="tool-num" aria-hidden="true">4</span>Suivi Juridique</h3>
+          <p>Tableau de bord de suivi de dossiers : clients, échéances, finances, notes.</p>
+        </a>
+        <a class="tool" href="considerant.html">
+          <h3><span class="tool-num" aria-hidden="true">5</span>Considérant</h3>
+          <p>Fiches de raisonnement juridique — structurer un considérant, une argumentation.</p>
+        </a>
+        <a class="tool" href="quantieme.html">
+          <h3><span class="tool-num" aria-hidden="true">6</span>Quantième</h3>
+          <p>Calcul des délais de procédure française à partir d'une date de départ.</p>
+        </a>
+      </div>
+    </section>
+
+    <footer class="tip">Chaque logiciel enregistre ses données localement dans son propre fichier/navigateur — pense à exporter régulièrement si l'outil le propose.</footer>
+  </main>
+</body>
+</html>

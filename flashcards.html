@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Fiches mémo — Droit Toolkit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#131316">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Zilla+Slab:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23131316%22%2F%3E%3Cg%20stroke%3D%22%23F7F6F2%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%3E%3Cline%20x1%3D%2216%22%20y1%3D%227%22%20x2%3D%2216%22%20y2%3D%2224%22%2F%3E%3Cline%20x1%3D%228%22%20y1%3D%2210%22%20x2%3D%2224%22%20y2%3D%2210%22%2F%3E%3Cline%20x1%3D%2216%22%20y1%3D%2224%22%20x2%3D%2211%22%20y2%3D%2224%22%2F%3E%3Cline%20x1%3D%2216%22%20y1%3D%2224%22%20x2%3D%2221%22%20y2%3D%2224%22%2F%3E%3Cpath%20d%3D%22M6%2010a4%205%200%200%200%208%200%22%2F%3E%3Cpath%20d%3D%22M18%2010a4%205%200%200%200%208%200%22%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%227%22%20r%3D%221.6%22%20fill%3D%22%233B2FE8%22%2F%3E%3C%2Fsvg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script src="theme.js"></script>
+<header class="topnav">
+  <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 32 32"><line x1="16" y1="7" x2="16" y2="24" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><line x1="8" y1="10" x2="24" y2="10" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><line x1="16" y1="24" x2="11" y2="24" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><line x1="16" y1="24" x2="21" y2="24" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M6 10a4 5 0 0 0 8 0" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/><path d="M18 10a4 5 0 0 0 8 0" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/><circle cx="16" cy="7" r="2.3" fill="rgb(59,47,232)"/></svg></span>Droit Toolkit</a>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="flashcards.html" class="active">Fiches mémo</a>
+    <a href="fiches-arret.html">Fiches d'arrêt</a>
+    <a href="codes.html">Codes &amp; articles</a>
+    <a href="Hub.html">Tous mes logiciels</a>
+    <button id="theme-toggle" aria-pressed="false">Nuit</button>
+  </nav>
+</header>
+<main>
+  <p class="eyebrow">Révision</p>
+  <h1>Fiches mémo</h1>
+  <p class="muted">Répétition espacée : les cartes que tu maîtrises reviennent moins souvent, celles qui coincent reviennent vite.</p>
+
+  <div class="card">
+    <div class="row between">
+      <div>
+        <strong id="dueCount">0</strong> <span class="muted">carte(s) à réviser aujourd'hui</span>
+        &nbsp;·&nbsp; <span class="muted"><span id="totalCount">0</span> carte(s) au total</span>
+      </div>
+      <div class="row">
+        <button id="startReview" class="primary">Commencer la révision</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="reviewArea" class="card" style="display:none;">
+    <div class="row between">
+      <span class="badge" id="reviewMatiere">—</span>
+      <span class="muted" id="reviewProgress"></span>
+    </div>
+    <hr class="sep">
+    <div id="reviewRecto" style="font-size:1.15rem; min-height:3em;"></div>
+    <div id="reviewVerso" style="display:none; font-size:1.05rem; margin-top:1rem; padding-top:1rem; border-top:1px dashed var(--filet);"></div>
+    <hr class="sep">
+    <div class="row end" id="showAnswerRow">
+      <button id="showAnswerBtn" class="primary">Afficher la réponse (espace)</button>
+    </div>
+    <div class="row" id="ratingRow" style="display:none;">
+      <button data-rating="0" style="border-color:var(--alerte); color:var(--alerte);">1 · Encore</button>
+      <button data-rating="1">2 · Difficile</button>
+      <button data-rating="2">3 · Correct</button>
+      <button data-rating="3" style="border-color:var(--succes); color:var(--succes);">4 · Facile</button>
+    </div>
+  </div>
+
+  <div id="reviewDone" class="card empty-state" style="display:none;">
+    <span class="badge">À jour</span><br>
+    Plus rien à réviser pour l'instant. Reviens plus tard ou ajoute de nouvelles cartes.
+  </div>
+
+  <div class="card">
+    <h3>Ajouter une carte</h3>
+    <label for="fMatiere">Matière</label>
+    <input type="text" id="fMatiere" list="matiereList" placeholder="ex. Droit civil">
+    <datalist id="matiereList"></datalist>
+    <label for="fRecto">Recto (question / terme)</label>
+    <textarea id="fRecto" placeholder="ex. Définition de la faute délictuelle ?"></textarea>
+    <label for="fVerso">Verso (réponse / définition)</label>
+    <textarea id="fVerso" placeholder="ex. Comportement contraire à une norme de conduite..."></textarea>
+    <div class="row end" style="margin-top:0.8rem;">
+      <button id="addCardBtn" class="primary">Ajouter la carte</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Toutes les cartes</h3>
+    <div class="toolbar">
+      <input type="search" id="searchBox" placeholder="Rechercher...">
+      <select id="filterMatiere"><option value="">Toutes les matières</option></select>
+      <button id="exportBtn">Exporter (JSON)</button>
+      <button id="importBtn">Importer</button>
+      <input type="file" id="importFile" accept="application/json" style="display:none;">
+    </div>
+    <div id="cardList"></div>
+  </div>
+
+  <footer class="tip">Astuce : utilise les touches 1/2/3/4 pendant la révision, espace pour afficher la réponse.</footer>
+</main>
+
+<script>
+const STORAGE_KEY = "droit_flashcards";
+
+function todayISOStatic() { return new Date().toISOString().slice(0, 10); }
+
+function mkSeedCard(id, matiere, recto, verso) {
+  return { id, matiere, recto, verso, ease: 2.5, interval: 0, reps: 0, dueDate: todayISOStatic() };
+}
+
+const SEED_RAW = [
+["Droit public des affaires", "Qu'est-ce que le droit public des affaires ?", "Branche du droit public qui régit l'intervention des personnes publiques dans la vie économique : réglementation économique, contrats publics, entreprises publiques, aides d'État."],
+["Droit public des affaires", "Définition du service public", "Activité d'intérêt général assurée ou assumée par une personne publique, soumise à un régime juridique spécifique (principes de continuité, d'égalité et de mutabilité/adaptabilité)."],
+["Droit public des affaires", "Différence entre SPA et SPIC ?", "Le SPA (service public administratif) est soumis au droit administratif. Le SPIC (service public industriel et commercial) est soumis principalement au droit privé pour ses usagers et son personnel, sauf le dirigeant et le comptable public."],
+["Droit public des affaires", "Critères \"Narcy\" de la mission de service public confiée à une personne privée", "Mission d'intérêt général, contrôle exercé par l'administration, prérogatives de puissance publique — critères assouplis ensuite par l'arrêt APREI (2007) en faisceau d'indices."],
+["Droit public des affaires", "Qu'est-ce qu'un marché public ?", "Contrat conclu à titre onéreux entre un acheteur public et un opérateur économique, pour répondre à ses besoins en matière de travaux, de fournitures ou de services."],
+["Droit public des affaires", "Qu'est-ce qu'une délégation de service public / concession ?", "Contrat par lequel une personne publique confie la gestion d'un service public à un délégataire dont la rémunération est substantiellement liée aux résultats de l'exploitation."],
+["Droit public des affaires", "Principe de liberté du commerce et de l'industrie", "Principe selon lequel toute personne est libre d'exercer l'activité économique de son choix ; il encadre et limite l'intervention des personnes publiques dans l'économie."],
+["Droit public des affaires", "Qu'est-ce qu'une société d'économie mixte (SEM) ?", "Société commerciale dont le capital est détenu conjointement par des personnes publiques (majoritaires) et des personnes privées."],
+["Droit public des affaires", "Comment identifier un contrat administratif ?", "Critère organique (une personne publique est partie au contrat) combiné à un critère matériel : clauses exorbitantes du droit commun, ou objet lié à l'exécution même du service public."],
+["Droit public des affaires", "Qu'est-ce qu'une aide d'État (droit de l'Union) ?", "Avantage sélectif accordé par une autorité publique, faussant la concurrence et affectant les échanges entre États membres (art. 107 TFUE) ; interdite en principe, sauf dérogations."],
+
+["Droit des sociétés", "Définition légale de la société (art. 1832 C. civ.)", "Contrat par lequel deux ou plusieurs personnes conviennent d'affecter à une entreprise commune des biens ou leur industrie en vue de partager le bénéfice ou de profiter de l'économie qui pourra en résulter, et de contribuer aux pertes."],
+["Droit des sociétés", "Qu'est-ce que l'affectio societatis ?", "Volonté des associés de collaborer ensemble, sur un pied d'égalité, à la réussite de l'entreprise commune ; élément constitutif du contrat de société."],
+["Droit des sociétés", "Effet de l'immatriculation au RCS ?", "La société acquiert la personnalité morale : patrimoine propre, capacité d'agir en justice, nom, siège et nationalité distincts de ceux des associés."],
+["Droit des sociétés", "Les trois types d'apports en société", "Apport en numéraire (somme d'argent), en nature (bien), en industrie (travail, savoir-faire) ; seuls les deux premiers forment le capital social."],
+["Droit des sociétés", "Différence SARL / SAS ?", "La SARL a un cadre légal rigide (gérant, parts sociales peu cessibles). La SAS offre une grande liberté statutaire (président, organisation des actions largement libre)."],
+["Droit des sociétés", "Qu'est-ce que l'abus de majorité ?", "Décision prise contrairement à l'intérêt général de la société et dans l'unique dessein de favoriser les associés majoritaires au détriment des minoritaires."],
+["Droit des sociétés", "Qu'est-ce que l'abus de biens sociaux ?", "Infraction pénale : le fait, pour un dirigeant, d'user des biens ou du crédit de la société de manière contraire à l'intérêt social, à des fins personnelles."],
+["Droit des sociétés", "Effet de la nullité d'une société ?", "En principe pas d'effet rétroactif entre associés ni à l'égard des tiers ; les causes de nullité sont limitativement encadrées par la loi (régime protecteur)."],
+["Droit des sociétés", "Qu'est-ce qu'une action \"ut singuli\" ?", "Action en responsabilité exercée par un ou plusieurs associés au nom et pour le compte de la société contre ses dirigeants, en cas de préjudice social."],
+["Droit des sociétés", "Rôle du commissaire aux comptes ?", "Contrôler la régularité et la sincérité des comptes sociaux et certifier les comptes annuels, dans les sociétés dépassant certains seuils légaux."],
+
+["Droit du travail", "Définition du contrat de travail", "Convention par laquelle une personne s'engage à travailler pour le compte et sous la subordination d'une autre, moyennant rémunération."],
+["Droit du travail", "Critère du lien de subordination", "Pouvoir de l'employeur de donner des ordres et directives, d'en contrôler l'exécution, et de sanctionner les manquements du salarié (Cass. soc., Société Générale, 1996)."],
+["Droit du travail", "Différence CDI / CDD ?", "Le CDI est le contrat de droit commun, sans terme fixé. Le CDD est un contrat d'exception, à terme précis, réservé aux cas prévus par la loi (remplacement, surcroît temporaire d'activité...)."],
+["Droit du travail", "Qu'est-ce que la période d'essai ?", "Période initiale du contrat permettant à chaque partie d'évaluer si la relation convient, durant laquelle la rupture est facilitée (en principe sans motif ni indemnité)."],
+["Droit du travail", "Qu'est-ce qu'une cause réelle et sérieuse de licenciement ?", "Motif objectif, existant et vérifiable, suffisamment grave pour justifier la rupture du contrat, apprécié souverainement par le juge en cas de litige."],
+["Droit du travail", "Différence faute grave / faute lourde ?", "La faute grave rend impossible le maintien du salarié dans l'entreprise (prive de préavis et d'indemnité de licenciement). La faute lourde suppose en plus une intention de nuire à l'employeur."],
+["Droit du travail", "Qu'est-ce qu'une convention collective ?", "Accord négocié entre organisations syndicales et patronales fixant les conditions de travail et garanties sociales applicables à une branche ou une entreprise."],
+["Droit du travail", "Qu'est-ce que le CSE ?", "Comité social et économique : instance unique de représentation du personnel, issue de la fusion des anciennes instances (délégués du personnel, comité d'entreprise, CHSCT)."],
+["Droit du travail", "Durée légale du travail effectif ?", "35 heures par semaine (durée légale, non maximale) ; au-delà, les heures sont en principe majorées (heures supplémentaires)."],
+["Droit du travail", "Qu'est-ce que le pouvoir de direction de l'employeur ?", "Prérogative permettant à l'employeur d'organiser, diriger et contrôler l'activité de l'entreprise et de ses salariés, dans le respect de la loi et des libertés individuelles."],
+
+["Libertés fondamentales", "Qu'est-ce que le bloc de constitutionnalité ?", "Ensemble des normes de valeur constitutionnelle utilisées par le Conseil constitutionnel : Constitution de 1958, préambule de 1946, DDHC de 1789, Charte de l'environnement, PFRLR."],
+["Libertés fondamentales", "Qu'est-ce que la QPC ?", "Question prioritaire de constitutionnalité : mécanisme permettant à tout justiciable de contester, à l'occasion d'une instance, la conformité d'une disposition législative aux droits et libertés garantis par la Constitution."],
+["Libertés fondamentales", "Apport de l'arrêt CE, Commune de Morsang-sur-Orge (1995)", "Le respect de la dignité de la personne humaine est une composante de l'ordre public, permettant à une autorité de police d'interdire une activité même sans circonstances locales particulières."],
+["Libertés fondamentales", "Apport de l'arrêt CE, Benjamin (1933)", "Contrôle maximum (proportionnalité) du juge administratif sur les mesures de police restreignant une liberté publique : la mesure doit être nécessaire, adaptée et proportionnée."],
+["Libertés fondamentales", "Qu'est-ce que le référé-liberté ?", "Procédure d'urgence permettant au juge administratif d'ordonner, en principe sous 48 heures, toute mesure nécessaire à la sauvegarde d'une liberté fondamentale gravement et manifestement illégalement atteinte."],
+["Libertés fondamentales", "Qu'est-ce que le contrôle de conventionnalité ?", "Contrôle par lequel tout juge (judiciaire ou administratif) écarte l'application d'une loi contraire à un traité international (ex. CESDH) — à la différence du contrôle de constitutionnalité, réservé au Conseil constitutionnel."],
+["Libertés fondamentales", "Article 8 de la CESDH", "Droit au respect de la vie privée et familiale, du domicile et de la correspondance, sous réserve d'ingérences prévues par la loi et nécessaires dans une société démocratique."],
+["Libertés fondamentales", "Liberté publique vs droit fondamental ?", "\"Liberté publique\" est une notion historiquement liée à la loi et au juge administratif français. \"Droit fondamental\" est une notion plus large, d'origine constitutionnelle et européenne, incluant aussi les droits sociaux."],
+["Libertés fondamentales", "Principe d'égalité devant la loi", "La loi doit traiter de manière identique les personnes placées dans une situation identique, sans empêcher un traitement différencié entre situations différentes ou pour un motif d'intérêt général."],
+["Libertés fondamentales", "Théorie des circonstances exceptionnelles", "Théorie jurisprudentielle permettant à l'administration, en période de crise grave, d'étendre ses pouvoirs au-delà du cadre légal ordinaire, sous le contrôle du juge."],
+
+["Procédure pénale", "Qu'est-ce que la présomption d'innocence ?", "Toute personne suspectée ou poursuivie est présumée innocente tant que sa culpabilité n'a pas été légalement établie (art. préliminaire CPP, art. 9 DDHC)."],
+["Procédure pénale", "Qu'est-ce que la garde à vue ?", "Mesure de contrainte par laquelle une personne soupçonnée est retenue dans les locaux d'un service d'enquête, sous le contrôle d'un magistrat, pour les nécessités de l'enquête."],
+["Procédure pénale", "Qu'est-ce que la mise en examen ?", "Décision du juge d'instruction plaçant sous statut procédural protecteur (accès au dossier, avocat...) une personne contre laquelle existent des indices graves ou concordants."],
+["Procédure pénale", "Différence contrôle judiciaire / détention provisoire ?", "Le contrôle judiciaire impose des obligations à une personne mise en examen laissée libre. La détention provisoire est une mesure exceptionnelle de privation de liberté avant jugement, décidée par le JLD."],
+["Procédure pénale", "Qu'est-ce que l'action publique ?", "Action exercée au nom de la société par le ministère public (procureur) pour l'application de la loi pénale à l'auteur d'une infraction."],
+["Procédure pénale", "Rôle de la chambre de l'instruction ?", "Juridiction d'appel des décisions du juge d'instruction et du JLD ; contrôle aussi la régularité de la procédure (nullités)."],
+["Procédure pénale", "Qu'est-ce qu'une nullité de procédure ?", "Sanction d'un acte de procédure accompli en violation d'une formalité substantielle, entraînant son annulation et celle des actes qui en découlent."],
+["Procédure pénale", "Délais de prescription de l'action publique ?", "20 ans pour les crimes, 6 ans pour les délits, 1 an pour les contraventions, à compter du jour de l'infraction (sauf règles particulières)."],
+["Procédure pénale", "Qu'est-ce que la comparution immédiate ?", "Procédure de jugement rapide d'une personne majeure pour un délit, lorsque les charges sont suffisantes et l'affaire en état d'être jugée."],
+["Procédure pénale", "Rôle du juge des libertés et de la détention (JLD) ?", "Magistrat du siège compétent pour statuer sur les mesures les plus attentatoires à la liberté individuelle : détention provisoire, certaines perquisitions, prolongation de garde à vue."],
+
+["Droit fiscal", "Définition de l'impôt", "Prestation pécuniaire requise des contribuables par voie d'autorité, à titre définitif, sans contrepartie directe, en vue de la couverture des charges publiques."],
+["Droit fiscal", "Principe de territorialité de l'IS", "Seuls les bénéfices réalisés par des entreprises exploitées en France sont en principe soumis à l'impôt sur les sociétés français, indépendamment de la nationalité de la société."],
+["Droit fiscal", "Qu'est-ce que l'abus de droit fiscal (art. L64 LPF) ?", "Procédure permettant à l'administration d'écarter des actes fictifs, ou recherchant par une application littérale des textes un but exclusivement fiscal contraire à l'intention de leurs auteurs."],
+["Droit fiscal", "Évasion fiscale vs fraude fiscale ?", "L'évasion fiscale utilise des montages légaux pour minimiser l'impôt (avec risque de requalification en abus de droit). La fraude fiscale est une violation intentionnelle et pénalement sanctionnée de la loi fiscale."],
+["Droit fiscal", "Qu'est-ce que l'acte anormal de gestion ?", "Acte contraire à l'intérêt de l'entreprise, l'exposant à une charge ou la privant d'une recette sans contrepartie, permettant à l'administration de rectifier le résultat imposable."],
+["Droit fiscal", "Les trois grandes catégories d'impôts", "Impôts sur le revenu (IR, IS), impôts sur la dépense (TVA), impôts sur le capital/patrimoine (droits de mutation, IFI)."],
+["Droit fiscal", "Qu'est-ce que la taxation d'office ?", "Procédure permettant à l'administration d'évaluer unilatéralement les bases d'imposition d'un contribuable défaillant, en renversant la charge de la preuve."],
+["Droit fiscal", "Délai de reprise de droit commun", "L'administration peut en principe exercer son droit de reprise jusqu'à la fin de la 3e année suivant celle au titre de laquelle l'imposition est due."],
+["Droit fiscal", "Qu'est-ce que le rescrit fiscal ?", "Prise de position formelle de l'administration sur l'application d'un texte fiscal à une situation de fait précise, qui lui devient opposable si la présentation était exacte et complète."],
+["Droit fiscal", "Principe de légalité de l'impôt", "La loi fixe les règles concernant l'assiette, le taux et les modalités de recouvrement des impositions de toute nature (art. 34 Constitution)."],
+
+["Régime général des obligations", "Définition de l'obligation", "Lien de droit unissant un créancier et un débiteur, en vertu duquel ce dernier est tenu envers le premier d'une prestation (donner, faire ou ne pas faire)."],
+["Régime général des obligations", "Obligation de moyens vs obligation de résultat ?", "Dans l'obligation de moyens, le débiteur s'engage à mettre en œuvre tous les moyens raisonnables (faute à prouver par le créancier). Dans l'obligation de résultat, sa non-atteinte suffit à établir la faute."],
+["Régime général des obligations", "Qu'est-ce que la solidarité entre débiteurs ?", "Modalité permettant au créancier d'exiger de l'un quelconque des codébiteurs solidaires le paiement de la totalité de la dette, à charge pour lui de se retourner contre les autres."],
+["Régime général des obligations", "Qu'est-ce que la cession de créance ?", "Convention par laquelle le créancier cédant transmet sa créance à un tiers cessionnaire ; opposable au débiteur cédé dès qu'il en est informé ou y intervient."],
+["Régime général des obligations", "Qu'est-ce que la novation ?", "Opération qui éteint une obligation en la remplaçant par une nouvelle (changement de créancier, de débiteur, ou d'objet)."],
+["Régime général des obligations", "Qu'est-ce que la subrogation personnelle ?", "Mécanisme par lequel un tiers qui paie la dette d'autrui est substitué dans les droits du créancier payé contre le débiteur."],
+["Régime général des obligations", "Qu'est-ce que la compensation ?", "Mode d'extinction simultanée de deux dettes réciproques, liquides et exigibles, entre les mêmes personnes, à hauteur de la plus faible des deux."],
+["Régime général des obligations", "Qu'est-ce que la délégation ?", "Opération par laquelle une personne (le délégant) obtient d'une autre (le délégué) qu'elle s'engage envers un tiers (le délégataire), qui accepte cette obligation nouvelle."],
+["Régime général des obligations", "Délai de prescription extinctive de droit commun", "Cinq ans à compter du jour où le titulaire d'un droit a connu ou aurait dû connaître les faits lui permettant de l'exercer (art. 2224 C. civ.)."],
+["Régime général des obligations", "Qu'est-ce que la cession de dette ?", "Convention par laquelle un débiteur cédant transmet sa dette à un tiers cessionnaire, avec l'accord du créancier, qui peut ou non libérer le débiteur originaire."],
+];
+
+const SEED = SEED_RAW.map(([m, r, v], i) => mkSeedCard("seed-fc-" + i, m, r, v));
+
+function loadCards() {
+  let existing = [];
+  try { existing = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { existing = []; }
+  const existingIds = new Set(existing.map(c => c.id));
+  const missing = SEED.filter(c => !existingIds.has(c.id));
+  return existing.concat(missing);
+}
+function saveCards(cards) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+}
+
+let cards = loadCards();
+saveCards(cards);
+let reviewQueue = [];
+let currentCard = null;
+let reviewTotal = 0;
+
+function todayISO() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function isDue(card) {
+  return !card.dueDate || card.dueDate <= todayISO();
+}
+
+function refreshMatiereOptions() {
+  const matieres = [...new Set(cards.map(c => c.matiere).filter(Boolean))].sort();
+  const dl = document.getElementById("matiereList");
+  dl.innerHTML = matieres.map(m => `<option value="${escapeHtml(m)}">`).join("");
+  const sel = document.getElementById("filterMatiere");
+  const current = sel.value;
+  sel.innerHTML = '<option value="">Toutes les matières</option>' +
+    matieres.map(m => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`).join("");
+  sel.value = current;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function updateCounts() {
+  document.getElementById("totalCount").textContent = cards.length;
+  document.getElementById("dueCount").textContent = cards.filter(isDue).length;
+}
+
+function renderList() {
+  const search = document.getElementById("searchBox").value.trim().toLowerCase();
+  const matiereFilter = document.getElementById("filterMatiere").value;
+  const list = document.getElementById("cardList");
+
+  let filtered = cards.filter(c => {
+    if (matiereFilter && c.matiere !== matiereFilter) return false;
+    if (search) {
+      const hay = (c.matiere + " " + c.recto + " " + c.verso).toLowerCase();
+      if (!hay.includes(search)) return false;
+    }
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty-state">Aucune carte pour l\'instant.</div>';
+    return;
+  }
+
+  filtered.sort((a, b) => (a.matiere || "").localeCompare(b.matiere || ""));
+
+  list.innerHTML = filtered.map(c => `
+    <div class="card" style="margin-bottom:0.6rem;">
+      <div class="row between">
+        <span class="badge">${escapeHtml(c.matiere || "Sans matière")}</span>
+        <span class="muted">${isDue(c) ? "à réviser" : "prochaine révision : " + c.dueDate}</span>
+      </div>
+      <p style="margin:0.6rem 0 0.2rem;"><strong>${escapeHtml(c.recto)}</strong></p>
+      <p class="muted" style="margin:0.2rem 0 0.6rem;">${escapeHtml(c.verso)}</p>
+      <div class="row end">
+        <button class="danger" onclick="deleteCard('${c.id}')">Supprimer</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function deleteCard(id) {
+  cards = cards.filter(c => c.id !== id);
+  saveCards(cards);
+  refreshMatiereOptions();
+  updateCounts();
+  renderList();
+}
+
+document.getElementById("addCardBtn").addEventListener("click", () => {
+  const matiere = document.getElementById("fMatiere").value.trim();
+  const recto = document.getElementById("fRecto").value.trim();
+  const verso = document.getElementById("fVerso").value.trim();
+  if (!recto || !verso) { alert("Merci de remplir le recto et le verso."); return; }
+  cards.push({
+    id: crypto.randomUUID(),
+    matiere, recto, verso,
+    ease: 2.5, interval: 0, reps: 0,
+    dueDate: todayISO()
+  });
+  saveCards(cards);
+  document.getElementById("fRecto").value = "";
+  document.getElementById("fVerso").value = "";
+  refreshMatiereOptions();
+  updateCounts();
+  renderList();
+});
+
+document.getElementById("searchBox").addEventListener("input", renderList);
+document.getElementById("filterMatiere").addEventListener("change", renderList);
+
+document.getElementById("exportBtn").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify(cards, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "fiches-memo-" + todayISO() + ".json";
+  a.click();
+});
+
+document.getElementById("importBtn").addEventListener("click", () => {
+  document.getElementById("importFile").click();
+});
+document.getElementById("importFile").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const imported = JSON.parse(reader.result);
+      if (!Array.isArray(imported)) throw new Error("format invalide");
+      const existingIds = new Set(cards.map(c => c.id));
+      let added = 0;
+      imported.forEach(c => {
+        if (c && c.recto && c.verso && !existingIds.has(c.id)) {
+          cards.push(Object.assign({
+            id: crypto.randomUUID(), ease: 2.5, interval: 0, reps: 0, dueDate: todayISO()
+          }, c));
+          added++;
+        }
+      });
+      saveCards(cards);
+      refreshMatiereOptions();
+      updateCounts();
+      renderList();
+      alert(added + " carte(s) importée(s).");
+    } catch (err) {
+      alert("Fichier invalide : " + err.message);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = "";
+});
+
+// --- Review logic (simplified SM-2) ---
+function startReview() {
+  reviewQueue = cards.filter(isDue);
+  reviewTotal = reviewQueue.length;
+  if (reviewQueue.length === 0) {
+    document.getElementById("reviewArea").style.display = "none";
+    document.getElementById("reviewDone").style.display = "block";
+    return;
+  }
+  document.getElementById("reviewDone").style.display = "none";
+  nextCard();
+}
+
+function nextCard() {
+  if (reviewQueue.length === 0) {
+    document.getElementById("reviewArea").style.display = "none";
+    document.getElementById("reviewDone").style.display = "block";
+    updateCounts();
+    renderList();
+    return;
+  }
+  currentCard = reviewQueue.shift();
+  document.getElementById("reviewArea").style.display = "block";
+  document.getElementById("reviewMatiere").textContent = currentCard.matiere || "Sans matière";
+  document.getElementById("reviewProgress").textContent =
+    (reviewTotal - reviewQueue.length - 1 + 1) + " / " + reviewTotal;
+  document.getElementById("reviewRecto").textContent = currentCard.recto;
+  document.getElementById("reviewVerso").textContent = currentCard.verso;
+  document.getElementById("reviewVerso").style.display = "none";
+  document.getElementById("showAnswerRow").style.display = "flex";
+  document.getElementById("ratingRow").style.display = "none";
+}
+
+function showAnswer() {
+  document.getElementById("reviewVerso").style.display = "block";
+  document.getElementById("showAnswerRow").style.display = "none";
+  document.getElementById("ratingRow").style.display = "flex";
+}
+
+function rateCard(rating) {
+  const c = cards.find(x => x.id === currentCard.id);
+  if (!c) { nextCard(); return; }
+  c.ease = c.ease || 2.5;
+  c.reps = c.reps || 0;
+  c.interval = c.interval || 0;
+
+  if (rating === 0) {
+    c.reps = 0;
+    c.interval = 0;
+    c.ease = Math.max(1.3, c.ease - 0.2);
+  } else {
+    if (rating === 1) c.ease = Math.max(1.3, c.ease - 0.15);
+    if (rating === 3) c.ease = c.ease + 0.15;
+
+    if (c.reps === 0) c.interval = 1;
+    else if (c.reps === 1) c.interval = 6;
+    else c.interval = Math.round(c.interval * c.ease);
+
+    c.reps += 1;
+  }
+
+  const due = new Date();
+  due.setDate(due.getDate() + Math.max(c.interval, rating === 0 ? 0 : 1));
+  c.dueDate = due.toISOString().slice(0, 10);
+
+  saveCards(cards);
+  nextCard();
+}
+
+document.getElementById("startReview").addEventListener("click", startReview);
+document.getElementById("showAnswerBtn").addEventListener("click", showAnswer);
+document.getElementById("ratingRow").addEventListener("click", (e) => {
+  const btn = e.target.closest("button[data-rating]");
+  if (btn) rateCard(Number(btn.dataset.rating));
+});
+
+document.addEventListener("keydown", (e) => {
+  if (document.getElementById("reviewArea").style.display === "none") return;
+  if (e.code === "Space") {
+    e.preventDefault();
+    if (document.getElementById("showAnswerRow").style.display !== "none") showAnswer();
+  }
+  if (["1","2","3","4"].includes(e.key) && document.getElementById("ratingRow").style.display !== "none") {
+    rateCard(Number(e.key) - 1);
+  }
+});
+
+refreshMatiereOptions();
+updateCounts();
+renderList();
+</script>
+</body>
+</html>

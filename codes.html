@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Codes &amp; articles — Droit Toolkit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#131316">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Zilla+Slab:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23131316%22%2F%3E%3Cg%20stroke%3D%22%23F7F6F2%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%3E%3Cline%20x1%3D%2216%22%20y1%3D%227%22%20x2%3D%2216%22%20y2%3D%2224%22%2F%3E%3Cline%20x1%3D%228%22%20y1%3D%2210%22%20x2%3D%2224%22%20y2%3D%2210%22%2F%3E%3Cline%20x1%3D%2216%22%20y1%3D%2224%22%20x2%3D%2211%22%20y2%3D%2224%22%2F%3E%3Cline%20x1%3D%2216%22%20y1%3D%2224%22%20x2%3D%2221%22%20y2%3D%2224%22%2F%3E%3Cpath%20d%3D%22M6%2010a4%205%200%200%200%208%200%22%2F%3E%3Cpath%20d%3D%22M18%2010a4%205%200%200%200%208%200%22%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%227%22%20r%3D%221.6%22%20fill%3D%22%233B2FE8%22%2F%3E%3C%2Fsvg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script src="theme.js"></script>
+<header class="topnav">
+  <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 32 32"><line x1="16" y1="7" x2="16" y2="24" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><line x1="8" y1="10" x2="24" y2="10" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><line x1="16" y1="24" x2="11" y2="24" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><line x1="16" y1="24" x2="21" y2="24" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M6 10a4 5 0 0 0 8 0" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/><path d="M18 10a4 5 0 0 0 8 0" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/><circle cx="16" cy="7" r="2.3" fill="rgb(59,47,232)"/></svg></span>Droit Toolkit</a>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="flashcards.html">Fiches mémo</a>
+    <a href="fiches-arret.html">Fiches d'arrêt</a>
+    <a href="codes.html" class="active">Codes &amp; articles</a>
+    <a href="Hub.html">Tous mes logiciels</a>
+    <button id="theme-toggle" aria-pressed="false">Nuit</button>
+  </nav>
+</header>
+<main>
+  <p class="eyebrow">Références</p>
+  <h1>Codes &amp; articles</h1>
+  <p class="muted">Colle ici les articles que tu utilises souvent (depuis Légifrance par exemple), ajoute une note personnelle et marque-les "à retenir". Une base d'articles de référence par matière est préchargée pour démarrer — pense à vérifier le texte exact et la numérotation en vigueur sur Légifrance.</p>
+
+  <div class="card">
+    <div class="toolbar">
+      <input type="search" id="searchBox" placeholder="Rechercher un article, un numéro, une note...">
+      <select id="filterMatiere"><option value="">Toutes les matières</option></select>
+      <select id="filterCode"><option value="">Tous les codes</option></select>
+      <label style="display:flex; align-items:center; gap:0.3rem; margin:0;">
+        <input type="checkbox" id="filterStar" style="width:auto;"> À retenir uniquement
+      </label>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Ajouter un article</h3>
+    <div class="row">
+      <div style="flex:1; min-width:180px;">
+        <label for="fMatiere">Matière</label>
+        <input type="text" id="fMatiere" list="matiereList" placeholder="ex. Droit des sociétés">
+        <datalist id="matiereList"></datalist>
+      </div>
+      <div style="flex:1; min-width:180px;">
+        <label for="fCode">Code</label>
+        <input type="text" id="fCode" list="codeList" placeholder="ex. Code civil">
+        <datalist id="codeList"></datalist>
+      </div>
+      <div style="flex:1; min-width:120px;">
+        <label for="fNumero">Numéro</label>
+        <input type="text" id="fNumero" placeholder="ex. 1240">
+      </div>
+    </div>
+    <label for="fTexte">Texte de l'article</label>
+    <textarea id="fTexte" placeholder="Colle le texte de l'article ici"></textarea>
+    <label for="fNote">Note personnelle</label>
+    <textarea id="fNote" placeholder="Ta note, exemple d'application, arrêt lié..."></textarea>
+    <div class="row" style="margin-top:0.4rem;">
+      <label style="display:flex; align-items:center; gap:0.3rem; margin:0;">
+        <input type="checkbox" id="fStar" style="width:auto;"> Marquer "à retenir"
+      </label>
+    </div>
+    <div class="row end" style="margin-top:0.8rem;">
+      <button id="addBtn" class="primary">Ajouter l'article</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row between">
+      <h3 style="margin:0;">Articles</h3>
+      <div class="row">
+        <button id="exportBtn">Exporter (JSON)</button>
+        <button id="importBtn">Importer</button>
+        <input type="file" id="importFile" accept="application/json" style="display:none;">
+      </div>
+    </div>
+    <div id="articleList" style="margin-top:0.8rem;"></div>
+  </div>
+</main>
+
+<script>
+const STORAGE_KEY = "droit_codes";
+
+function mkSeedArticle(matiere, code, numero, texte, note, star) {
+  return { matiere, code, numero, texte, note, star: !!star };
+}
+
+const SEED = [
+// Droit public des affaires
+mkSeedArticle("Droit public des affaires", "Constitution du 4 octobre 1958", "34",
+  "La loi fixe les règles concernant... la création de catégories d'établissements publics... les nationalisations d'entreprises et les transferts de propriété d'entreprises du secteur public au secteur privé.",
+  "Fonde la compétence du législateur sur les grandes opérations touchant au secteur public économique.", false),
+mkSeedArticle("Droit public des affaires", "Code de la commande publique", "L1111-1",
+  "Les contrats de la commande publique conclus par les acheteurs et les autorités concédantes soumis au présent code sont les marchés publics et les concessions définis au présent titre.",
+  "Article d'entrée du code : distingue les deux grandes familles de contrats de la commande publique.", true),
+mkSeedArticle("Droit public des affaires", "Code général des collectivités territoriales", "L1411-1 (notion de DSP)",
+  "Une délégation de service public est un contrat par lequel une personne morale de droit public confie la gestion d'un service public à un délégataire dont la rémunération est substantiellement liée aux résultats de l'exploitation.",
+  "Notion aujourd'hui reprise par la catégorie des concessions de service dans le Code de la commande publique (2019) — vérifier la numérotation en vigueur.", false),
+mkSeedArticle("Droit public des affaires", "Code général de la propriété des personnes publiques", "L2111-1",
+  "Le domaine public d'une personne publique est constitué des biens lui appartenant qui sont soit affectés à l'usage direct du public, soit affectés à un service public pourvu qu'ils fassent alors l'objet d'un aménagement indispensable à l'exécution des missions de ce service public.",
+  "Définition légale du domaine public, issue de la codification de 2006.", false),
+
+// Droit des sociétés
+mkSeedArticle("Droit des sociétés", "Code civil", "1832",
+  "La société est instituée par deux ou plusieurs personnes qui conviennent par un contrat d'affecter à une entreprise commune des biens ou leur industrie en vue de partager le bénéfice ou de profiter de l'économie qui pourra en résulter. Elle peut être instituée, dans les cas prévus par la loi, par l'acte de volonté d'une seule personne. Les associés s'engagent à contribuer aux pertes.",
+  "Définition matricielle de la société, valable pour toutes les formes sociales.", true),
+mkSeedArticle("Droit des sociétés", "Code civil", "1833",
+  "Toute société doit avoir un objet licite et être constituée dans l'intérêt commun des associés. La société est gérée dans son intérêt social, en prenant en considération les enjeux sociaux et environnementaux de son activité.",
+  "Deuxième alinéa issu de la loi PACTE (2019) : introduit la prise en compte des enjeux sociaux et environnementaux.", false),
+mkSeedArticle("Droit des sociétés", "Code de commerce", "L210-6",
+  "Les sociétés commerciales jouissent de la personnalité morale à dater de leur immatriculation au registre du commerce et des sociétés.",
+  "Marque le moment de naissance de la personnalité morale — avant, on parle de société en formation.", false),
+mkSeedArticle("Droit des sociétés", "Code de commerce", "L223-1",
+  "La société à responsabilité limitée est instituée par une ou plusieurs personnes qui ne supportent les pertes qu'à concurrence de leurs apports.",
+  "Définition de la SARL (et de l'EURL lorsqu'un seul associé).", false),
+mkSeedArticle("Droit des sociétés", "Code de commerce", "L227-1",
+  "Une société par actions simplifiée peut être instituée par une ou plusieurs personnes qui ne supportent les pertes qu'à concurrence de leurs apports.",
+  "Définition de la SAS (et de la SASU) — grande liberté statutaire dans l'organisation des pouvoirs.", false),
+
+// Droit du travail
+mkSeedArticle("Droit du travail", "Code du travail", "L1221-1",
+  "Le contrat de travail est soumis aux règles de droit commun. Il peut être établi selon les formes que les parties contractantes décident d'adopter.",
+  "Pas de formalisme imposé : le contrat de travail peut être écrit ou verbal (sauf CDD, temps partiel...).", false),
+mkSeedArticle("Droit du travail", "Code du travail", "L1231-1",
+  "Le contrat de travail à durée indéterminée peut être rompu à l'initiative de l'employeur ou du salarié, ou d'un commun accord, dans les conditions prévues par les dispositions du présent titre.",
+  "Article d'ouverture du titre relatif à la rupture du contrat de travail (licenciement, démission, rupture conventionnelle...).", false),
+mkSeedArticle("Droit du travail", "Code du travail", "L1232-1",
+  "Tout licenciement pour motif personnel est motivé dans les conditions définies par le présent chapitre. Il est justifié par une cause réelle et sérieuse.",
+  "Fondement textuel de l'exigence de cause réelle et sérieuse.", true),
+mkSeedArticle("Droit du travail", "Code du travail", "L3121-27",
+  "La durée légale de travail effectif des salariés à temps complet est fixée à trente-cinq heures par semaine.",
+  "Durée légale, non maximale : les heures effectuées au-delà sont en principe des heures supplémentaires majorées.", false),
+
+// Libertés fondamentales
+mkSeedArticle("Libertés fondamentales", "Déclaration des droits de l'homme et du citoyen (1789)", "1er",
+  "Les hommes naissent et demeurent libres et égaux en droits. Les distinctions sociales ne peuvent être fondées que sur l'utilité commune.",
+  "Fondement textuel du principe d'égalité, à valeur constitutionnelle.", true),
+mkSeedArticle("Libertés fondamentales", "Déclaration des droits de l'homme et du citoyen (1789)", "4",
+  "La liberté consiste à pouvoir faire tout ce qui ne nuit pas à autrui : ainsi, l'exercice des droits naturels de chaque homme n'a de bornes que celles qui assurent aux autres membres de la société la jouissance de ces mêmes droits. Ces bornes ne peuvent être déterminées que par la loi.",
+  "Définition classique de la liberté, souvent citée pour introduire la théorie des libertés publiques.", false),
+mkSeedArticle("Libertés fondamentales", "Déclaration des droits de l'homme et du citoyen (1789)", "11",
+  "La libre communication des pensées et des opinions est un des droits les plus précieux de l'homme : tout citoyen peut donc parler, écrire, imprimer librement, sauf à répondre de l'abus de cette liberté dans les cas déterminés par la loi.",
+  "Fondement constitutionnel de la liberté d'expression et de la presse.", false),
+mkSeedArticle("Libertés fondamentales", "Convention EDH", "8",
+  "Toute personne a droit au respect de sa vie privée et familiale, de son domicile et de sa correspondance. Il ne peut y avoir ingérence d'une autorité publique dans l'exercice de ce droit que pour autant que cette ingérence est prévue par la loi et nécessaire dans une société démocratique.",
+  "Article très mobilisé par la CEDH (vie privée, filiation, données personnelles, expulsion des étrangers...).", true),
+mkSeedArticle("Libertés fondamentales", "Convention EDH", "10",
+  "Toute personne a droit à la liberté d'expression. Ce droit comprend la liberté d'opinion et la liberté de recevoir ou de communiquer des informations ou des idées sans qu'il puisse y avoir ingérence d'autorités publiques.",
+  "Complète l'article 11 DDHC au niveau conventionnel européen.", false),
+mkSeedArticle("Libertés fondamentales", "Constitution du 4 octobre 1958", "66",
+  "Nul ne peut être arbitrairement détenu. L'autorité judiciaire, gardienne de la liberté individuelle, assure le respect de ce principe dans les conditions prévues par la loi.",
+  "Fondement du rôle protecteur du juge judiciaire à l'égard de la liberté individuelle (détention, garde à vue...).", false),
+
+// Procédure pénale
+mkSeedArticle("Procédure pénale", "Code de procédure pénale", "préliminaire",
+  "La procédure pénale doit être équitable et contradictoire et préserver l'équilibre des droits des parties. [...] Toute personne suspectée ou poursuivie est présumée innocente tant que sa culpabilité n'a pas été établie.",
+  "Article-cadre énonçant les grands principes directeurs du procès pénal.", true),
+mkSeedArticle("Procédure pénale", "Code de procédure pénale", "63",
+  "L'officier de police judiciaire peut, pour les nécessités de l'enquête, placer en garde à vue toute personne à l'encontre de laquelle il existe une ou plusieurs raisons plausibles de soupçonner qu'elle a commis ou tenté de commettre une infraction.",
+  "Fondement légal de la garde à vue, mesure de contrainte encadrée depuis la réforme de 2011.", false),
+mkSeedArticle("Procédure pénale", "Code de procédure pénale", "80-1",
+  "Le juge d'instruction ne peut mettre en examen que les personnes à l'encontre desquelles il existe des indices graves ou concordants rendant vraisemblable qu'elles aient pu participer, comme auteur ou complice, à la commission des infractions dont il est saisi.",
+  "Encadre le pouvoir de mise en examen pour éviter les mises en cause trop précoces.", false),
+mkSeedArticle("Procédure pénale", "Code de procédure pénale", "137",
+  "La personne mise en examen, présumée innocente, reste libre. Toutefois, en raison des nécessités de l'instruction ou à titre de mesure de sûreté, elle peut être astreinte à une ou plusieurs obligations du contrôle judiciaire [...] ; à titre exceptionnel, elle peut être placée en détention provisoire.",
+  "Pose le principe de liberté et le caractère exceptionnel de la détention provisoire.", false),
+mkSeedArticle("Procédure pénale", "Code de procédure pénale", "7 à 9",
+  "L'action publique se prescrit par vingt années révolues à compter du jour où l'infraction a été commise pour les crimes, par six années révolues pour les délits, par une année révolue pour les contraventions.",
+  "Délais issus de la réforme de la prescription pénale du 27 février 2017.", false),
+
+// Droit fiscal
+mkSeedArticle("Droit fiscal", "Livre des procédures fiscales", "L64",
+  "Afin d'en restituer le véritable caractère, l'administration est en droit d'écarter, comme ne lui étant pas opposables, les actes constitutifs d'un abus de droit, soit que ces actes ont un caractère fictif, soit que [...] ils n'ont pu être inspirés par aucun autre motif que celui d'éluder ou d'atténuer les charges fiscales.",
+  "Texte fondateur de la procédure de répression des abus de droit fiscal (fictivité ou fraude à la loi).", true),
+mkSeedArticle("Droit fiscal", "Code général des impôts", "1729",
+  "Les inexactitudes ou omissions relevées dans une déclaration [...] entraînent l'application d'une majoration de 40 % en cas de manquement délibéré et de 80 % en cas d'abus de droit ou de manœuvres frauduleuses.",
+  "Sanctions applicables en cas de rectification fiscale, à moduler selon la gravité du manquement.", false),
+mkSeedArticle("Droit fiscal", "Livre des procédures fiscales", "L169",
+  "Pour l'impôt sur le revenu et l'impôt sur les sociétés, le droit de reprise de l'administration des impôts s'exerce jusqu'à la fin de la troisième année suivant celle au titre de laquelle l'imposition est due.",
+  "Délai de reprise (prescription) de droit commun, sauf délais spéciaux plus longs (activité occulte...).", false),
+mkSeedArticle("Droit fiscal", "Code général des impôts", "4 B",
+  "Sont considérées comme ayant leur domicile fiscal en France les personnes qui ont en France leur foyer ou le lieu de leur séjour principal, qui y exercent une activité professionnelle [...] ou qui ont en France le centre de leurs intérêts économiques.",
+  "Critères alternatifs de détermination du domicile fiscal, point de départ de la territorialité de l'IR.", false),
+
+// Régime général des obligations
+mkSeedArticle("Régime général des obligations", "Code civil", "1231-1",
+  "Le débiteur est condamné, s'il y a lieu, au paiement de dommages et intérêts soit à raison de l'inexécution de l'obligation, soit à raison du retard dans l'exécution, s'il ne justifie pas que l'exécution a été empêchée par la force majeure.",
+  "Fondement de la responsabilité contractuelle de droit commun.", true),
+mkSeedArticle("Régime général des obligations", "Code civil", "1346",
+  "La subrogation a lieu par le seul effet de la loi au profit de celui qui, y ayant un intérêt légitime, paie dès lors que ce paiement le libère envers le créancier.",
+  "Subrogation légale — à distinguer de la subrogation conventionnelle (art. 1346-1).", false),
+mkSeedArticle("Régime général des obligations", "Code civil", "1327",
+  "Le débiteur peut, avec l'accord du créancier, céder sa dette à un tiers.",
+  "Consacre explicitement la cession de dette depuis la réforme du droit des obligations de 2016.", false),
+mkSeedArticle("Régime général des obligations", "Code civil", "2224",
+  "Les actions personnelles ou mobilières se prescrivent par cinq ans à compter du jour où le titulaire d'un droit a connu ou aurait dû connaître les faits lui permettant de l'exercer.",
+  "Délai de prescription extinctive de droit commun.", true),
+mkSeedArticle("Régime général des obligations", "Code civil", "1216",
+  "Un contractant, le cédant, peut céder sa qualité de partie au contrat à un tiers, le cessionnaire, avec l'accord de son cocontractant, le cédé.",
+  "Consacre la cession de contrat (transmission de la qualité de partie), également issue de la réforme de 2016.", false),
+].map((a, i) => Object.assign({ id: "seed-art-" + i }, a));
+
+const OBSOLETE_SEED_IDS = new Set(["seed-1", "seed-2"]); // ancien jeu d'exemple (Code civil 1240/1103)
+
+function loadArticles() {
+  let existing = [];
+  try { existing = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { existing = []; }
+  existing = existing.filter(a => !OBSOLETE_SEED_IDS.has(a.id));
+  const existingIds = new Set(existing.map(a => a.id));
+  const missing = SEED.filter(a => !existingIds.has(a.id));
+  return existing.concat(missing);
+}
+function saveArticles(list) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+}
+
+let articles = loadArticles();
+saveArticles(articles);
+
+function escapeHtml(s) {
+  return String(s || "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function highlight(text, term) {
+  const escaped = escapeHtml(text);
+  if (!term) return escaped;
+  const re = new RegExp("(" + term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "ig");
+  return escaped.replace(re, "<mark>$1</mark>");
+}
+
+function refreshCodeOptions() {
+  const codes = [...new Set(articles.map(a => a.code).filter(Boolean))].sort();
+  document.getElementById("codeList").innerHTML = codes.map(c => `<option value="${escapeHtml(c)}">`).join("");
+  const sel = document.getElementById("filterCode");
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">Tous les codes</option>' + codes.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
+  sel.value = cur;
+
+  const matieres = [...new Set(articles.map(a => a.matiere).filter(Boolean))].sort();
+  document.getElementById("matiereList").innerHTML = matieres.map(m => `<option value="${escapeHtml(m)}">`).join("");
+  const selM = document.getElementById("filterMatiere");
+  const curM = selM.value;
+  selM.innerHTML = '<option value="">Toutes les matières</option>' + matieres.map(m => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`).join("");
+  selM.value = curM;
+}
+
+document.getElementById("addBtn").addEventListener("click", () => {
+  const matiere = document.getElementById("fMatiere").value.trim();
+  const code = document.getElementById("fCode").value.trim();
+  const numero = document.getElementById("fNumero").value.trim();
+  const texte = document.getElementById("fTexte").value.trim();
+  if (!code || !numero || !texte) { alert("Merci de remplir le code, le numéro et le texte."); return; }
+  articles.push({
+    id: crypto.randomUUID(),
+    matiere, code, numero, texte,
+    note: document.getElementById("fNote").value.trim(),
+    star: document.getElementById("fStar").checked
+  });
+  saveArticles(articles);
+  document.getElementById("fNumero").value = "";
+  document.getElementById("fTexte").value = "";
+  document.getElementById("fNote").value = "";
+  document.getElementById("fStar").checked = false;
+  refreshCodeOptions();
+  renderList();
+});
+
+function toggleStar(id) {
+  const a = articles.find(x => x.id === id);
+  if (a) { a.star = !a.star; saveArticles(articles); renderList(); }
+}
+
+function deleteArticle(id) {
+  if (!confirm("Supprimer cet article ?")) return;
+  articles = articles.filter(a => a.id !== id);
+  saveArticles(articles);
+  refreshCodeOptions();
+  renderList();
+}
+
+function renderList() {
+  const search = document.getElementById("searchBox").value.trim().toLowerCase();
+  const codeFilter = document.getElementById("filterCode").value;
+  const matiereFilter = document.getElementById("filterMatiere").value;
+  const starOnly = document.getElementById("filterStar").checked;
+  const list = document.getElementById("articleList");
+
+  let filtered = articles.filter(a => {
+    if (codeFilter && a.code !== codeFilter) return false;
+    if (matiereFilter && a.matiere !== matiereFilter) return false;
+    if (starOnly && !a.star) return false;
+    if (search) {
+      const hay = (a.matiere + " " + a.code + " " + a.numero + " " + a.texte + " " + a.note).toLowerCase();
+      if (!hay.includes(search)) return false;
+    }
+    return true;
+  });
+
+  filtered.sort((a, b) => (a.matiere || "").localeCompare(b.matiere || "") || (a.code || "").localeCompare(b.code || "") || (a.numero || "").localeCompare(b.numero || "", undefined, {numeric:true}));
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty-state">Aucun article. Ajoutes-en un ci-dessus.</div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(a => `
+    <div class="card" style="margin-bottom:0.6rem;">
+      <div class="row between">
+        <div>
+          ${a.matiere ? `<span class="badge">${escapeHtml(a.matiere)}</span>` : ""}
+          <span class="muted" style="margin-left:0.4rem;">${escapeHtml(a.code)}</span>
+          <strong style="margin-left:0.4rem;">Art. ${escapeHtml(a.numero)}</strong>
+        </div>
+        <div class="row">
+          <button onclick="toggleStar('${a.id}')" title="À retenir" style="${a.star ? "color:rgb(var(--acc));border-color:rgb(var(--acc));" : ""}">
+            <svg width="14" height="14" viewBox="0 0 24 24" style="vertical-align:-2px; margin-right:4px;" fill="${a.star ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><polygon points="12 2 15.09 8.63 22 9.27 16.5 14.14 18.18 21 12 17.27 5.82 21 7.5 14.14 2 9.27 8.91 8.63"/></svg>À retenir
+          </button>
+          <button class="danger" onclick="deleteArticle('${a.id}')">Supprimer</button>
+        </div>
+      </div>
+      <p style="margin:0.6rem 0 0.2rem;">${highlight(a.texte, search)}</p>
+      ${a.note ? `<p class="muted" style="margin:0.4rem 0 0; padding-top:0.4rem; border-top:1px dashed var(--filet);"><strong style="text-transform:uppercase; font-size:11px; letter-spacing:.05em; color:var(--gris);">Note —</strong> ${highlight(a.note, search)}</p>` : ""}
+    </div>
+  `).join("");
+}
+
+document.getElementById("searchBox").addEventListener("input", renderList);
+document.getElementById("filterCode").addEventListener("change", renderList);
+document.getElementById("filterMatiere").addEventListener("change", renderList);
+document.getElementById("filterStar").addEventListener("change", renderList);
+
+document.getElementById("exportBtn").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify(articles, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "codes-articles-" + new Date().toISOString().slice(0,10) + ".json";
+  a.click();
+});
+
+document.getElementById("importBtn").addEventListener("click", () => document.getElementById("importFile").click());
+document.getElementById("importFile").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const imported = JSON.parse(reader.result);
+      if (!Array.isArray(imported)) throw new Error("format invalide");
+      const existingIds = new Set(articles.map(a => a.id));
+      let added = 0;
+      imported.forEach(a => {
+        if (a && a.code && a.numero && !existingIds.has(a.id)) {
+          articles.push(Object.assign({ id: crypto.randomUUID() }, a));
+          added++;
+        }
+      });
+      saveArticles(articles);
+      refreshCodeOptions();
+      renderList();
+      alert(added + " article(s) importé(s).");
+    } catch (err) {
+      alert("Fichier invalide : " + err.message);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = "";
+});
+
+refreshCodeOptions();
+renderList();
+</script>
+</body>
+</html>

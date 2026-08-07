@@ -1,0 +1,1144 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Considérant — fiches de raisonnement</title>
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#131316">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ccircle%20cx%3D%223%22%20cy%3D%2212%22%20r%3D%222.4%22%20fill%3D%22%233B2FE8%22%2F%3E%3Cg%20stroke%3D%22%233B2FE8%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M5.6%2012h3.6%22%2F%3E%3Cpath%20d%3D%22M9.2%205.6v12.8%22%2F%3E%3Cpath%20d%3D%22M9.2%205.6h9.4%22%2F%3E%3Cpath%20d%3D%22M9.2%2012h11%22%2F%3E%3Cpath%20d%3D%22M9.2%2018.4h7.6%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Zilla+Slab:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --fond:#F7F6F2; --papier:#FFFFFF; --papier-2:#FAF9F5; --papier-3:#E4E2DA;
+  --encre:#131316; --encre-2:#5C5C63;
+  --accent:#3B2FE8; --marge:#C62828;
+  --ombre:rgba(19,19,22,.14);
+  --titre:"Zilla Slab",Georgia,"Times New Roman",serif;
+  --serif:"Zilla Slab",Georgia,serif;
+  --sans:"Archivo",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+:root[data-nuit="1"]{
+  --fond:#131316; --papier:#1C1C20; --papier-2:#17171B; --papier-3:#2C2C31;
+  --encre:#F4F3EE; --encre-2:#B4B4AE;
+  --accent:#9B90F7; --marge:#D97567;
+  --ombre:rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden}
+body{background:var(--fond);color:var(--encre);font-family:var(--sans);font-size:14px;display:flex;flex-direction:column}
+button,select{font-family:inherit;font-size:inherit;color:inherit}
+:is(button,select):focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:8px 14px;background:var(--papier);border-bottom:1px solid var(--papier-3);z-index:30}
+.marque{display:flex;align-items:center;gap:10px;padding-right:15px;border-right:1px solid var(--papier-3)}
+.marque svg{flex:none;display:block}
+.mots b{display:block;font-family:var(--titre);font-weight:600;font-size:21px;line-height:1;letter-spacing:.005em}
+.mots span{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--encre-2);margin-top:3px}
+.carte h2{font-family:var(--titre)}
+.groupe{display:flex;align-items:center;gap:5px}
+.sep{width:1px;height:20px;background:var(--papier-3)}
+button.b,select.b,a.b{background:var(--papier-2);border:1px solid var(--papier-3);border-radius:0;padding:5px 10px;cursor:pointer;line-height:1.3}
+button.b,a.b{font-weight:600;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase}
+a.b{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
+button.b:hover,select.b:hover,a.b:hover{border-color:var(--encre-2)}
+button.b[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+select.b{max-width:210px}
+#etatSauve{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--encre-2)}
+
+#toile{flex:1;position:relative;overflow:hidden;cursor:grab;touch-action:none;background:var(--fond)}
+#toile.tire{cursor:grabbing}
+#plan{position:absolute;left:0;top:0;transform-origin:0 0}
+#liens{position:absolute;left:-12000px;top:-12000px;width:24000px;height:24000px;pointer-events:none;overflow:visible}
+
+.cube{
+  position:absolute;max-width:250px;min-width:52px;padding:8px 13px;
+  background:var(--papier);border:1px solid var(--papier-3);border-left:3px solid var(--teinte);
+  border-radius:0;box-shadow:0 1px 0 var(--ombre);
+  font-family:var(--serif);font-size:14.5px;line-height:1.42;
+  cursor:grab;user-select:none;white-space:pre-wrap;overflow-wrap:break-word;
+  transition:box-shadow .12s,border-color .12s;
+}
+.cube:hover{box-shadow:0 3px 0 var(--ombre)}
+.cube.tronc{font-family:var(--titre);font-size:22px;font-weight:600;background:var(--encre);color:var(--papier);border-color:var(--encre);border-left-color:var(--accent);padding:11px 18px}
+.cube.sel{border-color:var(--teinte);box-shadow:0 0 0 2px var(--teinte),0 3px 0 var(--ombre)}
+.cube.cible{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent)}
+.cube.porte{opacity:.7;cursor:grabbing}
+.cube.redige{cursor:text;user-select:text;white-space:pre-wrap;box-shadow:0 0 0 2px var(--accent)}
+.ref{
+  display:block;font-family:var(--mono);font-size:9.5px;line-height:13px;
+  letter-spacing:.1em;color:var(--teinte);margin-bottom:1px;font-weight:500;
+}
+.cube code{font-family:var(--mono);font-size:.85em;color:var(--teinte);background:var(--papier-2);padding:0 3px;border-radius:0}
+.cube.tronc code{color:var(--papier);background:#ffffff22}
+.cube b{font-weight:600}
+.cube.muet{color:transparent}
+.cube.muet code,.cube.muet b{color:transparent;background:transparent}
+.cube.muet::after{content:'· · · ·';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--encre-2);font-family:var(--mono);font-size:12px;letter-spacing:2px}
+
+.poignee{
+  position:absolute;right:-2px;bottom:-2px;width:16px;height:16px;cursor:nwse-resize;
+  opacity:0;transition:opacity .12s;z-index:3;
+}
+.poignee::after{
+  content:'';position:absolute;right:3px;bottom:3px;width:8px;height:8px;
+  border-right:2px solid var(--teinte);border-bottom:2px solid var(--teinte);border-radius:0;
+}
+.cube:hover .poignee{opacity:.45}
+.cube.sel .poignee{opacity:1}
+.cube.redige .poignee,.cube.muet .poignee{display:none}
+#largeur{width:96px;accent-color:var(--accent);cursor:pointer}
+.etiquette{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--encre-2)}
+.badge{
+  position:absolute;right:-13px;top:50%;transform:translateY(-50%);
+  width:22px;height:22px;border-radius:50%;border:1.6px solid var(--teinte);
+  background:var(--teinte);color:var(--papier);
+  font-family:var(--mono);font-size:10px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;z-index:2
+}
+.badge.ouvert{background:var(--papier);color:var(--teinte);width:13px;height:13px;right:-8px;font-size:0}
+
+#reglette{
+  position:absolute;display:none;gap:3px;padding:4px;z-index:25;
+  background:var(--papier-2);border:1px solid var(--papier-3);border-radius:0;
+  box-shadow:0 4px 0 var(--ombre)
+}
+#reglette.on{display:flex}
+#reglette button{
+  border:0;background:transparent;border-radius:0;padding:4px 8px;cursor:pointer;
+  font-size:12px;font-family:var(--sans);color:var(--encre);white-space:nowrap
+}
+#reglette button:hover{background:var(--papier-3)}
+#reglette button.danger:hover{background:var(--marge);color:#fff}
+#reglette .pastilles{display:flex;gap:3px;align-items:center;padding:0 4px;border-left:1px solid var(--papier-3);margin-left:2px}
+#reglette .pastilles i{width:13px;height:13px;border-radius:50%;cursor:pointer;display:block}
+
+.hud{position:absolute;display:flex;gap:6px;align-items:center;font-family:var(--mono);font-size:11px;color:var(--encre-2);z-index:20}
+#zoom{right:12px;bottom:12px}
+#zoom button{width:28px;height:28px;border-radius:0;border:1px solid var(--papier-3);background:var(--papier-2);cursor:pointer}
+#astuces{left:12px;bottom:12px;background:var(--papier-2);border:1px solid var(--papier-3);border-radius:0;padding:6px 14px;gap:12px}
+#astuces kbd{font-family:var(--mono);background:var(--papier-3);padding:1px 5px;border-radius:0;color:var(--encre)}
+#compteur{left:12px;top:12px;background:var(--papier-2);border:1px solid var(--papier-3);border-radius:0;padding:6px 14px;display:none}
+#compteur.on{display:flex}
+#compteur b{color:var(--accent);font-weight:500}
+#message{position:absolute;left:50%;top:14px;transform:translateX(-50%);background:var(--encre);color:var(--papier);padding:6px 14px;border-radius:0;font-size:12px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:40}
+#message.on{opacity:1}
+
+#aide{position:absolute;inset:0;z-index:50;background:color-mix(in srgb,var(--papier) 88%,transparent);display:none;align-items:center;justify-content:center;padding:20px}
+#aide.on{display:flex}
+.carte{background:var(--papier-2);border:1px solid var(--papier-3);border-radius:0;padding:26px 30px;max-width:560px;box-shadow:0 10px 0 var(--ombre)}
+.carte h2{font-family:var(--serif);font-size:23px;margin:0 0 4px}
+.carte p.sous{margin:0 0 18px;color:var(--encre-2);line-height:1.55}
+.carte dl{display:grid;grid-template-columns:auto 1fr;gap:9px 16px;margin:0 0 20px;align-items:baseline}
+.carte dt{font-family:var(--mono);font-size:11px;color:var(--accent);white-space:nowrap}
+.carte dd{margin:0;font-size:13px;line-height:1.5}
+#impression{display:none}
+@media print{
+  @page{size:A4 landscape;margin:9mm}
+  html,body{height:auto;overflow:visible;background:#fff}
+  body>*{display:none!important}
+  #impression{display:block!important}
+  #impression img{width:100%;height:auto}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header>
+  <div class="marque">
+    <svg width="26" height="26" viewBox="0 0 24 24" aria-label="Considérant" role="img">
+      <circle cx="3" cy="12" r="2.4" fill="currentColor"/>
+      <g fill="none" stroke-width="2" stroke-linecap="round">
+        <path d="M5.6 12h3.6" stroke="currentColor"/>
+        <path d="M9.2 5.6v12.8" stroke="currentColor"/>
+        <path d="M9.2 5.6h9.4" stroke="#3B2FE8"/>
+        <path d="M9.2 12h11" stroke="#C62828"/>
+        <path d="M9.2 18.4h7.6" stroke="#0A7B48"/>
+      </g>
+    </svg>
+    <div class="mots"><b>Considérant</b><span>fiches de raisonnement</span></div>
+  </div>
+  <a class="b" href="Hub.html" title="Tous mes logiciels">⊞ Hub</a>
+  <div class="sep"></div>
+  <div class="groupe">
+    <select class="b" id="fiches" title="Vos fiches"></select>
+    <button class="b" id="nouvelle">Nouvelle fiche</button>
+  </div>
+  <div class="sep"></div>
+  <div class="groupe">
+    <span class="etiquette">largeur</span>
+    <input type="range" id="largeur" min="120" max="440" step="10" value="250" title="Largeur de tous les cubes non étirés à la main">
+    <button class="b" id="largeurAuto" title="Revenir à la largeur automatique">auto</button>
+    <button class="b" id="ranger" title="Remettre l'arbre d'équerre">Ranger</button>
+    <button class="b" id="recitation" aria-pressed="false" title="Masquer les branches et les réciter">Récitation</button>
+    <button class="b" id="annuler" title="Annuler — Ctrl+Z">↶</button>
+    <button class="b" id="refaire" title="Rétablir — Ctrl+Maj+Z">↷</button>
+  </div>
+  <div class="sep"></div>
+  <div class="groupe">
+    <button class="b" id="expimg">Image</button>
+    <button class="b" id="imprimer">Imprimer</button>
+    <button class="b" id="expmd">Markdown</button>
+    <button class="b" id="sauvegarde">Sauvegarde</button>
+    <button class="b" id="importer">Importer</button>
+    <button class="b" id="nuit" aria-pressed="false">Nuit</button>
+    <button class="b" id="btnAide">Aide</button>
+  </div>
+  <span id="etatSauve"></span>
+</header>
+
+<div id="toile">
+  <div id="plan">
+    <svg id="liens" viewBox="-12000 -12000 24000 24000" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+
+  <div id="reglette">
+    <button data-a="enfant" title="Tab">+ enfant</button>
+    <button data-a="voisin" title="Entrée">+ voisin</button>
+    <button data-a="ecrire" title="Double-clic ou F2">Écrire</button>
+    <button data-a="plier">Replier</button>
+    <button data-a="uniformiser" title="Donner ce format à tous les cubes">Ce format partout</button>
+    <button class="danger" data-a="supprimer" title="Suppr">Supprimer</button>
+    <span class="pastilles" id="pastilles"></span>
+  </div>
+
+  <div class="hud" id="compteur"><span>Récitation</span>&nbsp;<b id="score">0 / 0</b></div>
+  <div class="hud" id="astuces">
+    <span><kbd>double-clic</kbd> écrire</span>
+    <span><kbd>Tab</kbd> enfant</span>
+    <span><kbd>Entrée</kbd> voisin</span>
+    <span>glisser sur un cube pour l'y rattacher</span>
+  </div>
+  <div class="hud" id="zoom">
+    <button id="zmoins">−</button><button id="zplus">+</button><button id="zrecentrer" title="Tout voir — 0">◎</button>
+  </div>
+  <div id="message"></div>
+
+  <div id="aide">
+    <div class="carte">
+      <h2>Considérant</h2>
+      <p class="sous">Un cube, une raison. Les traits disent laquelle s'appuie sur laquelle, et chaque branche porte son numéro — 2.3 se relit comme un considérant.</p>
+      <dl>
+        <dt>double-clic</dt><dd>écrire dans un cube. <kbd>Échap</kbd> ou clic ailleurs pour valider.</dd>
+        <dt>Tab</dt><dd>créer un cube <b>enfant</b>, rattaché à celui qui est sélectionné.</dd>
+        <dt>Entrée</dt><dd>créer un cube <b>voisin</b>, au même niveau.</dd>
+        <dt>glisser</dt><dd>déplacer un cube et toute sa descendance. Lâchez-le <b>sur un autre cube</b> pour le rattacher ailleurs.</dd>
+        <dt>Alt + glisser</dt><dd>déplacer le cube seul, en laissant ses enfants où ils sont.</dd>
+        <dt>coin bas-droit</dt><dd>étirer un cube. Double-clic sur la poignée pour revenir au format automatique.</dd>
+        <dt>largeur</dt><dd>le curseur en haut règle d'un coup tous les cubes que vous n'avez pas étirés à la main.</dd>
+        <dt>Ranger</dt><dd>remet tout l'arbre d'équerre quand la toile part en vrille.</dd>
+        <dt>Suppr</dt><dd>supprimer le cube et sa descendance. <kbd>Ctrl</kbd>+<kbd>Z</kbd> répare.</dd>
+        <dt>flèches</dt><dd>passer d'un cube à l'autre sans la souris.</dd>
+        <dt>`accents graves`</dt><dd>colorent une référence : <code>`art. 1240 C. civ.`</code></dd>
+      </dl>
+      <button class="b" id="fermerAide">Commencer</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="fichier" accept="application/json" hidden>
+<div id="impression"><img alt=""></div>
+
+<script>
+(() => {
+"use strict";
+
+/* ============================================================
+   Palettes — les teintes des grandes collections juridiques
+   ============================================================ */
+const JOUR = ['#24406E','#A5303C','#2E6F52','#8A4B9E','#B5651D','#0F6E70','#8C2F5E','#4A6E9E'];
+const NUIT = ['#7E9FD4','#E0787F','#6FBF8F','#C08BD6','#E0A05A','#4FBFC0','#E183B4','#9FB4E8'];
+const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const estNuit = () => document.documentElement.dataset.nuit === '1';
+const palette = () => estNuit() ? NUIT : JOUR;
+
+/* ============================================================
+   Modèle
+   ============================================================ */
+let compteurId = 1;
+const neuf = (t, x, y) => ({id:'c' + (compteurId++), t, x, y, plie:false, enfants:[]});
+
+let fiches = [], iFiche = 0, sel = null, recitation = false;
+let revelees = new Set(), vue = {x:0, y:0, k:1};
+const racine = () => fiches[iFiche].racine;
+
+function parcours(f, n = racine(), prof = 0, parent = null){
+  f(n, prof, parent);
+  for (const e of n.enfants) parcours(f, e, prof + 1, n);
+}
+function trouver(id){ let r = null; parcours(n => { if (n.id === id) r = n; }); return r; }
+function parentDe(id){ let r = null; parcours((n, p, par) => { if (n.id === id) r = par; }); return r; }
+function profDe(id){ let r = 0; parcours((n, p) => { if (n.id === id) r = p; }); return r; }
+function lignee(n){ const s = new Set(); (function w(x){ s.add(x.id); x.enfants.forEach(w); })(n); return s; }
+function visible(n){
+  let p = parentDe(n.id);
+  while (p){ if (p.plie) return false; p = parentDe(p.id); }
+  return true;
+}
+function teinteDe(n){
+  let x = n, chaine = [];
+  while (x){ chaine.unshift(x); x = parentDe(x.id); }
+  if (chaine.length < 2) return cssVar('--encre');
+  const branche = chaine[1];
+  if (branche.couleur != null) return palette()[branche.couleur % palette().length];
+  const i = racine().enfants.findIndex(e => e.id === branche.id);
+  return palette()[(i < 0 ? 0 : i) % palette().length];
+}
+
+/* ============================================================
+   Rendu
+   ============================================================ */
+const toile = document.getElementById('toile');
+const plan = document.getElementById('plan');
+const liens = document.getElementById('liens');
+const reglette = document.getElementById('reglette');
+const cubes = new Map();
+let refs = new Map();
+
+// 1, 1.2, 1.2.3 — chaque branche garde une référence stable, comme les
+// considérants numérotés d'une décision
+function numeroter(){
+  refs = new Map();
+  (function w(n, prefixe){
+    n.enfants.forEach((e, i) => {
+      const r = prefixe ? prefixe + '.' + (i + 1) : String(i + 1);
+      refs.set(e.id, r); w(e, r);
+    });
+  })(racine(), '');
+}
+
+function rendre(){
+  numeroter();
+  for (const el of cubes.values()) el.remove();
+  cubes.clear();
+  const vus = [];
+  parcours((n, prof) => { if (visible(n)) vus.push([n, prof]); });
+
+  for (const [n, prof] of vus){
+    const d = document.createElement('div');
+    d.className = 'cube' + (prof === 0 ? ' tronc' : '') + (n.id === sel ? ' sel' : '');
+    if (masque(n)) d.className += ' muet';
+    d.style.setProperty('--teinte', teinteDe(n));
+    d.style.left = n.x + 'px';
+    d.style.top = n.y + 'px';
+    dimensionner(d, n);
+    d.dataset.id = n.id;
+    d.innerHTML = (prof > 0 ? `<span class="ref">${refs.get(n.id) || ''}</span>` : '')
+                + formater(n.t || 'Sans titre');
+    if (n.enfants.length){
+      const b = document.createElement('span');
+      b.className = 'badge' + (n.plie ? '' : ' ouvert');
+      b.textContent = n.plie ? compter(n) : '';
+      b.title = n.plie ? 'Déplier' : 'Replier';
+      b.addEventListener('pointerdown', e => e.stopPropagation());
+      b.addEventListener('click', e => { e.stopPropagation(); basculer(n); });
+      d.appendChild(b);
+    }
+    const poignee = document.createElement('span');
+    poignee.className = 'poignee';
+    poignee.title = 'Étirer — double-clic pour le format automatique';
+    etirer(poignee, d, n);
+    d.appendChild(poignee);
+    ecouter(d, n);
+    plan.appendChild(d);
+    cubes.set(n.id, d);
+  }
+  for (const [n] of vus){
+    const d = cubes.get(n.id);
+    n.w = d.offsetWidth; n.h = d.offsetHeight;
+  }
+  tracerLiens(vus.map(v => v[0]));
+  placerReglette();
+  majScore();
+}
+
+const largeurCommune = () => fiches[iFiche].largeur;
+
+function dimensionner(d, n){
+  const l = n.l || largeurCommune();
+  if (l){ d.style.width = l + 'px'; d.style.maxWidth = 'none'; }
+  else { d.style.width = ''; d.style.maxWidth = ''; }
+  d.style.minHeight = n.hMin ? n.hMin + 'px' : '';
+}
+
+// étirement d'un cube : largeur libre, hauteur minimale
+function etirer(poignee, d, n){
+  poignee.addEventListener('pointerdown', ev => {
+    ev.stopPropagation(); ev.preventDefault();
+    memoriser();
+    poignee.setPointerCapture(ev.pointerId);
+    reglette.classList.remove('on');
+    const x0 = ev.clientX, y0 = ev.clientY, l0 = d.offsetWidth, h0 = d.offsetHeight;
+    const suivre = e => {
+      n.l = Math.round(Math.max(80, l0 + (e.clientX - x0) / vue.k));
+      n.hMin = Math.round(Math.max(34, h0 + (e.clientY - y0) / vue.k));
+      dimensionner(d, n);
+      n.w = d.offsetWidth; n.h = d.offsetHeight;
+      tracerLiens([...cubes.keys()].map(trouver));
+    };
+    const fin = () => {
+      poignee.removeEventListener('pointermove', suivre);
+      rendre(); enregistrerBientot();
+    };
+    poignee.addEventListener('pointermove', suivre);
+    poignee.addEventListener('pointerup', fin, {once:true});
+    poignee.addEventListener('pointercancel', fin, {once:true});
+  });
+  poignee.addEventListener('dblclick', ev => {
+    ev.stopPropagation();
+    memoriser(); delete n.l; delete n.hMin;
+    rendre(); enregistrerBientot();
+    signaler('Format automatique rétabli');
+  });
+}
+
+function tracerLiens(vus){
+  liens.textContent = '';
+  const dedans = new Set(vus.map(n => n.id));
+  parcours(n => {
+    if (!dedans.has(n.id) || n.plie) return;
+    for (const e of n.enfants){
+      if (!dedans.has(e.id)) continue;
+      const x1 = n.x + n.w, y1 = n.y + n.h / 2, x2 = e.x, y2 = e.y + e.h / 2;
+      const dx = Math.max(24, Math.abs(x2 - x1) * .5);
+      const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      p.setAttribute('d', `M${x1},${y1}C${x1 + dx},${y1} ${x2 - dx},${y2} ${x2},${y2}`);
+      p.setAttribute('fill', 'none');
+      p.setAttribute('stroke', teinteDe(e));
+      p.setAttribute('stroke-width', Math.max(1.2, 3 - profDe(e.id) * .5));
+      p.setAttribute('stroke-linecap', 'round');
+      p.setAttribute('opacity', masque(e) ? .3 : .8);
+      liens.appendChild(p);
+    }
+  });
+}
+
+const echapper = s => s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const formater = s => echapper(s)
+  .replace(/`([^`]+)`/g, '<code>$1</code>')
+  .replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>');
+
+const masque = n => recitation && n.id !== racine().id && !revelees.has(n.id);
+function compter(n){ let c = 0; (function w(x){ for (const e of x.enfants){ c++; w(e); } })(n); return c; }
+
+function appliquerVue(){
+  plan.style.transform = `translate(${vue.x}px,${vue.y}px) scale(${vue.k})`;
+  placerReglette();
+}
+
+/* ============================================================
+   Sélection et réglette
+   ============================================================ */
+function selectionner(id){
+  sel = id;
+  for (const [k, el] of cubes) el.classList.toggle('sel', k === id);
+  placerReglette();
+}
+function placerReglette(){
+  const n = sel ? trouver(sel) : null;
+  if (!n || !cubes.has(n.id) || redaction){ reglette.classList.remove('on'); return; }
+  reglette.classList.add('on');
+  const x = vue.x + n.x * vue.k, y = vue.y + n.y * vue.k;
+  reglette.style.left = Math.max(6, x) + 'px';
+  reglette.style.top = Math.max(6, y - reglette.offsetHeight - 9) + 'px';
+  reglette.querySelector('[data-a="plier"]').textContent = n.plie ? 'Déplier' : 'Replier';
+  reglette.querySelector('[data-a="plier"]').style.display = n.enfants.length ? '' : 'none';
+  reglette.querySelector('[data-a="supprimer"]').style.display = n.id === racine().id ? 'none' : '';
+  curseurLargeur.value = largeurCommune() || 250;
+  const p = document.getElementById('pastilles');
+  const brancheChoisie = profDe(n.id) >= 1;
+  p.style.display = brancheChoisie ? '' : 'none';
+  p.textContent = '';
+  if (brancheChoisie) palette().forEach((coul, i) => {
+    const b = document.createElement('i');
+    b.style.background = coul; b.title = 'Teinte de la branche';
+    b.addEventListener('click', () => { teinter(n, i); });
+    p.appendChild(b);
+  });
+}
+reglette.addEventListener('pointerdown', e => e.stopPropagation());
+reglette.addEventListener('click', e => {
+  const a = e.target.closest('button'); if (!a || !sel) return;
+  const n = trouver(sel);
+  ({ enfant: () => ajouter(n, 'enfant'),
+     voisin: () => ajouter(n, 'voisin'),
+     ecrire: () => rediger(n),
+     plier:  () => basculer(n),
+     uniformiser: () => {
+       memoriser();
+       const l = n.l || n.w, h = n.hMin || n.h;
+       parcours(x => { if (x.id !== racine().id){ x.l = l; x.hMin = h; } });
+       rendre(); enregistrerBientot();
+       signaler('Tous les cubes ont pris ce format');
+     },
+     supprimer: () => supprimer(n) })[a.dataset.a]();
+});
+
+function teinter(n, i){
+  memoriser();
+  let x = n, chaine = [];
+  while (x){ chaine.unshift(x); x = parentDe(x.id); }
+  const branche = chaine[1]; if (!branche) return;
+  branche.couleur = i;
+  rendre(); enregistrerBientot();
+}
+
+/* ============================================================
+   Écriture dans le cube
+   ============================================================ */
+let redaction = null;
+function rediger(n, sansMemo){
+  const d = cubes.get(n.id); if (!d) return;
+  if (!sansMemo) memoriser();
+  redaction = n.id;
+  reglette.classList.remove('on');
+  const badge = d.querySelector('.badge'); if (badge) badge.remove();
+  d.classList.add('redige');
+  d.contentEditable = 'true';
+  d.textContent = n.t;
+  d.focus();
+  const r = document.createRange(); r.selectNodeContents(d);
+  const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+  const finir = () => {
+    d.contentEditable = 'false';
+    d.classList.remove('redige');
+    n.t = d.innerText.replace(/\n+$/, '').trim();
+    redaction = null;
+    rendre(); enregistrerBientot();
+  };
+  d.addEventListener('blur', finir, {once:true});
+  d.addEventListener('keydown', ev => {
+    ev.stopPropagation();
+    if (ev.key === 'Escape' || (ev.key === 'Enter' && !ev.shiftKey)){ ev.preventDefault(); d.blur(); }
+  });
+}
+
+/* ============================================================
+   Création, suppression, pliage
+   ============================================================ */
+function libre(x, y, w, h, exclus = new Set()){
+  let essais = 0;
+  while (essais++ < 60){
+    let heurt = false;
+    parcours(n => {
+      if (exclus.has(n.id) || !visible(n) || !n.w) return;
+      if (x < n.x + n.w + 14 && x + w + 14 > n.x && y < n.y + n.h + 10 && y + h + 10 > n.y) heurt = true;
+    });
+    if (!heurt) return y;
+    y += 44;
+  }
+  return y;
+}
+
+function ajouter(n, quoi){
+  memoriser();
+  const parent = quoi === 'enfant' ? n : (parentDe(n.id) || n);
+  const larg = n.w || 140;
+  let x, y;
+  if (quoi === 'enfant'){ x = n.x + larg + 70; y = n.y; }
+  else { x = n.x; y = n.y + (n.h || 40) + 16; }
+  y = libre(x, y, 130, 38);
+  const e = neuf('', x, y);
+  if (quoi === 'voisin'){
+    const i = parent.enfants.findIndex(c => c.id === n.id);
+    parent.enfants.splice(i + 1, 0, e);
+  } else { parent.plie = false; parent.enfants.push(e); }
+  if (recitation) revelees.add(e.id);
+  sel = e.id;
+  rendre();
+  rediger(e, true);
+}
+
+function supprimer(n){
+  if (n.id === racine().id) return;
+  memoriser();
+  const p = parentDe(n.id);
+  p.enfants = p.enfants.filter(e => e.id !== n.id);
+  sel = p.id;
+  rendre(); enregistrerBientot();
+  signaler('Cube supprimé — Ctrl+Z pour le récupérer');
+}
+
+function basculer(n){
+  memoriser();
+  n.plie = !n.plie;
+  rendre(); enregistrerBientot();
+}
+
+/* ============================================================
+   Glisser : déplacer, rattacher
+   ============================================================ */
+function ecouter(d, n){
+  d.addEventListener('dblclick', ev => { ev.stopPropagation(); rediger(n); });
+  d.addEventListener('pointerdown', ev => {
+    if (redaction) return;
+    ev.stopPropagation();
+    selectionner(n.id);
+    if (recitation){
+      if (masque(n)){ revelees.add(n.id); rendre(); return; }
+      if (n.enfants.length && n.plie){ basculer(n); return; }
+    }
+    const seul = ev.altKey;
+    const famille = seul ? new Set([n.id]) : lignee(n);
+    const depart = {x: ev.clientX, y: ev.clientY};
+    const positions = new Map();
+    parcours(x => { if (famille.has(x.id)) positions.set(x.id, {x: x.x, y: x.y}); });
+    let bouge = false, cible = null, memorise = false;
+    d.setPointerCapture(ev.pointerId);
+
+    const suivre = e => {
+      const dx = (e.clientX - depart.x) / vue.k, dy = (e.clientY - depart.y) / vue.k;
+      if (!bouge && Math.hypot(dx, dy) < 3) return;
+      if (!memorise){ memoriser(); memorise = true; }
+      bouge = true;
+      d.classList.add('porte');
+      for (const [id, p] of positions){
+        const x = trouver(id); x.x = p.x + dx; x.y = p.y + dy;
+        const el = cubes.get(id);
+        if (el){ el.style.left = x.x + 'px'; el.style.top = x.y + 'px'; }
+      }
+      tracerLiens([...cubes.keys()].map(trouver));
+      const nouvelle = cibleSous(e.clientX, e.clientY, famille);
+      if (nouvelle !== cible){
+        if (cible) cubes.get(cible)?.classList.remove('cible');
+        cible = nouvelle;
+        if (cible) cubes.get(cible)?.classList.add('cible');
+      }
+      reglette.classList.remove('on');
+    };
+    const lacher = () => {
+      d.removeEventListener('pointermove', suivre);
+      d.classList.remove('porte');
+      if (cible){
+        cubes.get(cible)?.classList.remove('cible');
+        rattacher(n, trouver(cible));
+      } else if (bouge){
+        rendre(); enregistrerBientot();
+      } else placerReglette();
+    };
+    d.addEventListener('pointermove', suivre);
+    d.addEventListener('pointerup', lacher, {once:true});
+    d.addEventListener('pointercancel', lacher, {once:true});
+  });
+}
+
+function cibleSous(cx, cy, exclus){
+  const r = toile.getBoundingClientRect();
+  const x = (cx - r.left - vue.x) / vue.k, y = (cy - r.top - vue.y) / vue.k;
+  let trouve = null;
+  parcours(n => {
+    if (exclus.has(n.id) || !visible(n) || !n.w) return;
+    if (x >= n.x && x <= n.x + n.w && y >= n.y && y <= n.y + n.h) trouve = n.id;
+  });
+  return trouve;
+}
+
+function rattacher(n, nouveauParent){
+  if (!nouveauParent || lignee(n).has(nouveauParent.id)) return;
+  const ancien = parentDe(n.id);
+  if (ancien === nouveauParent){ rendre(); enregistrerBientot(); return; }
+  ancien.enfants = ancien.enfants.filter(e => e.id !== n.id);
+  nouveauParent.enfants.push(n);
+  nouveauParent.plie = false;
+  const dx = nouveauParent.x + (nouveauParent.w || 140) + 70 - n.x;
+  let dy = nouveauParent.y - n.y;
+  const famille = lignee(n);
+  parcours(x => { if (famille.has(x.id)){ x.x += dx; x.y += dy; } });
+  n.y = libre(n.x, n.y, n.w || 140, n.h || 38, famille);
+  rendre(); enregistrerBientot();
+  signaler(`Rattaché à «\u00a0${(nouveauParent.t || 'sans titre').slice(0, 32)}\u00a0»`);
+}
+
+/* ============================================================
+   Ranger — remise d'équerre de tout l'arbre
+   ============================================================ */
+function ranger(){
+  memoriser();
+  const parProf = [];
+  parcours((n, p) => { (parProf[p] ||= []).push(n); });
+  const colonnes = [0];
+  for (let d = 0; d < parProf.length; d++)
+    colonnes[d + 1] = colonnes[d] + Math.max(...parProf[d].map(n => n.w || 140)) + 70;
+
+  (function hauteur(n){
+    const propre = (n.h || 38) + 18;
+    if (n.plie || !n.enfants.length){ n.ht = propre; return n.ht; }
+    n.ht = Math.max(propre, n.enfants.reduce((a, e) => a + hauteur(e), 0));
+    return n.ht;
+  })(racine());
+
+  (function poser(n, haut, prof){
+    n.x = colonnes[prof];
+    n.y = haut + (n.ht - (n.h || 38)) / 2;
+    if (n.plie) return;
+    let y = haut + (n.ht - n.enfants.reduce((a, e) => a + e.ht, 0)) / 2;
+    for (const e of n.enfants){ poser(e, y, prof + 1); y += e.ht; }
+  })(racine(), 0, 0);
+
+  rendre(); recentrer(); enregistrerBientot();
+}
+
+/* ============================================================
+   Vue
+   ============================================================ */
+toile.addEventListener('wheel', ev => {
+  ev.preventDefault();
+  const r = toile.getBoundingClientRect();
+  const mx = ev.clientX - r.left, my = ev.clientY - r.top;
+  const k = Math.min(2.4, Math.max(.2, vue.k * Math.exp(-ev.deltaY * .0016)));
+  vue.x = mx - (mx - vue.x) * (k / vue.k);
+  vue.y = my - (my - vue.y) * (k / vue.k);
+  vue.k = k; appliquerVue();
+}, {passive:false});
+
+toile.addEventListener('pointerdown', ev => {
+  // tout ce qui est posé sur la toile garde ses propres clics :
+  // capturer le pointeur ici les détournerait vers le déplacement de la vue
+  if (ev.target.closest('.cube, #reglette, .hud, #aide, button')) return;
+  selectionner(null);
+  const d = {x: ev.clientX - vue.x, y: ev.clientY - vue.y};
+  toile.classList.add('tire');
+  toile.setPointerCapture(ev.pointerId);
+  const suivre = e => { vue.x = e.clientX - d.x; vue.y = e.clientY - d.y; appliquerVue(); };
+  const fin = () => { toile.classList.remove('tire'); toile.removeEventListener('pointermove', suivre); };
+  toile.addEventListener('pointermove', suivre);
+  toile.addEventListener('pointerup', fin, {once:true});
+  toile.addEventListener('pointercancel', fin, {once:true});
+});
+
+function zoomer(f){
+  const r = toile.getBoundingClientRect(), mx = r.width / 2, my = r.height / 2;
+  const k = Math.min(2.4, Math.max(.2, vue.k * f));
+  vue.x = mx - (mx - vue.x) * (k / vue.k);
+  vue.y = my - (my - vue.y) * (k / vue.k);
+  vue.k = k; appliquerVue();
+}
+function recentrer(){
+  let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+  parcours(n => {
+    if (!visible(n)) return;
+    x0 = Math.min(x0, n.x); y0 = Math.min(y0, n.y);
+    x1 = Math.max(x1, n.x + (n.w || 140)); y1 = Math.max(y1, n.y + (n.h || 38));
+  });
+  const r = toile.getBoundingClientRect();
+  const k = Math.min(1.1, (r.width - 120) / Math.max(1, x1 - x0), (r.height - 140) / Math.max(1, y1 - y0));
+  vue.k = Math.max(.2, k);
+  vue.x = (r.width - (x1 - x0) * vue.k) / 2 - x0 * vue.k;
+  vue.y = (r.height - (y1 - y0) * vue.k) / 2 - y0 * vue.k;
+  appliquerVue();
+}
+
+/* ============================================================
+   Clavier
+   ============================================================ */
+addEventListener('keydown', ev => {
+  if (redaction) return;
+  const cible = ev.target;
+  if (cible.isContentEditable) return;
+  if (cible.tagName === 'SELECT' || cible.tagName === 'INPUT') return;
+  const n = sel ? trouver(sel) : null;
+  const k = ev.key;
+
+  if (k === 'Escape' && aide.classList.contains('on')){
+    aide.classList.remove('on'); reglagesVus(); return;
+  }
+  if ((ev.ctrlKey || ev.metaKey) && k.toLowerCase() === 'z'){
+    ev.preventDefault(); ev.shiftKey ? refaire() : annuler(); return;
+  }
+  if ((ev.ctrlKey || ev.metaKey) && k.toLowerCase() === 's'){ ev.preventDefault(); enregistrer(); return; }
+  if (k === '0'){ recentrer(); return; }
+  if (!n) return;
+
+  if (k === 'Tab'){ ev.preventDefault(); ajouter(n, 'enfant'); return; }
+  if (k === 'Enter'){ ev.preventDefault(); n.id === racine().id ? ajouter(n, 'enfant') : ajouter(n, 'voisin'); return; }
+  if (k === 'F2'){ ev.preventDefault(); rediger(n); return; }
+  if (k === 'Delete' || k === 'Backspace'){ ev.preventDefault(); supprimer(n); return; }
+  if (k === 'Escape'){ selectionner(null); return; }
+  if (k.startsWith('Arrow')){
+    ev.preventDefault();
+    if (ev.ctrlKey || ev.metaKey){
+      memoriser();
+      const d = 12, fam = lignee(n);
+      parcours(x => { if (fam.has(x.id)){
+        x.x += k === 'ArrowRight' ? d : k === 'ArrowLeft' ? -d : 0;
+        x.y += k === 'ArrowDown' ? d : k === 'ArrowUp' ? -d : 0;
+      }});
+      rendre(); enregistrerBientot(); return;
+    }
+    naviguer(n, k);
+  }
+});
+
+function naviguer(n, touche){
+  const p = parentDe(n.id);
+  if (touche === 'ArrowRight' && n.enfants.length && !n.plie) return selectionner(n.enfants[0].id);
+  if (touche === 'ArrowLeft' && p) return selectionner(p.id);
+  if (!p) return;
+  const fr = p.enfants, i = fr.findIndex(e => e.id === n.id);
+  if (touche === 'ArrowDown' && fr[i + 1]) selectionner(fr[i + 1].id);
+  if (touche === 'ArrowUp' && fr[i - 1]) selectionner(fr[i - 1].id);
+}
+
+/* ============================================================
+   Annuler / rétablir
+   ============================================================ */
+const pile = [], refait = [];
+const cliche = () => JSON.stringify({r: racine(), c: compteurId});
+function memoriser(){ pile.push(cliche()); if (pile.length > 80) pile.shift(); refait.length = 0; }
+function restaurer(txt){
+  const o = JSON.parse(txt);
+  fiches[iFiche].racine = o.r; compteurId = o.c;
+  if (sel && !trouver(sel)) sel = null;
+  rendre(); enregistrerBientot();
+}
+function annuler(){ if (!pile.length) return signaler('Rien à annuler'); refait.push(cliche()); restaurer(pile.pop()); }
+function refaire(){ if (!refait.length) return signaler('Rien à rétablir'); pile.push(cliche()); restaurer(refait.pop()); }
+document.getElementById('annuler').onclick = annuler;
+document.getElementById('refaire').onclick = refaire;
+
+/* ============================================================
+   Récitation
+   ============================================================ */
+document.getElementById('recitation').onclick = e => {
+  recitation = !recitation;
+  e.currentTarget.setAttribute('aria-pressed', String(recitation));
+  revelees.clear();
+  parcours(n => { if (n.id !== racine().id) n.plie = n.enfants.length > 0; });
+  if (!recitation) parcours(n => { n.plie = false; });
+  rendre();
+  signaler(recitation ? 'Récitez, puis cliquez un cube pour vérifier' : 'Récitation terminée');
+};
+function majScore(){
+  const c = document.getElementById('compteur');
+  c.classList.toggle('on', recitation);
+  if (!recitation) return;
+  let total = 0, vus = 0;
+  parcours(n => { if (n.id !== racine().id){ total++; if (revelees.has(n.id)) vus++; } });
+  document.getElementById('score').textContent = `${vus} / ${total}`;
+}
+
+/* ============================================================
+   Fiches, sauvegarde, exports
+   ============================================================ */
+const CLE = 'attendu-cubes-v1';
+const memoire = {};
+const rangement = {
+  async lire(k){
+    if (window.storage){ try { const r = await window.storage.get(k); return r ? JSON.parse(r.value) : null; } catch { return null; } }
+    return memoire[k] ?? null;
+  },
+  async ecrire(k, v){
+    if (window.storage){ try { await window.storage.set(k, JSON.stringify(v)); return true; } catch { return false; } }
+    memoire[k] = v; return true;
+  }
+};
+
+const choix = document.getElementById('fiches');
+function listerFiches(){
+  choix.textContent = '';
+  fiches.forEach((f, i) => {
+    const o = document.createElement('option');
+    o.value = i; o.textContent = f.racine.t || 'Fiche sans titre';
+    choix.appendChild(o);
+  });
+  choix.value = iFiche;
+}
+choix.onchange = () => {
+  iFiche = +choix.value; sel = null; pile.length = 0; refait.length = 0;
+  revelees.clear(); rendre(); recentrer(); sauver();
+};
+
+let minuterieSauve;
+function enregistrerBientot(){
+  listerFiches();
+  clearTimeout(minuterieSauve);
+  minuterieSauve = setTimeout(enregistrer, 900);
+}
+async function enregistrer(){
+  await sauver();
+  const h = new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+  document.getElementById('etatSauve').textContent = 'enregistré à ' + h;
+}
+const sauver = () => rangement.ecrire(CLE, {fiches, iFiche, nuit: estNuit(), compteurId});
+
+document.getElementById('nouvelle').onclick = () => {
+  fiches.push({racine: neuf('Nouvelle fiche', 0, 0)});
+  iFiche = fiches.length - 1; sel = fiches[iFiche].racine.id;
+  pile.length = 0; rendre(); recentrer(); enregistrerBientot();
+  rediger(racine(), true);
+};
+
+function versMarkdown(){
+  let out = '';
+  parcours((n, p) => {
+    if (p === 0) out += '# ' + n.t + '\n\n';
+    else out += '  '.repeat(p - 1) + '- ' + n.t + '\n';
+  });
+  return out;
+}
+function telecharger(nom, texte, type){
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([texte], {type}));
+  a.download = nom; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+const nomFichier = () => (racine().t || 'fiche').replace(/[^\w\-À-ÿ ]+/g, '').trim() || 'fiche';
+document.getElementById('expmd').onclick = () => telecharger(nomFichier() + '.md', versMarkdown(), 'text/markdown');
+document.getElementById('sauvegarde').onclick = () =>
+  telecharger('considerant-sauvegarde.json', JSON.stringify({fiches}, null, 1), 'application/json');
+
+const fichier = document.getElementById('fichier');
+document.getElementById('importer').onclick = () => fichier.click();
+fichier.onchange = async () => {
+  const f = fichier.files[0]; if (!f) return;
+  try {
+    const o = JSON.parse(await f.text());
+    if (!o.fiches) throw 0;
+    fiches = fiches.concat(o.fiches);
+    let max = 0;
+    fiches.forEach(fi => (function w(n){ max = Math.max(max, +String(n.id).slice(1) || 0); n.enfants.forEach(w); })(fi.racine));
+    compteurId = max + 1;
+    iFiche = fiches.length - 1; sel = null;
+    rendre(); recentrer(); enregistrerBientot();
+    signaler('Sauvegarde importée');
+  } catch { signaler('Ce fichier n\'est pas une sauvegarde Considérant'); }
+  fichier.value = '';
+};
+
+document.getElementById('nuit').onclick = e => {
+  const on = !estNuit();
+  document.documentElement.dataset.nuit = on ? '1' : '0';
+  e.currentTarget.setAttribute('aria-pressed', String(on));
+  rendre(); sauver();
+};
+const curseurLargeur = document.getElementById('largeur');
+curseurLargeur.addEventListener('input', () => {
+  fiches[iFiche].largeur = +curseurLargeur.value;
+  rendre(); enregistrerBientot();
+});
+document.getElementById('largeurAuto').onclick = () => {
+  memoriser();
+  delete fiches[iFiche].largeur;
+  parcours(n => { delete n.l; delete n.hMin; });
+  rendre(); enregistrerBientot();
+  signaler('Format automatique pour toute la fiche');
+};
+document.getElementById('ranger').onclick = ranger;
+document.getElementById('zplus').onclick = () => zoomer(1.2);
+document.getElementById('zmoins').onclick = () => zoomer(1/1.2);
+document.getElementById('zrecentrer').onclick = recentrer;
+const aide = document.getElementById('aide');
+document.getElementById('btnAide').onclick = () => aide.classList.add('on');
+document.getElementById('fermerAide').onclick = () => { aide.classList.remove('on'); reglagesVus(); };
+aide.addEventListener('click', e => { if (e.target === aide){ aide.classList.remove('on'); reglagesVus(); } });
+function reglagesVus(){ rangement.ecrire('attendu-aide-vue', true); }
+
+/* ============================================================
+   Image : l'arbre redessiné sur une toile, pour le disque
+   ou pour le papier
+   ============================================================ */
+function chemin(ctx, x, y, w, h, r){
+  ctx.beginPath();
+  if (ctx.roundRect){ ctx.roundRect(x, y, w, h, r); return; }
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+}
+function segmenter(t){
+  const out = [], re = /(`[^`]+`|\*\*[^*]+\*\*)/g; let i = 0, m;
+  while ((m = re.exec(t))){
+    if (m.index > i) out.push({t: t.slice(i, m.index)});
+    out.push(m[0][0] === '`' ? {t: m[0].slice(1, -1), code:true} : {t: m[0].slice(2, -2), gras:true});
+    i = re.lastIndex;
+  }
+  if (i < t.length) out.push({t: t.slice(i)});
+  return out.filter(x => x.t);
+}
+const policeDe = (s, taille, grasBase, titre) =>
+  (s.gras || grasBase ? '600 ' : '') +
+  (s.code ? (taille * .85).toFixed(1) + 'px "IBM Plex Mono",monospace'
+          : taille + 'px ' + (titre ? '"EB Garamond",Garamond,serif' : 'Spectral,Georgia,serif'));
+
+function decouper(ctx, segs, maxw, taille, grasBase, titre){
+  const lignes = [[]];
+  for (const s of segs) for (const mot of s.t.split(/(\s+)/)){
+    if (!mot) continue;
+    const b = {t: mot, code: s.code, gras: s.gras};
+    ctx.font = policeDe(b, taille, grasBase, titre);
+    b.w = ctx.measureText(mot).width;
+    const cur = lignes[lignes.length - 1];
+    const larg = cur.reduce((a, c) => a + c.w, 0);
+    if (larg + b.w > maxw && larg > 0){ if (/^\s+$/.test(mot)) continue; lignes.push([b]); }
+    else { if (/^\s+$/.test(mot) && !cur.length) continue; cur.push(b); }
+  }
+  return lignes.filter(l => l.length);
+}
+
+function enJour(fn){
+  const etait = estNuit();
+  if (etait) document.documentElement.dataset.nuit = '0';
+  try { return fn(); } finally { if (etait) document.documentElement.dataset.nuit = '1'; }
+}
+
+function composer(echelle, fond){
+  let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+  parcours(n => {
+    if (!visible(n) || !n.w) return;
+    x0 = Math.min(x0, n.x); y0 = Math.min(y0, n.y);
+    x1 = Math.max(x1, n.x + n.w + (n.plie && n.enfants.length ? 12 : 0));
+    y1 = Math.max(y1, n.y + n.h);
+  });
+  const marge = 46, L = x1 - x0 + marge * 2, H = y1 - y0 + marge * 2;
+  const c = document.createElement('canvas');
+  c.width = Math.ceil(L * echelle); c.height = Math.ceil(H * echelle);
+  const ctx = c.getContext('2d');
+  ctx.scale(echelle, echelle);
+  ctx.fillStyle = fond || cssVar('--fond');
+  ctx.fillRect(0, 0, L, H);
+  ctx.translate(marge - x0, marge - y0);
+
+  parcours(n => {
+    if (!visible(n) || n.plie) return;
+    for (const e of n.enfants){
+      if (!visible(e)) continue;
+      const a = n.x + n.w, b = n.y + n.h / 2, d = e.x, f = e.y + e.h / 2;
+      const dx = Math.max(24, Math.abs(d - a) * .5);
+      ctx.beginPath(); ctx.moveTo(a, b); ctx.bezierCurveTo(a + dx, b, d - dx, f, d, f);
+      ctx.strokeStyle = teinteDe(e);
+      ctx.lineWidth = Math.max(1.2, 3 - profDe(e.id) * .5);
+      ctx.lineCap = 'round'; ctx.globalAlpha = .8; ctx.stroke(); ctx.globalAlpha = 1;
+    }
+  });
+
+  parcours((n, prof) => {
+    if (!visible(n)) return;
+    const teinte = teinteDe(n), tronc = prof === 0;
+    chemin(ctx, n.x, n.y, n.w, n.h, 9);
+    ctx.fillStyle = tronc ? cssVar('--encre') : cssVar('--papier'); ctx.fill();
+    ctx.strokeStyle = tronc ? cssVar('--encre') : cssVar('--papier-3');
+    ctx.lineWidth = 1; ctx.stroke();
+    ctx.save(); chemin(ctx, n.x, n.y, n.w, n.h, 9); ctx.clip();
+    ctx.fillStyle = tronc ? cssVar('--marge') : teinte;
+    ctx.fillRect(n.x, n.y, 3, n.h); ctx.restore();
+
+    const taille = tronc ? 22 : 14.5, gauche = tronc ? 21 : 16, droite = tronc ? 18 : 13;
+    const lignes = decouper(ctx, segmenter(n.t || ''), n.w - gauche - droite, taille, tronc, tronc);
+    const lh = taille * 1.42;
+    let haut = tronc ? 12 : 9;
+    ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+    if (!tronc && refs.get(n.id)){
+      ctx.font = '500 9.5px "IBM Plex Mono",monospace';
+      ctx.fillStyle = teinte;
+      ctx.fillText(refs.get(n.id), n.x + gauche, n.y + haut + 6.5);
+      haut += 14;
+    }
+    lignes.forEach((ligne, i) => {
+      let x = n.x + gauche; const y = n.y + haut + lh * (i + .5);
+      for (const b of ligne){
+        ctx.font = policeDe(b, taille, tronc, tronc);
+        if (b.code && !tronc){
+          ctx.fillStyle = cssVar('--papier-2');
+          ctx.fillRect(x - 2, y - taille * .62, b.w + 4, taille * 1.24);
+        }
+        ctx.fillStyle = tronc ? cssVar('--papier') : (b.code ? teinte : cssVar('--encre'));
+        ctx.fillText(b.t, x, y); x += b.w;
+      }
+    });
+
+    if (n.plie && n.enfants.length){
+      const cx = n.x + n.w, cy = n.y + n.h / 2;
+      ctx.beginPath(); ctx.arc(cx, cy, 11, 0, 6.284);
+      ctx.fillStyle = teinte; ctx.fill();
+      ctx.fillStyle = cssVar('--papier');
+      ctx.font = '10px "IBM Plex Mono",monospace'; ctx.textAlign = 'center';
+      ctx.fillText(String(compter(n)), cx, cy); ctx.textAlign = 'left';
+    }
+  });
+
+  ctx.setTransform(echelle, 0, 0, echelle, 0, 0);
+  ctx.globalAlpha = .55;
+  ctx.fillStyle = cssVar('--encre-2');
+  ctx.font = '500 10px "IBM Plex Mono",monospace';
+  ctx.fillText('CONSIDÉRANT — ' + new Date().toLocaleDateString('fr-FR'), marge, H - marge / 2);
+  ctx.globalAlpha = 1;
+  return c;
+}
+
+document.getElementById('expimg').onclick = () => {
+  const c = enJour(() => composer(2));
+  c.toBlob(b => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(b); a.download = nomFichier() + '.png'; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  });
+  signaler('Image enregistrée');
+};
+
+document.getElementById('imprimer').onclick = () => {
+  const c = enJour(() => composer(2, '#FFFFFF'));
+  const img = document.querySelector('#impression img');
+  const lancer = () => { img.onload = null; setTimeout(() => print(), 60); };
+  img.onload = lancer;
+  img.src = c.toDataURL('image/png');
+  if (img.complete) lancer();
+};
+
+function signaler(t){
+  const m = document.getElementById('message');
+  m.textContent = t; m.classList.add('on');
+  clearTimeout(m._t); m._t = setTimeout(() => m.classList.remove('on'), 2400);
+}
+
+/* ============================================================
+   Démarrage
+   ============================================================ */
+function fichExemple(){
+  const r = neuf('Responsabilité civile extracontractuelle', 0, 0);
+  const bloc = (titre, feuilles) => {
+    const b = neuf(titre, 0, 0);
+    feuilles.forEach(f => b.enfants.push(neuf(f, 0, 0)));
+    r.enfants.push(b);
+    return b;
+  };
+  const c = bloc('Conditions', []);
+  const fg = neuf('Un fait générateur', 0, 0);
+  fg.enfants.push(neuf('Faute — `art. 1240 C. civ.`', 0, 0));
+  fg.enfants.push(neuf('Fait des choses — garde : usage, direction, contrôle', 0, 0));
+  fg.enfants.push(neuf('Fait d\'autrui — `Blieck`, Ass. plén. 1991', 0, 0));
+  const dom = neuf('Un dommage', 0, 0);
+  dom.enfants.push(neuf('Certain, direct, légitime', 0, 0));
+  dom.enfants.push(neuf('Perte de chance', 0, 0));
+  const lien = neuf('Un lien de causalité', 0, 0);
+  lien.enfants.push(neuf('Équivalence des conditions', 0, 0));
+  lien.enfants.push(neuf('Causalité adéquate', 0, 0));
+  c.enfants.push(fg, dom, lien);
+  bloc('Régimes spéciaux', ['Loi Badinter, 5 juillet 1985', 'Produits défectueux — `art. 1245 et s.`', 'Troubles anormaux de voisinage']);
+  bloc('Exonérations', ['Force majeure', 'Fait d\'un tiers', 'Faute de la victime']);
+  return {racine: r};
+}
+
+(async function demarrer(){
+  const sauvegarde = await rangement.lire(CLE);
+  if (sauvegarde && sauvegarde.fiches && sauvegarde.fiches.length){
+    fiches = sauvegarde.fiches; iFiche = Math.min(sauvegarde.iFiche || 0, fiches.length - 1);
+    compteurId = sauvegarde.compteurId || 999;
+    if (sauvegarde.nuit){
+      document.documentElement.dataset.nuit = '1';
+      document.getElementById('nuit').setAttribute('aria-pressed', 'true');
+    }
+  } else {
+    fiches = [fichExemple()];
+  }
+  listerFiches();
+  if (document.fonts) await document.fonts.ready.catch(() => {});
+  rendre();
+  if (!sauvegarde) ranger(); else recentrer();
+  if (!(await rangement.lire('attendu-aide-vue'))) aide.classList.add('on');
+})();
+
+addEventListener('resize', placerReglette);
+})();
+</script>

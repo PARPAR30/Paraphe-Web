@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Fiches d'arrêt — Droit Toolkit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#131316">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Zilla+Slab:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23131316%22%2F%3E%3Cg%20stroke%3D%22%23F7F6F2%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%3E%3Cline%20x1%3D%2216%22%20y1%3D%227%22%20x2%3D%2216%22%20y2%3D%2224%22%2F%3E%3Cline%20x1%3D%228%22%20y1%3D%2210%22%20x2%3D%2224%22%20y2%3D%2210%22%2F%3E%3Cline%20x1%3D%2216%22%20y1%3D%2224%22%20x2%3D%2211%22%20y2%3D%2224%22%2F%3E%3Cline%20x1%3D%2216%22%20y1%3D%2224%22%20x2%3D%2221%22%20y2%3D%2224%22%2F%3E%3Cpath%20d%3D%22M6%2010a4%205%200%200%200%208%200%22%2F%3E%3Cpath%20d%3D%22M18%2010a4%205%200%200%200%208%200%22%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%227%22%20r%3D%221.6%22%20fill%3D%22%233B2FE8%22%2F%3E%3C%2Fsvg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script src="theme.js"></script>
+<header class="topnav">
+  <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 32 32"><line x1="16" y1="7" x2="16" y2="24" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><line x1="8" y1="10" x2="24" y2="10" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><line x1="16" y1="24" x2="11" y2="24" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><line x1="16" y1="24" x2="21" y2="24" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M6 10a4 5 0 0 0 8 0" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/><path d="M18 10a4 5 0 0 0 8 0" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/><circle cx="16" cy="7" r="2.3" fill="rgb(59,47,232)"/></svg></span>Droit Toolkit</a>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="flashcards.html">Fiches mémo</a>
+    <a href="fiches-arret.html" class="active">Fiches d'arrêt</a>
+    <a href="codes.html">Codes &amp; articles</a>
+    <a href="Hub.html">Tous mes logiciels</a>
+    <button id="theme-toggle" aria-pressed="false">Nuit</button>
+  </nav>
+</header>
+<main>
+  <p class="eyebrow">Analyse de jurisprudence</p>
+  <h1>Fiches d'arrêt</h1>
+  <p class="muted">Structure : faits, procédure, problème de droit, solution / motifs, portée.</p>
+  <p class="muted">Quelques arrêts de référence sont préchargés par matière pour démarrer — noms et dates sont à recouper avec ton cours avant un examen.</p>
+
+  <div class="card">
+    <h3 id="formTitle">Nouvelle fiche</h3>
+    <input type="hidden" id="editId">
+    <div class="row">
+      <div style="flex:2; min-width:200px;">
+        <label for="fTitre">Titre (nom de l'arrêt)</label>
+        <input type="text" id="fTitre" placeholder="ex. Cass. civ. 1re, 28 janvier 1998">
+      </div>
+      <div style="flex:1; min-width:160px;">
+        <label for="fJuridiction">Juridiction</label>
+        <select id="fJuridiction">
+          <option>Cour de cassation</option>
+          <option>Conseil d'État</option>
+          <option>Conseil constitutionnel</option>
+          <option>CJUE</option>
+          <option>CEDH</option>
+          <option>Cour d'appel</option>
+          <option>Tribunal judiciaire</option>
+          <option>Autre</option>
+        </select>
+      </div>
+      <div style="flex:1; min-width:140px;">
+        <label for="fDate">Date</label>
+        <input type="date" id="fDate">
+      </div>
+    </div>
+    <label for="fMatiere">Matière</label>
+    <input type="text" id="fMatiere" list="matiereList" placeholder="ex. Droit des obligations">
+    <datalist id="matiereList"></datalist>
+
+    <label for="fFaits">Faits</label>
+    <textarea id="fFaits" placeholder="Résumé des faits pertinents"></textarea>
+
+    <label for="fProcedure">Procédure</label>
+    <textarea id="fProcedure" placeholder="Historique procédural, moyens des parties"></textarea>
+
+    <label for="fProbleme">Problème de droit</label>
+    <textarea id="fProbleme" placeholder="Question de droit posée à la juridiction"></textarea>
+
+    <label for="fSolution">Solution / motifs</label>
+    <textarea id="fSolution" placeholder="Décision rendue et raisonnement"></textarea>
+
+    <label for="fPortee">Portée</label>
+    <textarea id="fPortee" placeholder="Apport de l'arrêt, revirement, portée future"></textarea>
+
+    <div class="row end" style="margin-top:0.8rem;">
+      <button id="cancelEditBtn" style="display:none;">Annuler</button>
+      <button id="saveBtn" class="primary">Enregistrer la fiche</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="toolbar">
+      <input type="search" id="searchBox" placeholder="Rechercher (titre, faits, matière...)">
+      <select id="filterMatiere"><option value="">Toutes les matières</option></select>
+      <select id="filterJuridiction"><option value="">Toutes juridictions</option></select>
+      <button id="exportBtn">Exporter (JSON)</button>
+      <button id="importBtn">Importer</button>
+      <input type="file" id="importFile" accept="application/json" style="display:none;">
+    </div>
+    <div id="ficheList"></div>
+  </div>
+</main>
+
+<script>
+const STORAGE_KEY = "droit_fiches_arret";
+
+function mkSeedFiche(titre, juridiction, date, matiere, faits, procedure, probleme, solution, portee) {
+  return { titre, juridiction, date, matiere, faits, procedure, probleme, solution, portee };
+}
+
+const SEED = [
+mkSeedFiche(
+  "Blanco", "Conseil d'État", "1873-02-08", "Droit public des affaires",
+  "Une fillette est blessée par un wagonnet appartenant à une manufacture de tabac, service exploité par l'État.",
+  "Le Tribunal des conflits est saisi pour déterminer l'ordre juridictionnel compétent, judiciaire ou administratif.",
+  "La responsabilité de l'État du fait des services publics relève-t-elle des règles de droit commun applicables entre particuliers ?",
+  "Non : la responsabilité de la puissance publique n'est ni générale ni absolue, elle a ses règles propres qui varient selon les besoins du service et la nécessité de concilier les droits de l'État avec les droits privés ; le juge administratif est compétent.",
+  "Arrêt fondateur du droit administratif français : il consacre son autonomie par rapport au droit civil et pose les bases de la responsabilité administrative."
+),
+mkSeedFiche(
+  "Société commerciale de l'Ouest africain (\"Bac d'Eloka\")", "Autre", "1921-01-22", "Droit public des affaires",
+  "Un usager est victime d'un accident lors de la traversée d'une lagune par un bac exploité par une colonie.",
+  "Question de compétence juridictionnelle portée devant le Tribunal des conflits.",
+  "Le service d'un bac, exploité dans les mêmes conditions qu'une entreprise privée, relève-t-il du droit administratif ?",
+  "Non : lorsqu'une personne publique gère un service dans les mêmes conditions qu'un industriel ordinaire, ce service est un service public industriel et commercial (SPIC) relevant du droit privé et du juge judiciaire.",
+  "Consacre la distinction SPA/SPIC, fondamentale pour déterminer le régime juridique applicable aux activités publiques à caractère économique."
+),
+mkSeedFiche(
+  "Époux Bertin", "Conseil d'État", "1956-04-20", "Droit public des affaires",
+  "Un contrat verbal confie à des particuliers la nourriture de réfugiés en 1944, dans le cadre d'une mission de service public confiée par l'État.",
+  "Litige né de l'exécution du contrat ; question de la juridiction compétente.",
+  "Un contrat ayant pour objet l'exécution même du service public est-il, de ce seul fait, un contrat administratif ?",
+  "Oui : un contrat par lequel un particulier est associé directement à l'exécution même du service public est un contrat administratif, sans qu'il soit besoin de rechercher l'existence de clauses exorbitantes.",
+  "Consacre un critère matériel alternatif (l'objet du contrat) de qualification du contrat administratif, à côté du critère des clauses exorbitantes."
+),
+mkSeedFiche(
+  "Association du personnel relevant des établissements pour inadaptés (APREI)", "Conseil d'État", "2007-02-22", "Droit public des affaires",
+  "Une personne privée exerce une activité d'intérêt général sans disposer de prérogatives de puissance publique.",
+  "Pourvoi devant le Conseil d'État sur la qualification de l'activité.",
+  "Une personne privée peut-elle être regardée comme chargée d'une mission de service public en l'absence de prérogatives de puissance publique ?",
+  "Oui, sous réserve d'un faisceau d'indices : conditions de création, d'organisation et de fonctionnement, obligations imposées, mesures de contrôle par l'administration, prérogatives éventuelles.",
+  "Assouplit les critères \"Narcy\" (1963) en admettant la reconnaissance d'un service public confié à une personne privée même sans prérogative de puissance publique."
+),
+
+mkSeedFiche(
+  "Motte", "Cour de cassation", "1946-06-04", "Droit des sociétés",
+  "Un litige oppose les organes d'une société commerciale sur la répartition de leurs pouvoirs respectifs.",
+  "Pourvoi en cassation sur la portée des décisions de l'assemblée générale.",
+  "L'assemblée générale des actionnaires peut-elle empiéter sur les attributions du conseil d'administration ?",
+  "Non : chaque organe social dispose de compétences qui lui sont propres et exclusives ; l'assemblée ne peut se substituer au conseil d'administration dans l'exercice de ses attributions légales.",
+  "Arrêt fondateur du principe de la hiérarchie et de la spécialisation des pouvoirs entre organes sociaux, toujours invoqué en droit des sociétés."
+),
+mkSeedFiche(
+  "Comité d'établissement de Saint-Chamond", "Cour de cassation", "1954-01-28", "Droit des sociétés",
+  "Un comité d'établissement, groupement non expressément doté de la personnalité morale par un texte, agit en justice.",
+  "Pourvoi sur la capacité juridique du comité à agir.",
+  "Un groupement peut-il se voir reconnaître la personnalité morale en l'absence de texte le prévoyant expressément ?",
+  "Oui : la personnalité civile n'est pas une création de la loi, elle appartient en principe à tout groupement pourvu d'une possibilité d'expression collective pour la défense d'intérêts licites, dignes d'être juridiquement protégés.",
+  "Consacre une conception \"réaliste\" de la personnalité morale, essentielle pour comprendre la nature juridique de la société au-delà du seul formalisme de l'immatriculation."
+),
+
+mkSeedFiche(
+  "Société Générale (lien de subordination)", "Cour de cassation", "1996-11-13", "Droit du travail",
+  "Un litige porte sur la qualification d'une relation contractuelle en contrat de travail.",
+  "Pourvoi en cassation (chambre sociale) sur les critères du contrat de travail.",
+  "Quel est le critère déterminant pour qualifier une relation contractuelle de contrat de travail ?",
+  "Le lien de subordination juridique, caractérisé par l'exécution d'un travail sous l'autorité d'un employeur qui a le pouvoir de donner des ordres et directives, d'en contrôler l'exécution et de sanctionner les manquements.",
+  "Fixe la définition de référence du lien de subordination, critère central de qualification du contrat de travail encore appliqué aujourd'hui."
+),
+mkSeedFiche(
+  "Jurisprudence constante — définition de la faute grave", "Cour de cassation", "",  "Droit du travail",
+  "Divers litiges relatifs à la qualification d'une faute commise par un salarié comme justifiant une rupture immédiate du contrat.",
+  "Contentieux récurrent devant la chambre sociale de la Cour de cassation.",
+  "À quelles conditions une faute du salarié peut-elle priver celui-ci du préavis et de l'indemnité de licenciement ?",
+  "La faute grave est celle qui rend impossible le maintien du salarié dans l'entreprise pendant la durée du préavis, même limitée dans le temps.",
+  "Formule désormais constante, à distinguer de la faute lourde qui suppose en plus une intention de nuire à l'employeur."
+),
+
+mkSeedFiche(
+  "Benjamin", "Conseil d'État", "1933-05-19", "Libertés fondamentales",
+  "Un maire interdit une réunion publique par crainte de troubles à l'ordre public.",
+  "Recours pour excès de pouvoir contre l'arrêté d'interdiction.",
+  "Dans quelle mesure une autorité de police peut-elle restreindre une liberté publique au nom de la prévention de troubles éventuels ?",
+  "L'interdiction n'est légale que si elle est nécessaire, adaptée et proportionnée au risque de trouble à l'ordre public ; de simples risques éventuels ne suffisent pas si des mesures moins contraignantes sont possibles.",
+  "Arrêt fondateur du contrôle maximum (proportionnalité) exercé par le juge administratif sur les mesures de police restreignant les libertés publiques."
+),
+mkSeedFiche(
+  "Commune de Morsang-sur-Orge", "Conseil d'État", "1995-10-27", "Libertés fondamentales",
+  "Un maire interdit un spectacle de \"lancer de nains\" sur le territoire de sa commune.",
+  "Recours contre l'arrêté d'interdiction, en l'absence de circonstances locales particulières de trouble à l'ordre public.",
+  "Le respect de la dignité de la personne humaine peut-il fonder, à lui seul, une mesure de police restreignant une liberté ?",
+  "Oui : le respect de la dignité de la personne humaine est une composante de l'ordre public, permettant à l'autorité de police d'interdire une attraction qui y porte atteinte, même en l'absence de circonstances locales particulières.",
+  "Consacre la dignité de la personne humaine comme composante autonome de l'ordre public, décision majeure et discutée en doctrine."
+),
+
+mkSeedFiche(
+  "QPC garde à vue", "Conseil constitutionnel", "2010-07-30", "Procédure pénale",
+  "Le régime de droit commun de la garde à vue ne garantit pas l'assistance effective d'un avocat pendant les auditions.",
+  "Questions prioritaires de constitutionnalité transmises au Conseil constitutionnel.",
+  "Le régime de la garde à vue de droit commun est-il conforme aux droits et libertés garantis par la Constitution, notamment aux droits de la défense ?",
+  "Non : en l'état, les dispositions ne permettaient pas d'assurer un exercice effectif des droits de la défense, dont l'assistance d'un avocat lors des auditions ; abrogation différée pour laisser le temps d'une réforme.",
+  "Décision majeure ayant entraîné la réforme de 2011 sur la garde à vue (présence effective de l'avocat, notification des droits...)."
+),
+
+mkSeedFiche(
+  "Sté Janfin (abus de droit fiscal)", "Conseil d'État", "2006-09-27", "Droit fiscal",
+  "Une société réalise un montage juridique dans le seul but d'obtenir un avantage fiscal, en dehors du champ littéral de l'article L64 LPF alors en vigueur.",
+  "Contentieux fiscal devant le Conseil d'État.",
+  "L'administration peut-elle sanctionner un montage recherchant un but exclusivement fiscal même hors du champ strict de la procédure d'abus de droit prévue par les textes ?",
+  "Oui : le Conseil d'État consacre une théorie prétorienne de la fraude à la loi fiscale, permettant d'écarter les montages artificiels recherchant le bénéfice d'une application littérale des textes contraire à l'intention de leurs auteurs.",
+  "Contribue à la construction de la théorie de l'abus de droit fiscal, avant sa codification étendue à l'article L64 du LPF."
+),
+
+mkSeedFiche(
+  "Mercier", "Cour de cassation", "1936-05-20", "Régime général des obligations",
+  "Un patient invoque la responsabilité d'un médecin après l'échec d'un traitement.",
+  "Pourvoi en cassation sur le fondement de la responsabilité applicable à la relation médecin-patient.",
+  "La responsabilité du médecin envers son patient est-elle de nature contractuelle ou délictuelle, et de quelle intensité est son obligation ?",
+  "Il se forme entre le médecin et son patient un véritable contrat, dont découle pour le praticien l'obligation de donner des soins consciencieux, attentifs et conformes aux données de la science — une obligation de moyens, non de résultat.",
+  "Arrêt fondateur de la distinction obligation de moyens / obligation de résultat, toujours structurante en droit des obligations."
+),
+mkSeedFiche(
+  "Myr'Ho c. Boot Shop (\"Bootshop\")", "Cour de cassation", "2006-10-06", "Régime général des obligations",
+  "Un locataire subit un préjudice résultant de l'inexécution d'un contrat conclu entre son bailleur et un tiers.",
+  "Pourvoi devant l'assemblée plénière de la Cour de cassation.",
+  "Un tiers à un contrat peut-il invoquer un manquement contractuel sur le fondement de la responsabilité délictuelle ?",
+  "Oui : le tiers à un contrat peut invoquer, sur le fondement de la responsabilité délictuelle, un manquement contractuel dès lors que ce manquement lui a causé un dommage, sans avoir à démontrer une faute délictuelle distincte.",
+  "Arrêt majeur sur l'opposabilité du contrat aux tiers, très discuté, qui facilite l'action des tiers victimes d'une inexécution contractuelle."
+),
+].map((f, i) => Object.assign({ id: "seed-fa-" + i }, f));
+
+function loadFiches() {
+  let existing = [];
+  try { existing = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { existing = []; }
+  const existingIds = new Set(existing.map(f => f.id));
+  const missing = SEED.filter(f => !existingIds.has(f.id));
+  return existing.concat(missing);
+}
+function saveFiches(fiches) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(fiches));
+}
+
+let fiches = loadFiches();
+saveFiches(fiches);
+let expanded = new Set();
+
+function escapeHtml(s) {
+  return String(s || "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function refreshFilters() {
+  const matieres = [...new Set(fiches.map(f => f.matiere).filter(Boolean))].sort();
+  document.getElementById("matiereList").innerHTML = matieres.map(m => `<option value="${escapeHtml(m)}">`).join("");
+
+  const selM = document.getElementById("filterMatiere");
+  const curM = selM.value;
+  selM.innerHTML = '<option value="">Toutes les matières</option>' + matieres.map(m => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`).join("");
+  selM.value = curM;
+
+  const juridictions = [...new Set(fiches.map(f => f.juridiction).filter(Boolean))].sort();
+  const selJ = document.getElementById("filterJuridiction");
+  const curJ = selJ.value;
+  selJ.innerHTML = '<option value="">Toutes juridictions</option>' + juridictions.map(j => `<option value="${escapeHtml(j)}">${escapeHtml(j)}</option>`).join("");
+  selJ.value = curJ;
+}
+
+function resetForm() {
+  document.getElementById("editId").value = "";
+  document.getElementById("formTitle").textContent = "Nouvelle fiche";
+  ["fTitre","fDate","fMatiere","fFaits","fProcedure","fProbleme","fSolution","fPortee"].forEach(id => document.getElementById(id).value = "");
+  document.getElementById("fJuridiction").value = "Cour de cassation";
+  document.getElementById("cancelEditBtn").style.display = "none";
+}
+
+function fillForm(f) {
+  document.getElementById("editId").value = f.id;
+  document.getElementById("formTitle").textContent = "Modifier la fiche";
+  document.getElementById("fTitre").value = f.titre || "";
+  document.getElementById("fJuridiction").value = f.juridiction || "Cour de cassation";
+  document.getElementById("fDate").value = f.date || "";
+  document.getElementById("fMatiere").value = f.matiere || "";
+  document.getElementById("fFaits").value = f.faits || "";
+  document.getElementById("fProcedure").value = f.procedure || "";
+  document.getElementById("fProbleme").value = f.probleme || "";
+  document.getElementById("fSolution").value = f.solution || "";
+  document.getElementById("fPortee").value = f.portee || "";
+  document.getElementById("cancelEditBtn").style.display = "inline-block";
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+document.getElementById("saveBtn").addEventListener("click", () => {
+  const titre = document.getElementById("fTitre").value.trim();
+  if (!titre) { alert("Merci d'indiquer un titre."); return; }
+  const id = document.getElementById("editId").value;
+  const data = {
+    id: id || crypto.randomUUID(),
+    titre,
+    juridiction: document.getElementById("fJuridiction").value,
+    date: document.getElementById("fDate").value,
+    matiere: document.getElementById("fMatiere").value.trim(),
+    faits: document.getElementById("fFaits").value.trim(),
+    procedure: document.getElementById("fProcedure").value.trim(),
+    probleme: document.getElementById("fProbleme").value.trim(),
+    solution: document.getElementById("fSolution").value.trim(),
+    portee: document.getElementById("fPortee").value.trim(),
+  };
+  if (id) {
+    const idx = fiches.findIndex(f => f.id === id);
+    if (idx >= 0) fiches[idx] = data;
+  } else {
+    fiches.push(data);
+  }
+  saveFiches(fiches);
+  resetForm();
+  refreshFilters();
+  renderList();
+});
+
+document.getElementById("cancelEditBtn").addEventListener("click", resetForm);
+
+function editFiche(id) {
+  const f = fiches.find(x => x.id === id);
+  if (f) fillForm(f);
+}
+
+function deleteFiche(id) {
+  if (!confirm("Supprimer cette fiche ?")) return;
+  fiches = fiches.filter(f => f.id !== id);
+  saveFiches(fiches);
+  refreshFilters();
+  renderList();
+}
+
+function toggleExpand(id) {
+  if (expanded.has(id)) expanded.delete(id); else expanded.add(id);
+  renderList();
+}
+
+function renderList() {
+  const search = document.getElementById("searchBox").value.trim().toLowerCase();
+  const matiereFilter = document.getElementById("filterMatiere").value;
+  const juridictionFilter = document.getElementById("filterJuridiction").value;
+  const list = document.getElementById("ficheList");
+
+  let filtered = fiches.filter(f => {
+    if (matiereFilter && f.matiere !== matiereFilter) return false;
+    if (juridictionFilter && f.juridiction !== juridictionFilter) return false;
+    if (search) {
+      const hay = Object.values(f).join(" ").toLowerCase();
+      if (!hay.includes(search)) return false;
+    }
+    return true;
+  });
+
+  filtered.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty-state">Aucune fiche pour l\'instant.</div>';
+    return;
+  }
+
+  const fieldLabels = [
+    ["faits", "Faits"], ["procedure", "Procédure"], ["probleme", "Problème de droit"],
+    ["solution", "Solution / motifs"], ["portee", "Portée"]
+  ];
+
+  list.innerHTML = filtered.map(f => {
+    const isOpen = expanded.has(f.id);
+    return `
+    <div class="card" style="margin-bottom:0.6rem;">
+      <div class="row between" style="cursor:pointer;" onclick="toggleExpand('${f.id}')">
+        <div>
+          <strong>${escapeHtml(f.titre)}</strong>
+          <span class="badge" style="margin-left:0.5rem;">${escapeHtml(f.juridiction || "")}</span>
+          ${f.matiere ? `<span class="badge" style="margin-left:0.3rem;">${escapeHtml(f.matiere)}</span>` : ""}
+        </div>
+        <span class="muted">${escapeHtml(f.date || "")} ${isOpen ? "▲" : "▼"}</span>
+      </div>
+      ${isOpen ? `
+        <hr class="sep">
+        ${fieldLabels.map(([key,label]) => f[key] ? `<p><strong>${label}.</strong> ${escapeHtml(f[key]).replace(/\n/g,"<br>")}</p>` : "").join("")}
+        <div class="row end">
+          <button onclick="event.stopPropagation(); editFiche('${f.id}')">Modifier</button>
+          <button class="danger" onclick="event.stopPropagation(); deleteFiche('${f.id}')">Supprimer</button>
+        </div>
+      ` : ""}
+    </div>`;
+  }).join("");
+}
+
+document.getElementById("searchBox").addEventListener("input", renderList);
+document.getElementById("filterMatiere").addEventListener("change", renderList);
+document.getElementById("filterJuridiction").addEventListener("change", renderList);
+
+document.getElementById("exportBtn").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify(fiches, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "fiches-arret-" + new Date().toISOString().slice(0,10) + ".json";
+  a.click();
+});
+
+document.getElementById("importBtn").addEventListener("click", () => document.getElementById("importFile").click());
+document.getElementById("importFile").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const imported = JSON.parse(reader.result);
+      if (!Array.isArray(imported)) throw new Error("format invalide");
+      const existingIds = new Set(fiches.map(f => f.id));
+      let added = 0;
+      imported.forEach(f => {
+        if (f && f.titre && !existingIds.has(f.id)) {
+          fiches.push(Object.assign({ id: crypto.randomUUID() }, f));
+          added++;
+        }
+      });
+      saveFiches(fiches);
+      refreshFilters();
+      renderList();
+      alert(added + " fiche(s) importée(s).");
+    } catch (err) {
+      alert("Fichier invalide : " + err.message);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = "";
+});
+
+resetForm();
+refreshFilters();
+renderList();
+</script>
+</body>
+</html>
