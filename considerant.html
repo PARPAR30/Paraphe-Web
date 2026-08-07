@@ -77,7 +77,7 @@ select.b{max-width:210px}
 
 .poignee{
   position:absolute;right:-2px;bottom:-2px;width:16px;height:16px;cursor:nwse-resize;
-  opacity:0;transition:opacity .12s;z-index:3;
+  opacity:0;transition:opacity .12s;z-index:3;touch-action:none;
 }
 .poignee::after{
   content:'';position:absolute;right:3px;bottom:3px;width:8px;height:8px;
@@ -85,6 +85,12 @@ select.b{max-width:210px}
 }
 .cube:hover .poignee{opacity:.45}
 .cube.sel .poignee{opacity:1}
+/* doigt plus large que le curseur : cible tactile agrandie, glyphe inchangé */
+@media (pointer:coarse){
+  .poignee{width:34px;height:34px;right:-10px;bottom:-10px;opacity:.4}
+  .poignee::after{right:11px;bottom:11px}
+  .cube.sel .poignee{opacity:1}
+}
 .cube.redige .poignee,.cube.muet .poignee{display:none}
 #largeur{width:96px;accent-color:var(--accent);cursor:pointer}
 .etiquette{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--encre-2)}
@@ -705,20 +711,80 @@ toile.addEventListener('wheel', ev => {
   vue.k = k; appliquerVue();
 }, {passive:false});
 
+// Glisser à un doigt (déplacer la vue) et pincer à deux doigts (zoomer),
+// comme dans une appli photo — les deux gestes partagent le même suivi
+// des pointeurs actifs pour permettre de passer de l'un à l'autre à la volée.
+const pointeurs = new Map();
+let panDepart = null, panOrigineVue = null;
+let pinceDist = null, pinceMilieu = null;
+
+const positionLocale = ev => {
+  const r = toile.getBoundingClientRect();
+  return {x: ev.clientX - r.left, y: ev.clientY - r.top};
+};
+const distance2 = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+const milieu2 = (a, b) => ({x: (a.x + b.x) / 2, y: (a.y + b.y) / 2});
+
 toile.addEventListener('pointerdown', ev => {
   // tout ce qui est posé sur la toile garde ses propres clics :
   // capturer le pointeur ici les détournerait vers le déplacement de la vue
   if (ev.target.closest('.cube, #reglette, .hud, #aide, button')) return;
-  selectionner(null);
-  const d = {x: ev.clientX - vue.x, y: ev.clientY - vue.y};
-  toile.classList.add('tire');
-  toile.setPointerCapture(ev.pointerId);
-  const suivre = e => { vue.x = e.clientX - d.x; vue.y = e.clientY - d.y; appliquerVue(); };
-  const fin = () => { toile.classList.remove('tire'); toile.removeEventListener('pointermove', suivre); };
-  toile.addEventListener('pointermove', suivre);
-  toile.addEventListener('pointerup', fin, {once:true});
-  toile.addEventListener('pointercancel', fin, {once:true});
+  try { toile.setPointerCapture(ev.pointerId); } catch (e) { /* deuxième doigt : tolérer */ }
+  pointeurs.set(ev.pointerId, positionLocale(ev));
+
+  if (pointeurs.size === 1){
+    selectionner(null);
+    toile.classList.add('tire');
+    panDepart = {x: ev.clientX, y: ev.clientY};
+    panOrigineVue = {x: vue.x, y: vue.y};
+  } else if (pointeurs.size === 2){
+    toile.classList.remove('tire');
+    const [a, b] = [...pointeurs.values()];
+    pinceDist = distance2(a, b);
+    pinceMilieu = milieu2(a, b);
+  }
 });
+
+toile.addEventListener('pointermove', ev => {
+  if (!pointeurs.has(ev.pointerId)) return;
+  pointeurs.set(ev.pointerId, positionLocale(ev));
+
+  if (pointeurs.size >= 2){
+    const [a, b] = [...pointeurs.values()];
+    const d = distance2(a, b), mid = milieu2(a, b);
+    if (pinceDist){
+      const k = Math.min(2.4, Math.max(.2, vue.k * (d / pinceDist)));
+      vue.x = mid.x - (mid.x - vue.x) * (k / vue.k);
+      vue.y = mid.y - (mid.y - vue.y) * (k / vue.k);
+      vue.k = k;
+      appliquerVue();
+    }
+    pinceDist = d; pinceMilieu = mid;
+  } else if (pointeurs.size === 1 && panDepart){
+    vue.x = panOrigineVue.x + (ev.clientX - panDepart.x);
+    vue.y = panOrigineVue.y + (ev.clientY - panDepart.y);
+    appliquerVue();
+  }
+});
+
+function relacherPointeur(ev){
+  if (!pointeurs.has(ev.pointerId)) return;
+  pointeurs.delete(ev.pointerId);
+  pinceDist = null; pinceMilieu = null;
+  if (pointeurs.size === 1){
+    // il reste un doigt : reprendre le glisser sans saut, depuis sa position actuelle
+    const [restant] = [...pointeurs.entries()];
+    const r = toile.getBoundingClientRect();
+    panDepart = {x: restant[1].x + r.left, y: restant[1].y + r.top};
+    panOrigineVue = {x: vue.x, y: vue.y};
+    toile.classList.add('tire');
+  } else if (pointeurs.size === 0){
+    toile.classList.remove('tire');
+    panDepart = null;
+  }
+}
+toile.addEventListener('pointerup', relacherPointeur);
+toile.addEventListener('pointercancel', relacherPointeur);
 
 function zoomer(f){
   const r = toile.getBoundingClientRect(), mx = r.width / 2, my = r.height / 2;
