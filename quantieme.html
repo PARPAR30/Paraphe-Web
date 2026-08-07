@@ -1053,8 +1053,9 @@ textarea.saisie{resize:vertical;font-family:var(--sans);font-size:13.5px;line-he
 
   /* --- frise verticale --- */
   .piste{overflow:visible;padding:var(--e6) var(--e4) var(--e3)}
-  .frise{flex-direction:column;gap:0;padding-bottom:0}
+  .frise{display:flex;flex-direction:column;gap:0;padding-bottom:0}
   .colonne{
+    display:flex;flex-direction:column;
     min-width:0;width:100%;
     border-left:3px solid rgb(var(--c));padding-left:var(--e3);
   }
@@ -1062,6 +1063,10 @@ textarea.saisie{resize:vertical;font-family:var(--sans);font-size:13.5px;line-he
   .colonne.retard{border-left-color:var(--alerte)}
   .jour{order:1;padding:var(--e3) 0 var(--e1)}
   .jour .gros{font-size:calc(27px * var(--ech))}
+  .rj{
+    position:static!important;order:0;top:auto;margin:0 0 6px;
+    left:auto!important;right:auto!important;transform:none!important;
+  }
   .legende{order:2;max-width:none;padding:0 0 var(--e3)}
   .legende .quoi{font-size:calc(16px * var(--ech))}
   .bande{
