@@ -11931,11 +11931,11 @@ function handleCSV(file){
 
 /* ── COULEUR D'ACCENT ──────────────────────────────────── */
 var ACCENTS=[
-  {n:'Or (défaut)',h:43,c:'#c9a84c'},{n:'Indigo',h:230,c:'#5b6abf'},{n:'Émeraude',h:160,c:'#34a07e'},
+  {n:'Or',h:43,c:'#c9a84c'},{n:'Indigo (défaut)',h:230,c:'#5b6abf'},{n:'Émeraude',h:160,c:'#34a07e'},
   {n:'Rose',h:340,c:'#c44466'},{n:'Cyan',h:190,c:'#2098a8'},{n:'Violet',h:270,c:'#8844cc'},
   {n:'Corail',h:15,c:'#d05540'},{n:'Forêt',h:145,c:'#2e8b57'},
 ];
-var curHue=parseInt(localStorage.getItem('sj-hue')||'43');
+var curHue=parseInt(localStorage.getItem('sj-hue')||'230');
 
 function applyHue(h){
   curHue=h;localStorage.setItem('sj-hue',''+h);
@@ -11960,7 +11960,7 @@ function renderSettings(){
   if(sl){sl.value=curHue;vl.textContent=curHue+'°';sl.oninput=function(){applyHue(parseInt(sl.value));vl.textContent=sl.value+'°';
     sw.querySelectorAll('button').forEach(function(b){b.classList.remove('sel');b.textContent='';if(parseInt(b.getAttribute('data-h'))===parseInt(sl.value)){b.classList.add('sel');b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';}});
   };}
-  document.getElementById('reset-accent').onclick=function(){applyHue(43);renderSettings();};
+  document.getElementById('reset-accent').onclick=function(){applyHue(230);renderSettings();};
   // KPI config
   var cfg=document.getElementById('kpi-cfg');
   cfg.innerHTML=KPI_DEFS.map(function(k){var on=kpiVis.indexOf(k.id)>=0;return '<button class="kpi-toggle-chip'+(on?' on':'')+'" data-kc="'+k.id+'">'+k.lbl+'</button>'}).join('');
@@ -13934,7 +13934,7 @@ window.addEventListener('DOMContentLoaded', function() {
 </div>
 
 <div id="copyright-footer" style="
-  position:fixed;bottom:8px;right:16px;z-index:9000;
+  position:fixed;bottom:8px;left:16px;z-index:9000;
   font-size:.58rem;color:var(--text3,#3a5270);
   letter-spacing:.3px;pointer-events:none;user-select:none;opacity:.45;
 ">© 2024–2026 Pierre-Antoine RUAT</div>
