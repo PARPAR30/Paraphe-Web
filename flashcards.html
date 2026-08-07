@@ -90,6 +90,7 @@
       <input type="search" id="searchBox" placeholder="Rechercher...">
       <select id="filterMatiere"><option value="">Toutes les matières</option></select>
       <button id="exportBtn">Exporter (JSON)</button>
+      <button id="exportPdfBtn">Exporter (PDF)</button>
       <button id="importBtn">Importer</button>
       <input type="file" id="importFile" accept="application/json" style="display:none;">
     </div>
@@ -98,6 +99,7 @@
 
   <footer class="tip">Astuce : utilise les touches 1/2/3/4 pendant la révision, espace pour afficher la réponse.</footer>
 </main>
+<div id="printArea"></div>
 
 <script>
 const STORAGE_KEY = "droit_flashcards";
@@ -307,6 +309,46 @@ document.getElementById("exportBtn").addEventListener("click", () => {
   a.href = URL.createObjectURL(blob);
   a.download = "fiches-memo-" + todayISO() + ".json";
   a.click();
+});
+
+document.getElementById("exportPdfBtn").addEventListener("click", () => {
+  const search = document.getElementById("searchBox").value.trim().toLowerCase();
+  const matiereFilter = document.getElementById("filterMatiere").value;
+  let filtered = cards.filter(c => {
+    if (matiereFilter && c.matiere !== matiereFilter) return false;
+    if (search) {
+      const hay = (c.matiere + " " + c.recto + " " + c.verso).toLowerCase();
+      if (!hay.includes(search)) return false;
+    }
+    return true;
+  });
+  if (!filtered.length) { alert("Aucune carte à exporter avec ces filtres."); return; }
+  filtered.sort((a, b) => (a.matiere || "").localeCompare(b.matiere || ""));
+
+  const groups = {};
+  filtered.forEach(c => {
+    const m = c.matiere || "Sans matière";
+    (groups[m] = groups[m] || []).push(c);
+  });
+
+  const today = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  let html = `<div class="print-header">
+      <div><p class="print-brand">Droit Toolkit</p><h1>Fiches mémo</h1></div>
+      <div class="print-meta"><b>${filtered.length}</b> carte(s)<br>${today}</div>
+    </div>`;
+  Object.keys(groups).sort().forEach(m => {
+    html += `<div class="print-group-title">${escapeHtml(m)}</div>`;
+    groups[m].forEach(c => {
+      html += `<div class="print-item">
+        <h3>${escapeHtml(c.recto)}</h3>
+        <p>${escapeHtml(c.verso).replace(/\n/g, "<br>")}</p>
+      </div>`;
+    });
+  });
+  html += `<div class="print-footer"><span>Droit Toolkit — Fiches mémo</span><span>${today}</span></div>`;
+
+  document.getElementById("printArea").innerHTML = html;
+  window.print();
 });
 
 document.getElementById("importBtn").addEventListener("click", () => {

@@ -211,3 +211,66 @@ footer.tip{margin-top:var(--e7);color:var(--gris);font-size:calc(12px * var(--ec
   header.topnav{flex-direction:column;align-items:flex-start}
   header.topnav nav{margin-left:0}
 }
+
+/* ═════════════════════════════════════════════════════════════════════
+   EXPORT PDF — feuille imprimable partagée par les outils "Droit Toolkit"
+   Le contenu réel est injecté en JS dans #printArea juste avant l'impression.
+   ═════════════════════════════════════════════════════════════════════ */
+#printArea{display:none}
+@media print{
+  @page{size:A4 portrait;margin:16mm 14mm}
+  html,body{background:#fff!important}
+  body>*{display:none!important}
+  #printArea{display:block!important;font-family:var(--sans);color:#000;font-size:10.5pt;line-height:1.55}
+
+  .print-header{
+    display:flex;justify-content:space-between;align-items:flex-end;gap:var(--e4);
+    border-bottom:2.5pt solid #000;padding-bottom:8px;margin-bottom:20px;
+  }
+  .print-header h1{font-family:var(--slab);font-size:21pt;font-weight:700;margin:0;letter-spacing:-.02em;color:#000}
+  .print-header .print-brand{
+    font-family:"IBM Plex Mono",monospace;font-size:8pt;text-transform:uppercase;letter-spacing:.1em;
+    color:rgb(var(--acc));margin:0 0 3px;
+  }
+  .print-meta{text-align:right;font-size:8pt;color:#555;white-space:nowrap;line-height:1.6}
+  .print-meta b{color:#000;font-weight:700}
+
+  .print-group-title{
+    font-family:var(--slab);font-size:12.5pt;font-weight:700;color:#000;
+    margin:22px 0 10px;padding-bottom:4px;border-bottom:1pt solid #000;
+    break-after:avoid;page-break-after:avoid;
+  }
+  .print-group-title:first-of-type{margin-top:0}
+
+  .print-item{break-inside:avoid;page-break-inside:avoid;margin:0 0 13px;padding-bottom:13px;border-bottom:.75pt solid #CCC}
+  .print-item:last-child{border-bottom:none}
+  .print-item h3{
+    font-family:var(--slab);font-size:11pt;font-weight:600;color:#000;
+    margin:0 0 5px;display:flex;align-items:baseline;flex-wrap:wrap;gap:6px;
+  }
+  .print-tag{
+    display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:7pt;font-weight:500;
+    text-transform:uppercase;letter-spacing:.06em;border:.75pt solid #000;color:#000;
+    padding:1px 5px;line-height:1.5;white-space:nowrap;
+  }
+  .print-tag.accent{border-color:rgb(var(--acc));color:rgb(var(--acc))}
+  .print-item p{margin:0;font-size:9.5pt;line-height:1.55;color:#111}
+  .print-item .print-note{
+    margin-top:7px;padding-top:6px;border-top:.75pt dashed #BBB;font-size:9pt;color:#333;
+  }
+  .print-item .print-note b{
+    font-family:"IBM Plex Mono",monospace;font-size:7.5pt;text-transform:uppercase;
+    letter-spacing:.06em;color:#666;font-weight:600;
+  }
+  .print-item dl{margin:6px 0 0;display:grid;grid-template-columns:auto 1fr;gap:4px 12px}
+  .print-item dt{
+    font-family:"IBM Plex Mono",monospace;font-size:7.5pt;text-transform:uppercase;
+    letter-spacing:.06em;color:#666;white-space:nowrap;padding-top:2px;font-weight:600;
+  }
+  .print-item dd{margin:0;font-size:9.5pt;line-height:1.55;color:#111}
+
+  .print-footer{
+    margin-top:26px;padding-top:8px;border-top:.75pt solid #999;
+    font-size:7.5pt;color:#888;display:flex;justify-content:space-between;
+  }
+}

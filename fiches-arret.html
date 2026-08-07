@@ -91,12 +91,14 @@
       <select id="filterMatiere"><option value="">Toutes les matières</option></select>
       <select id="filterJuridiction"><option value="">Toutes juridictions</option></select>
       <button id="exportBtn">Exporter (JSON)</button>
+      <button id="exportPdfBtn">Exporter (PDF)</button>
       <button id="importBtn">Importer</button>
       <input type="file" id="importFile" accept="application/json" style="display:none;">
     </div>
     <div id="ficheList"></div>
   </div>
 </main>
+<div id="printArea"></div>
 
 <script>
 const STORAGE_KEY = "droit_fiches_arret";
@@ -396,6 +398,64 @@ document.getElementById("exportBtn").addEventListener("click", () => {
   a.href = URL.createObjectURL(blob);
   a.download = "fiches-arret-" + new Date().toISOString().slice(0,10) + ".json";
   a.click();
+});
+
+document.getElementById("exportPdfBtn").addEventListener("click", () => {
+  const search = document.getElementById("searchBox").value.trim().toLowerCase();
+  const matiereFilter = document.getElementById("filterMatiere").value;
+  const juridictionFilter = document.getElementById("filterJuridiction").value;
+  let filtered = fiches.filter(f => {
+    if (matiereFilter && f.matiere !== matiereFilter) return false;
+    if (juridictionFilter && f.juridiction !== juridictionFilter) return false;
+    if (search) {
+      const hay = Object.values(f).join(" ").toLowerCase();
+      if (!hay.includes(search)) return false;
+    }
+    return true;
+  });
+  if (!filtered.length) { alert("Aucune fiche à exporter avec ces filtres."); return; }
+  filtered.sort((a, b) => (a.matiere || "").localeCompare(b.matiere || "") || (b.date || "").localeCompare(a.date || ""));
+
+  const groups = {};
+  filtered.forEach(f => {
+    const m = f.matiere || "Sans matière";
+    (groups[m] = groups[m] || []).push(f);
+  });
+
+  const fieldLabels = [
+    ["faits", "Faits"], ["procedure", "Procédure"], ["probleme", "Problème de droit"],
+    ["solution", "Solution / motifs"], ["portee", "Portée"]
+  ];
+  const fmtDate = d => {
+    if (!d) return "";
+    const parts = d.split("-");
+    if (parts.length !== 3) return d;
+    return new Date(d).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  };
+
+  const today = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  let html = `<div class="print-header">
+      <div><p class="print-brand">Droit Toolkit</p><h1>Fiches d'arrêt</h1></div>
+      <div class="print-meta"><b>${filtered.length}</b> fiche(s)<br>${today}</div>
+    </div>`;
+  Object.keys(groups).sort().forEach(m => {
+    html += `<div class="print-group-title">${escapeHtml(m)}</div>`;
+    groups[m].forEach(f => {
+      html += `<div class="print-item">
+        <h3>${escapeHtml(f.titre)}
+          ${f.juridiction ? `<span class="print-tag">${escapeHtml(f.juridiction)}</span>` : ""}
+          ${f.date ? `<span class="print-tag accent">${escapeHtml(fmtDate(f.date))}</span>` : ""}
+        </h3>
+        <dl>
+          ${fieldLabels.map(([key, label]) => f[key] ? `<dt>${label}</dt><dd>${escapeHtml(f[key]).replace(/\n/g, "<br>")}</dd>` : "").join("")}
+        </dl>
+      </div>`;
+    });
+  });
+  html += `<div class="print-footer"><span>Droit Toolkit — Fiches d'arrêt</span><span>${today}</span></div>`;
+
+  document.getElementById("printArea").innerHTML = html;
+  window.print();
 });
 
 document.getElementById("importBtn").addEventListener("click", () => document.getElementById("importFile").click());

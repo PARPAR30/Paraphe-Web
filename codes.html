@@ -81,6 +81,7 @@
       <h3 style="margin:0;">Articles</h3>
       <div class="row">
         <button id="exportBtn">Exporter (JSON)</button>
+        <button id="exportPdfBtn">Exporter (PDF)</button>
         <button id="importBtn">Importer</button>
         <input type="file" id="importFile" accept="application/json" style="display:none;">
       </div>
@@ -88,6 +89,7 @@
     <div id="articleList" style="margin-top:0.8rem;"></div>
   </div>
 </main>
+<div id="printArea"></div>
 
 <script>
 const STORAGE_KEY = "droit_codes";
@@ -347,6 +349,55 @@ document.getElementById("exportBtn").addEventListener("click", () => {
   a.href = URL.createObjectURL(blob);
   a.download = "codes-articles-" + new Date().toISOString().slice(0,10) + ".json";
   a.click();
+});
+
+document.getElementById("exportPdfBtn").addEventListener("click", () => {
+  const search = document.getElementById("searchBox").value.trim().toLowerCase();
+  const codeFilter = document.getElementById("filterCode").value;
+  const matiereFilter = document.getElementById("filterMatiere").value;
+  const starOnly = document.getElementById("filterStar").checked;
+
+  let filtered = articles.filter(a => {
+    if (codeFilter && a.code !== codeFilter) return false;
+    if (matiereFilter && a.matiere !== matiereFilter) return false;
+    if (starOnly && !a.star) return false;
+    if (search) {
+      const hay = (a.matiere + " " + a.code + " " + a.numero + " " + a.texte + " " + a.note).toLowerCase();
+      if (!hay.includes(search)) return false;
+    }
+    return true;
+  });
+  if (!filtered.length) { alert("Aucun article à exporter avec ces filtres."); return; }
+  filtered.sort((a, b) => (a.matiere || "").localeCompare(b.matiere || "") || (a.code || "").localeCompare(b.code || "") || (a.numero || "").localeCompare(b.numero || "", undefined, { numeric: true }));
+
+  const groups = {};
+  filtered.forEach(a => {
+    const m = a.matiere || "Sans matière";
+    (groups[m] = groups[m] || []).push(a);
+  });
+
+  const today = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  let html = `<div class="print-header">
+      <div><p class="print-brand">Droit Toolkit</p><h1>Codes &amp; articles</h1></div>
+      <div class="print-meta"><b>${filtered.length}</b> article(s)<br>${today}</div>
+    </div>`;
+  Object.keys(groups).sort().forEach(m => {
+    html += `<div class="print-group-title">${escapeHtml(m)}</div>`;
+    groups[m].forEach(a => {
+      html += `<div class="print-item">
+        <h3>Art. ${escapeHtml(a.numero)}
+          <span class="print-tag">${escapeHtml(a.code)}</span>
+          ${a.star ? `<span class="print-tag accent">À retenir</span>` : ""}
+        </h3>
+        <p>${escapeHtml(a.texte).replace(/\n/g, "<br>")}</p>
+        ${a.note ? `<div class="print-note"><b>Note —</b> ${escapeHtml(a.note).replace(/\n/g, "<br>")}</div>` : ""}
+      </div>`;
+    });
+  });
+  html += `<div class="print-footer"><span>Droit Toolkit — Codes &amp; articles</span><span>${today}</span></div>`;
+
+  document.getElementById("printArea").innerHTML = html;
+  window.print();
 });
 
 document.getElementById("importBtn").addEventListener("click", () => document.getElementById("importFile").click());
