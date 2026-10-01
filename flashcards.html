@@ -2,112 +2,224 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Fiches mémo — Droit Toolkit</title>
+<title>Fiches mémo — Paraphe</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#131316">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Zilla+Slab:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23131316%22%2F%3E%3Cg%20stroke%3D%22%23F7F6F2%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%3E%3Cline%20x1%3D%2216%22%20y1%3D%227%22%20x2%3D%2216%22%20y2%3D%2224%22%2F%3E%3Cline%20x1%3D%228%22%20y1%3D%2210%22%20x2%3D%2224%22%20y2%3D%2210%22%2F%3E%3Cline%20x1%3D%2216%22%20y1%3D%2224%22%20x2%3D%2211%22%20y2%3D%2224%22%2F%3E%3Cline%20x1%3D%2216%22%20y1%3D%2224%22%20x2%3D%2221%22%20y2%3D%2224%22%2F%3E%3Cpath%20d%3D%22M6%2010a4%205%200%200%200%208%200%22%2F%3E%3Cpath%20d%3D%22M18%2010a4%205%200%200%200%208%200%22%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%227%22%20r%3D%221.6%22%20fill%3D%22%233B2FE8%22%2F%3E%3C%2Fsvg%3E">
+<script src="taille.js"></script><script src="navigation.js" defer></script>
+<link rel="stylesheet" href="fonts/fonts.css">
+<script src="pwa.js" defer></script>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
 <link rel="stylesheet" href="style.css">
+<style>
+  .stats-grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:var(--e3)}
+  .stats-grille>div{border:1px solid var(--filet);padding:var(--e3)}
+  .stat-val{display:block;font-family:var(--slab);font-weight:700;font-size:calc(26px * var(--ech));font-variant-numeric:lining-nums tabular-nums;line-height:1.1}
+  .stat-lbl{display:block;font-size:calc(12px * var(--ech));font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--gris)}
+  .histo{display:flex;align-items:flex-end;gap:var(--e1);height:64px;margin-top:var(--e4);border-bottom:1px solid var(--encre)}
+  .histo>div{flex:1;background:rgb(var(--acc));min-height:1px}
+  .histo>div.vide{background:var(--filet)}
+  .histo-vide{margin:auto;align-self:center;color:var(--gris);font-size:calc(12px * var(--ech));font-style:italic}
+  .histo.sans-donnees{height:40px}
+
+  /* une page, deux tâches : réviser / gérer ses cartes */
+  main.memo{max-width:1100px}
+  .onglets{display:flex;gap:0;margin:var(--e6) 0 var(--e5);border-bottom:2px solid var(--encre)}
+  .onglets button{border:2px solid transparent;border-bottom:0;margin-bottom:-2px;background:none;min-height:44px;padding:0 var(--e5);
+    font-size:calc(13px * var(--ech));letter-spacing:.08em;color:var(--gris)}
+  .onglets button[aria-selected="true"]{border-color:var(--encre);background:var(--fond);color:var(--encre)}
+  .onglets button:hover{background:none;color:var(--encre)}
+  .onglets .compte{display:inline-block;margin-left:6px;padding:2px 6px;border:1px solid currentColor;font-size:calc(12px * var(--ech));letter-spacing:0}
+  .a-reviser{display:grid;grid-template-columns:1fr auto;gap:var(--e3) var(--e6);align-items:center;padding:var(--e6)}
+  .a-reviser-chiffre{display:flex;align-items:baseline;gap:var(--e3);flex-wrap:wrap}
+  .a-reviser-chiffre b{font:700 calc(56px * var(--ech))/1 var(--slab);letter-spacing:-.03em}
+  .a-reviser-chiffre span{font-size:calc(17px * var(--ech));color:var(--encre-2)}
+  .a-reviser #statMatieres{grid-column:1}
+  .a-reviser #startReview{grid-column:2;grid-row:1 / span 2}
+  button.grand{min-height:56px;padding:0 var(--e6);font-size:calc(14px * var(--ech))}
+  .liste-cartes{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:var(--e4)}
+  .carte-item{border:2px solid var(--encre);background:var(--carte);padding:var(--e4);display:flex;flex-direction:column;gap:var(--e2)}
+  .carte-item .meta{display:flex;justify-content:space-between;gap:var(--e3);align-items:center;font-size:calc(12px * var(--ech));color:var(--gris)}
+  .carte-item .meta .due{color:rgb(var(--acc));font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+  .carte-item h4{margin:0;font:600 calc(16px * var(--ech))/1.35 var(--slab)}
+  .carte-item p{margin:0;color:var(--encre-2);font-size:calc(14px * var(--ech));display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .carte-item .actions{display:flex;gap:var(--e4);margin-top:auto;padding-top:var(--e2);border-top:1px solid var(--filet)}
+  .lien-action{border:0;background:none;padding:0;min-height:28px;font-size:calc(12px * var(--ech));font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--encre)}
+  .lien-action:hover{background:none;color:rgb(var(--acc))}
+  .lien-action.danger{color:var(--gris)}
+  .lien-action.danger:hover{background:none;color:var(--alerte)}
+
+  /* révision en plein écran : la carte seule, au centre */
+  .revision{position:fixed;inset:0;z-index:60;background:var(--fond);color:var(--encre);display:flex;flex-direction:column}
+  .revision[hidden]{display:none}
+  .rev-barre{display:flex;align-items:center;gap:var(--e4);padding:var(--e3) var(--pad);border-bottom:2px solid var(--encre)}
+  .rev-prog{flex:1;height:8px;background:var(--filet)}
+  .rev-prog i{display:block;height:100%;width:0;background:rgb(var(--acc));transition:width .3s}
+  #reviewProgress{font-size:calc(13px * var(--ech));font-weight:600;color:var(--encre-2);white-space:nowrap}
+  .rev-centre{flex:1;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--e6);padding:var(--e6) var(--pad)}
+  .rev-carte{width:100%;max-width:780px;background:var(--carte);border:3px solid var(--encre);box-shadow:var(--ombre-forte);padding:clamp(24px,5vw,48px)}
+  #reviewRecto{font:600 calc(26px * var(--ech))/1.35 var(--slab);white-space:pre-line}
+  #reviewVerso{font-size:calc(19px * var(--ech));line-height:1.6;margin-top:var(--e6);padding-top:var(--e6);border-top:2px dashed var(--filet);white-space:pre-line}
+  kbd{display:inline-block;min-width:22px;padding:2px 6px;border:1.5px solid currentColor;border-bottom-width:3px;font:600 calc(12px * var(--ech))/1.2 var(--sans);text-align:center;margin-left:8px}
+  .rev-notes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--e3);width:100%;max-width:780px}
+  .rev-notes[hidden],.rev-actions[hidden],.rev-fin[hidden],#reviewVerso[hidden]{display:none}
+  .rev-notes button{display:flex;flex-direction:column;align-items:center;gap:4px;min-height:84px;text-transform:none;letter-spacing:0}
+  .rev-notes button kbd{margin:0 0 2px}
+  .rev-notes button b{font-size:calc(15px * var(--ech))}
+  .rev-notes button small{font-size:calc(12px * var(--ech));font-weight:500;opacity:.75}
+  .rev-notes .encore{border-color:var(--alerte);color:var(--alerte)}
+  .rev-notes .facile{border-color:var(--succes);color:var(--succes)}
+  .rev-fin{text-align:center;max-width:560px}
+  .rev-fin h2{font-size:calc(34px * var(--ech));margin:var(--e3) 0}
+  .rev-fin p{margin:0 0 var(--e6)}
+
+  /* fenêtre d'ajout / modification */
+  dialog.fenetre-carte{border:3px solid var(--encre);background:var(--carte);color:var(--encre);padding:var(--e6);width:min(620px,calc(100vw - 32px));box-shadow:12px 12px 0 rgb(var(--acc))}
+  dialog.fenetre-carte::backdrop{background:rgba(19,19,22,.5)}
+  dialog.fenetre-carte h3{margin-top:0}
+  dialog.fenetre-carte textarea{min-height:90px}
+  @media (max-width:640px){
+    .a-reviser{grid-template-columns:1fr}
+    .a-reviser #startReview{grid-column:1;grid-row:auto;width:100%}
+    .rev-notes{grid-template-columns:1fr 1fr}
+  }
+  .barre-cartes{margin-bottom:var(--e6)}
+</style>
 </head>
 <body>
 <script src="theme.js"></script>
 <header class="topnav">
-  <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 32 32"><line x1="16" y1="7" x2="16" y2="24" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><line x1="8" y1="10" x2="24" y2="10" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><line x1="16" y1="24" x2="11" y2="24" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><line x1="16" y1="24" x2="21" y2="24" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M6 10a4 5 0 0 0 8 0" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/><path d="M18 10a4 5 0 0 0 8 0" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/><circle cx="16" cy="7" r="2.3" fill="rgb(59,47,232)"/></svg></span>Droit Toolkit</a>
+  <a class="brand" href="Hub.html"><span class="brand-mark" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 32 32"><rect x="5.25" y="4.25" width="18.5" height="21.5" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 9h4v20H9v-4h15z" fill="currentColor"/><rect x="9" y="9" width="11" height="2.2" fill="currentColor"/><rect x="9" y="13.4" width="7" height="2.2" fill="currentColor"/><rect x="15" y="18" width="5" height="4.5" style="fill:rgb(var(--acc,59,47,232))"/></svg></span>Paraphe</a>
   <nav>
-    <a href="index.html">Accueil</a>
+    <span data-paraphe-nav></span>
     <a href="flashcards.html" class="active">Fiches mémo</a>
     <a href="fiches-arret.html">Fiches d'arrêt</a>
     <a href="codes.html">Codes &amp; articles</a>
-    <a href="Hub.html">Tous mes logiciels</a>
     <button id="theme-toggle" aria-pressed="false">Nuit</button>
   </nav>
 </header>
-<main>
+<main class="memo">
   <p class="eyebrow">Révision</p>
   <h1>Fiches mémo</h1>
-  <p class="muted">Répétition espacée : les cartes que tu maîtrises reviennent moins souvent, celles qui coincent reviennent vite.</p>
+  <p class="muted">Des cartes question-réponse pour retenir définitions et articles. Celles que vous maîtrisez reviennent moins souvent, celles qui coincent reviennent vite.</p>
 
-  <div class="card">
-    <div class="row between">
-      <div>
-        <strong id="dueCount">0</strong> <span class="muted">carte(s) à réviser aujourd'hui</span>
-        &nbsp;·&nbsp; <span class="muted"><span id="totalCount">0</span> carte(s) au total</span>
+  <div class="onglets" role="tablist" aria-label="Fiches mémo">
+    <button type="button" role="tab" id="ongReviser" aria-selected="true" aria-controls="vueReviser">Réviser</button>
+    <button type="button" role="tab" id="ongCartes" aria-selected="false" aria-controls="vueCartes">Mes cartes<span class="compte" id="totalCount">0</span></button>
+  </div>
+
+  <section id="vueReviser" role="tabpanel" aria-labelledby="ongReviser">
+    <div class="card a-reviser">
+      <div class="a-reviser-chiffre"><b id="dueCount">0</b><span id="dueLibelle">carte(s) à réviser aujourd'hui</span></div>
+      <div class="muted" id="statMatieres"></div>
+      <button type="button" id="startReview" class="primary grand">Commencer la révision</button>
+    </div>
+
+    <div class="card">
+      <h3>Statistiques</h3>
+      <div class="stats-grille">
+        <div><span class="stat-val" id="statJour">0</span><span class="stat-lbl">révisions aujourd'hui</span></div>
+        <div><span class="stat-val" id="statSerie">0</span><span class="stat-lbl">jour(s) d'affilée</span></div>
+        <div><span class="stat-val" id="statMaitrisees">0</span><span class="stat-lbl">cartes maîtrisées (≥ 21 j)</span></div>
+        <div><span class="stat-val" id="statNouvelles">0</span><span class="stat-lbl">jamais révisées</span></div>
       </div>
-      <div class="row">
-        <button id="startReview" class="primary">Commencer la révision</button>
+      <div class="histo" id="statHisto" aria-label="Révisions des 14 derniers jours"></div>
+    </div>
+  </section>
+
+  <section id="vueCartes" role="tabpanel" aria-labelledby="ongCartes" hidden>
+    <div class="card barre barre-cartes">
+      <div class="barre-filtres">
+        <input type="search" id="searchBox" placeholder="Rechercher une carte…" aria-label="Rechercher une carte">
+        <select id="filterMatiere" aria-label="Filtrer par matière"><option value="">Toutes les matières</option></select>
       </div>
+      <div class="barre-actions">
+      <button type="button" id="nouvelleCarte" class="primary">+ Nouvelle carte</button>
+      <div class="barre-groupe" role="group" aria-label="Importer">
+        <span class="barre-titre">Importer</span>
+        <button type="button" id="importBtn" title="Reprendre un fichier .json enregistré depuis cet outil">Depuis un fichier</button>
+        <button type="button" id="promptIA" title="Copier un prompt qui fait convertir votre document (PDF, Word, texte…) par une IA au format d’import">Avec une IA</button>
+      </div>
+      <div class="barre-groupe" role="group" aria-label="Exporter">
+        <span class="barre-titre">Exporter</span>
+        <button type="button" id="exportBtn" title="Enregistrer une copie de vos cartes (fichier .json)">Sauvegarde</button>
+        <button type="button" id="exportPdfBtn" title="Mettre en page vos cartes pour les imprimer ou les enregistrer en PDF">Imprimer / PDF</button>
+      </div>
+      <input type="file" id="importFile" accept="application/json" hidden>
     </div>
-  </div>
+    </div>
+    <div id="cardList" class="liste-cartes"></div>
+  </section>
 
-  <div id="reviewArea" class="card" style="display:none;">
-    <div class="row between">
-      <span class="badge" id="reviewMatiere">—</span>
-      <span class="muted" id="reviewProgress"></span>
-    </div>
-    <hr class="sep">
-    <div id="reviewRecto" style="font-size:1.15rem; min-height:3em;"></div>
-    <div id="reviewVerso" style="display:none; font-size:1.05rem; margin-top:1rem; padding-top:1rem; border-top:1px dashed var(--filet);"></div>
-    <hr class="sep">
-    <div class="row end" id="showAnswerRow">
-      <button id="showAnswerBtn" class="primary">Afficher la réponse (espace)</button>
-    </div>
-    <div class="row" id="ratingRow" style="display:none;">
-      <button data-rating="0" style="border-color:var(--alerte); color:var(--alerte);">1 · Encore</button>
-      <button data-rating="1">2 · Difficile</button>
-      <button data-rating="2">3 · Correct</button>
-      <button data-rating="3" style="border-color:var(--succes); color:var(--succes);">4 · Facile</button>
-    </div>
-  </div>
-
-  <div id="reviewDone" class="card empty-state" style="display:none;">
-    <span class="badge">À jour</span><br>
-    Plus rien à réviser pour l'instant. Reviens plus tard ou ajoute de nouvelles cartes.
-  </div>
-
-  <div class="card">
-    <h3>Ajouter une carte</h3>
-    <label for="fMatiere">Matière</label>
-    <input type="text" id="fMatiere" list="matiereList" placeholder="ex. Droit civil">
-    <datalist id="matiereList"></datalist>
-    <label for="fRecto">Recto (question / terme)</label>
-    <textarea id="fRecto" placeholder="ex. Définition de la faute délictuelle ?"></textarea>
-    <label for="fVerso">Verso (réponse / définition)</label>
-    <textarea id="fVerso" placeholder="ex. Comportement contraire à une norme de conduite..."></textarea>
-    <div class="row end" style="margin-top:0.8rem;">
-      <button id="addCardBtn" class="primary">Ajouter la carte</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <h3>Toutes les cartes</h3>
-    <div class="toolbar">
-      <input type="search" id="searchBox" placeholder="Rechercher...">
-      <select id="filterMatiere"><option value="">Toutes les matières</option></select>
-      <button id="exportBtn">Exporter (JSON)</button>
-      <button id="exportPdfBtn">Exporter (PDF)</button>
-      <button id="importBtn">Importer</button>
-      <input type="file" id="importFile" accept="application/json" style="display:none;">
-    </div>
-    <div id="cardList"></div>
-  </div>
-
-  <footer class="tip">Astuce : utilise les touches 1/2/3/4 pendant la révision, espace pour afficher la réponse.</footer>
+  <footer class="tip">Pendant la révision : <kbd>Espace</kbd> affiche la réponse, <kbd>1</kbd> à <kbd>4</kbd> notent la carte, <kbd>Échap</kbd> quitte.</footer>
 </main>
+
+<!-- Révision en plein écran -->
+<div class="revision" id="reviewArea" role="dialog" aria-modal="true" aria-label="Révision" hidden>
+  <div class="rev-barre">
+    <span class="badge" id="reviewMatiere">—</span>
+    <div class="rev-prog" aria-hidden="true"><i id="reviewBar"></i></div>
+    <span id="reviewProgress"></span>
+    <button type="button" id="quitterRevision">Quitter</button>
+  </div>
+  <div class="rev-centre">
+    <div class="rev-carte" id="revCarte">
+      <div id="reviewRecto"></div>
+      <div id="reviewVerso" hidden></div>
+    </div>
+    <div class="rev-actions" id="showAnswerRow">
+      <button type="button" id="showAnswerBtn" class="primary grand">Afficher la réponse<kbd>Espace</kbd></button>
+    </div>
+    <div class="rev-notes" id="ratingRow" hidden>
+      <button type="button" data-rating="0" class="encore"><kbd>1</kbd><b>Encore</b><small>revient dans la séance</small></button>
+      <button type="button" data-rating="1"><kbd>2</kbd><b>Difficile</b><small>revient plus tôt</small></button>
+      <button type="button" data-rating="2"><kbd>3</kbd><b>Correct</b><small>intervalle normal</small></button>
+      <button type="button" data-rating="3" class="facile"><kbd>4</kbd><b>Facile</b><small>revient plus tard</small></button>
+    </div>
+    <div class="rev-fin" id="reviewDone" hidden>
+      <span class="badge">Séance terminée</span>
+      <h2 id="finTitre">Tout est à jour.</h2>
+      <p class="muted" id="finTexte"></p>
+      <button type="button" id="fermerRevision" class="primary grand">Terminer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Ajout / modification d'une carte -->
+<dialog class="fenetre-carte" id="formCard" aria-labelledby="formTitle">
+  <h3 id="formTitle">Nouvelle carte</h3>
+  <label for="fMatiere">Matière</label>
+  <input type="text" id="fMatiere" list="matiereList" placeholder="ex. Droit civil">
+  <datalist id="matiereList"></datalist>
+  <label for="fRecto">Recto (question / terme)</label>
+  <textarea id="fRecto" placeholder="ex. Définition de la faute délictuelle ?"></textarea>
+  <label for="fVerso">Verso (réponse / définition)</label>
+  <textarea id="fVerso" placeholder="ex. Comportement contraire à une norme de conduite…"></textarea>
+  <div class="row end" style="margin-top:var(--e4);">
+    <button type="button" id="cancelEditBtn">Annuler</button>
+    <button type="button" id="addAnotherBtn">Ajouter et en créer une autre</button>
+    <button type="button" id="addCardBtn" class="primary">Ajouter la carte</button>
+  </div>
+</dialog>
 <div id="printArea"></div>
 
+<script src="commun.js"></script>
 <script>
 const STORAGE_KEY = "droit_flashcards";
+// Cartes d'exemple supprimées par l'utilisateur : sans cette liste, elles revenaient à chaque chargement
+const DELETED_SEEDS_KEY = "droit_flashcards_seeds_supprimees";
 
-function todayISOStatic() { return new Date().toISOString().slice(0, 10); }
+const localISO = Commun.dateLocale;           // AAAA-MM-JJ en heure locale
+const todayISO = () => Commun.dateLocale();
+const escapeHtml = Commun.echapper;
+const nouvelleProgression = () => ({ ease: 2.5, interval: 0, reps: 0, dueDate: todayISO() });
 
 function mkSeedCard(id, matiere, recto, verso) {
-  return { id, matiere, recto, verso, ease: 2.5, interval: 0, reps: 0, dueDate: todayISOStatic() };
+  return { id, matiere, recto, verso, ...nouvelleProgression() };
 }
 
 const SEED_RAW = [
@@ -191,27 +303,14 @@ const SEED_RAW = [
 
 const SEED = SEED_RAW.map(([m, r, v], i) => mkSeedCard("seed-fc-" + i, m, r, v));
 
-function loadCards() {
-  let existing = [];
-  try { existing = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-  catch { existing = []; }
-  const existingIds = new Set(existing.map(c => c.id));
-  const missing = SEED.filter(c => !existingIds.has(c.id));
-  return existing.concat(missing);
-}
-function saveCards(cards) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
-}
+const loadCards = () => Commun.avecExemples(STORAGE_KEY, SEED, DELETED_SEEDS_KEY);
+const saveCards = list => Commun.ecrire(STORAGE_KEY, list);
 
 let cards = loadCards();
 saveCards(cards);
 let reviewQueue = [];
 let currentCard = null;
 let reviewTotal = 0;
-
-function todayISO() {
-  return new Date().toISOString().slice(0, 10);
-}
 
 function isDue(card) {
   return !card.dueDate || card.dueDate <= todayISO();
@@ -228,52 +327,135 @@ function refreshMatiereOptions() {
   sel.value = current;
 }
 
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
-
 function updateCounts() {
   document.getElementById("totalCount").textContent = cards.length;
-  document.getElementById("dueCount").textContent = cards.filter(isDue).length;
+  const aReviser = cards.filter(isDue).length;
+  document.getElementById("dueCount").textContent = aReviser;
+  document.getElementById("dueLibelle").textContent = aReviser > 1 ? "cartes à réviser aujourd'hui" : (aReviser ? "carte à réviser aujourd'hui" : "carte à réviser aujourd'hui — tout est à jour");
+  document.getElementById("startReview").disabled = !aReviser;
+  renderStats();
+}
+
+// --- Statistiques : nombre de révisions par jour, conservé à part des cartes ---
+const STATS_KEY = "droit_flashcards_stats";
+function loadStats() {
+  const s = Commun.lire(STATS_KEY, null);
+  return s && s.jours ? s : { jours: {} };
+}
+function logReview() {
+  const s = loadStats(), j = todayISO();
+  s.jours[j] = (s.jours[j] || 0) + 1;
+  try { localStorage.setItem(STATS_KEY, JSON.stringify(s)); } catch {}
+}
+function renderStats() {
+  const jours = loadStats().jours;
+  const d = new Date();
+  // série : jours consécutifs avec au moins une révision, en partant d'aujourd'hui (ou d'hier si rien encore aujourd'hui)
+  if (!jours[localISO(d)]) d.setDate(d.getDate() - 1);
+  let serie = 0;
+  while (jours[localISO(d)]) { serie++; d.setDate(d.getDate() - 1); }
+  document.getElementById("statJour").textContent = jours[todayISO()] || 0;
+  document.getElementById("statSerie").textContent = serie;
+  document.getElementById("statMaitrisees").textContent = cards.filter(c => (c.interval || 0) >= 21).length;
+  document.getElementById("statNouvelles").textContent = cards.filter(c => !c.reps && !c.interval).length;
+
+  const derniers = [];
+  for (let i = 13; i >= 0; i--) { const x = new Date(); x.setDate(x.getDate() - i); derniers.push([localISO(x), jours[localISO(x)] || 0]); }
+  const max = Math.max(1, ...derniers.map(x => x[1]));
+  const histo = document.getElementById("statHisto");
+  const vide = derniers.every(x => !x[1]);
+  histo.classList.toggle("sans-donnees", vide);
+  if (vide) { histo.innerHTML = '<span class="histo-vide">Aucune révision ces 14 derniers jours — lancez une séance !</span>'; }
+  else histo.innerHTML = derniers.map(([j, n]) =>
+    `<div class="${n ? "" : "vide"}" style="height:${n ? Math.max(4, Math.round(n / max * 100)) : 2}%" title="${j} : ${n} révision(s)"></div>`).join("");
+
+  const parMatiere = {};
+  cards.filter(isDue).forEach(c => { const m = c.matiere || "Sans matière"; parMatiere[m] = (parMatiere[m] || 0) + 1; });
+  const liste = Object.entries(parMatiere).sort((a, b) => b[1] - a[1]).map(([m, n]) => `${escapeHtml(m)} : <b>${n}</b>`);
+  document.getElementById("statMatieres").innerHTML = liste.length ? "À réviser — " + liste.join(" · ") : "Rien à réviser aujourd'hui.";
+}
+
+// Cartes correspondant à la recherche et au filtre (liste et export PDF)
+function cartesFiltrees() {
+  const search = document.getElementById("searchBox").value.trim().toLowerCase();
+  const matiereFilter = document.getElementById("filterMatiere").value;
+  return cards.filter(c =>
+    (!matiereFilter || c.matiere === matiereFilter) &&
+    (!search || [c.matiere, c.recto, c.verso].join(" ").toLowerCase().includes(search)));
 }
 
 function renderList() {
-  const search = document.getElementById("searchBox").value.trim().toLowerCase();
-  const matiereFilter = document.getElementById("filterMatiere").value;
   const list = document.getElementById("cardList");
-
-  let filtered = cards.filter(c => {
-    if (matiereFilter && c.matiere !== matiereFilter) return false;
-    if (search) {
-      const hay = (c.matiere + " " + c.recto + " " + c.verso).toLowerCase();
-      if (!hay.includes(search)) return false;
-    }
-    return true;
-  });
+  const filtered = cartesFiltrees();
 
   if (filtered.length === 0) {
-    list.innerHTML = '<div class="empty-state">Aucune carte pour l\'instant.</div>';
+    list.innerHTML = cards.length
+      ? '<div class="empty-state">Aucune carte ne correspond à cette recherche.</div>'
+      : '<div class="empty-state">Aucune carte pour l\'instant. Créez-en une avec « + Nouvelle carte ».</div>';
     return;
   }
 
   filtered.sort((a, b) => (a.matiere || "").localeCompare(b.matiere || ""));
 
   list.innerHTML = filtered.map(c => `
-    <div class="card" style="margin-bottom:0.6rem;">
-      <div class="row between">
+    <article class="carte-item">
+      <div class="meta">
         <span class="badge">${escapeHtml(c.matiere || "Sans matière")}</span>
-        <span class="muted">${isDue(c) ? "à réviser" : "prochaine révision : " + c.dueDate}</span>
+        ${isDue(c) ? '<span class="due">à réviser</span>' : "<span>prochaine révision : " + new Date(c.dueDate + "T12:00").toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) + "</span>"}
       </div>
-      <p style="margin:0.6rem 0 0.2rem;"><strong>${escapeHtml(c.recto)}</strong></p>
-      <p class="muted" style="margin:0.2rem 0 0.6rem;">${escapeHtml(c.verso)}</p>
-      <div class="row end">
-        <button class="danger" onclick="deleteCard('${c.id}')">Supprimer</button>
+      <h4>${escapeHtml(c.recto)}</h4>
+      <p>${escapeHtml(c.verso)}</p>
+      <div class="actions">
+        <button type="button" class="lien-action" data-edit="${escapeHtml(c.id)}">Modifier</button>
+        <button type="button" class="lien-action danger" data-delete="${escapeHtml(c.id)}">Supprimer</button>
       </div>
-    </div>
-  `).join("");
+    </article>  `).join("");
 }
 
+document.getElementById("cardList").addEventListener("click", (e) => {
+  const btn = e.target.closest("button[data-delete], button[data-edit]");
+  if (!btn) return;
+  if (btn.dataset.edit) startEdit(btn.dataset.edit);
+  else deleteCard(btn.dataset.delete);
+});
+
+// --- Modification d'une carte : le formulaire d'ajout passe en mode édition ---
+let editingId = null;
+const fenetre = document.getElementById("formCard");
+function ouvrirFormulaire() { fenetre.showModal ? fenetre.showModal() : fenetre.setAttribute("open", ""); document.getElementById("fRecto").focus(); }
+function startEdit(id) {
+  const c = cards.find(x => x.id === id);
+  if (!c) return;
+  editingId = id;
+  document.getElementById("fMatiere").value = c.matiere || "";
+  document.getElementById("fRecto").value = c.recto || "";
+  document.getElementById("fVerso").value = c.verso || "";
+  document.getElementById("formTitle").textContent = "Modifier la carte";
+  document.getElementById("addCardBtn").textContent = "Enregistrer";
+  document.getElementById("addAnotherBtn").hidden = true;
+  ouvrirFormulaire();
+}
+function nouvelleCarte() {
+  editingId = null;
+  document.getElementById("fRecto").value = "";
+  document.getElementById("fVerso").value = "";
+  document.getElementById("formTitle").textContent = "Nouvelle carte";
+  document.getElementById("addCardBtn").textContent = "Ajouter la carte";
+  document.getElementById("addAnotherBtn").hidden = false;
+  ouvrirFormulaire();
+}
+function endEdit() {
+  editingId = null;
+  document.getElementById("fRecto").value = "";
+  document.getElementById("fVerso").value = "";
+  if (fenetre.open) fenetre.close();
+}
+document.getElementById("nouvelleCarte").addEventListener("click", nouvelleCarte);
+document.getElementById("cancelEditBtn").addEventListener("click", endEdit);
+
 function deleteCard(id) {
+  if (!confirm("Supprimer cette carte ?")) return;
+  Commun.oublierExemple(DELETED_SEEDS_KEY, id);
   cards = cards.filter(c => c.id !== id);
   saveCards(cards);
   refreshMatiereOptions();
@@ -281,47 +463,45 @@ function deleteCard(id) {
   renderList();
 }
 
-document.getElementById("addCardBtn").addEventListener("click", () => {
+function enregistrerCarte(continuer) {
   const matiere = document.getElementById("fMatiere").value.trim();
   const recto = document.getElementById("fRecto").value.trim();
   const verso = document.getElementById("fVerso").value.trim();
   if (!recto || !verso) { alert("Merci de remplir le recto et le verso."); return; }
-  cards.push({
-    id: crypto.randomUUID(),
-    matiere, recto, verso,
-    ease: 2.5, interval: 0, reps: 0,
-    dueDate: todayISO()
-  });
+  let id = editingId;
+  if (editingId) {
+    // on garde la progression de révision (ease, interval, échéance)
+    const c = cards.find(x => x.id === editingId);
+    if (c) Object.assign(c, { matiere, recto, verso });
+  } else {
+    id = crypto.randomUUID();
+    cards.push({ id, matiere, recto, verso, ...nouvelleProgression() });
+  }
   saveCards(cards);
-  document.getElementById("fRecto").value = "";
-  document.getElementById("fVerso").value = "";
   refreshMatiereOptions();
   updateCounts();
   renderList();
-});
+  if (continuer) {                      // la matière reste : on enchaîne les cartes d'un même cours
+    document.getElementById("fRecto").value = "";
+    document.getElementById("fVerso").value = "";
+    document.getElementById("fRecto").focus();
+  } else {
+    endEdit();
+    const bouton = document.querySelector(`.carte-item [data-edit="${CSS.escape(id)}"]`);
+    Commun.montrer(bouton && bouton.closest(".carte-item"));   // la carte enregistrée, sous vos yeux
+  }
+}
+document.getElementById("addCardBtn").addEventListener("click", () => enregistrerCarte(false));
+document.getElementById("addAnotherBtn").addEventListener("click", () => enregistrerCarte(true));
 
 document.getElementById("searchBox").addEventListener("input", renderList);
 document.getElementById("filterMatiere").addEventListener("change", renderList);
 
-document.getElementById("exportBtn").addEventListener("click", () => {
-  const blob = new Blob([JSON.stringify(cards, null, 2)], { type: "application/json" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "fiches-memo-" + todayISO() + ".json";
-  a.click();
-});
+document.getElementById("exportBtn").addEventListener("click", () =>
+  Commun.telecharger("fiches-memo-" + todayISO() + ".json", JSON.stringify(cards, null, 2)));
 
 document.getElementById("exportPdfBtn").addEventListener("click", () => {
-  const search = document.getElementById("searchBox").value.trim().toLowerCase();
-  const matiereFilter = document.getElementById("filterMatiere").value;
-  let filtered = cards.filter(c => {
-    if (matiereFilter && c.matiere !== matiereFilter) return false;
-    if (search) {
-      const hay = (c.matiere + " " + c.recto + " " + c.verso).toLowerCase();
-      if (!hay.includes(search)) return false;
-    }
-    return true;
-  });
+  const filtered = cartesFiltrees();
   if (!filtered.length) { alert("Aucune carte à exporter avec ces filtres."); return; }
   filtered.sort((a, b) => (a.matiere || "").localeCompare(b.matiere || ""));
 
@@ -333,7 +513,7 @@ document.getElementById("exportPdfBtn").addEventListener("click", () => {
 
   const today = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
   let html = `<div class="print-header">
-      <div><p class="print-brand">Droit Toolkit</p><h1>Fiches mémo</h1></div>
+      <div><p class="print-brand">Paraphe</p><h1>Fiches mémo</h1></div>
       <div class="print-meta"><b>${filtered.length}</b> carte(s)<br>${today}</div>
     </div>`;
   Object.keys(groups).sort().forEach(m => {
@@ -345,7 +525,7 @@ document.getElementById("exportPdfBtn").addEventListener("click", () => {
       </div>`;
     });
   });
-  html += `<div class="print-footer"><span>Droit Toolkit — Fiches mémo</span><span>${today}</span></div>`;
+  html += `<div class="print-footer"><span>Paraphe — Fiches mémo</span><span>${today}</span></div>`;
 
   document.getElementById("printArea").innerHTML = html;
   window.print();
@@ -354,74 +534,98 @@ document.getElementById("exportPdfBtn").addEventListener("click", () => {
 document.getElementById("importBtn").addEventListener("click", () => {
   document.getElementById("importFile").click();
 });
-document.getElementById("importFile").addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    try {
-      const imported = JSON.parse(reader.result);
-      if (!Array.isArray(imported)) throw new Error("format invalide");
-      const existingIds = new Set(cards.map(c => c.id));
-      let added = 0;
-      imported.forEach(c => {
-        if (c && c.recto && c.verso && !existingIds.has(c.id)) {
-          cards.push(Object.assign({
-            id: crypto.randomUUID(), ease: 2.5, interval: 0, reps: 0, dueDate: todayISO()
-          }, c));
-          added++;
-        }
-      });
-      saveCards(cards);
-      refreshMatiereOptions();
-      updateCounts();
-      renderList();
-      alert(added + " carte(s) importée(s).");
-    } catch (err) {
-      alert("Fichier invalide : " + err.message);
-    }
-  };
-  reader.readAsText(file);
-  e.target.value = "";
-});
+const PROMPT_IA = `Tu vas transformer le document ci-dessous (cours, fiche de révision, polycopié, arrêt, export Anki ou Quizlet…) en cartes de révision pour l'outil « Mémo » de Paraphe, qui les fait réviser par répétition espacée.
+
+FORMAT : un tableau JSON, un objet par carte.
+[
+  {
+    "matiere": "Droit des obligations",
+    "recto": "Quel est le délai de prescription de droit commun des actions personnelles ou mobilières ?",
+    "verso": "Cinq ans à compter du jour où le titulaire du droit a connu ou aurait dû connaître les faits lui permettant de l'exercer (art. 2224 C. civ.)."
+  }
+]
+
+RÈGLES
+- Si le document contient déjà des paires question / réponse (export Anki ou Quizlet, liste de questions), reprends-les telles quelles, une carte par paire, sans les réécrire.
+- Sinon, rédige des cartes qui couvrent les notions importantes du document : définitions, conditions, régimes, délais, exceptions, arrêts de principe.
+- Une carte = une seule notion. La question (recto) se suffit à elle-même et appelle une réponse précise ; évite les questions fermées (oui / non).
+- La réponse (verso) est courte (une à trois phrases), exacte et fidèle au document, avec la référence entre parenthèses quand le document la donne (« art. 1231-1 C. civ. », « Cass. ch. mixte, 22 avr. 2005 »).
+- matiere : la matière du document (« Droit des contrats », « Procédure pénale »…), la même pour toutes les cartes d'un même thème.
+- Pas de doublons. Formule les questions de façon impersonnelle.
+- Ne crée aucune carte sur une information qui ne figure pas dans le document.` + Commun.FIN_PROMPT("memo-cartes.json");
+const IMPORT = {
+  liste: () => cards,
+  valide: c => c.recto && c.verso,
+  defauts: () => ({ matiere: "", ...nouvelleProgression() }),
+  apres: n => {
+    saveCards(cards);
+    refreshMatiereOptions();
+    updateCounts();
+    renderList();
+    alert(n + " carte(s) importée(s).");
+  }
+};
+Commun.importerJSON(document.getElementById("importFile"), IMPORT);
+Commun.promptIA(document.getElementById("promptIA"), { prompt: PROMPT_IA, quoi: "des cartes", input: document.getElementById("importFile"), options: IMPORT });
 
 // --- Review logic (simplified SM-2) ---
+let reviewDoneIds = new Set();
+const zone = document.getElementById("reviewArea");
+function afficherFin() {
+  document.getElementById("revCarte").hidden = true;
+  document.getElementById("showAnswerRow").hidden = true;
+  document.getElementById("ratingRow").hidden = true;
+  const n = reviewDoneIds.size;
+  document.getElementById("finTitre").textContent = n ? "Bravo, séance terminée." : "Rien à réviser aujourd'hui.";
+  document.getElementById("finTexte").textContent = n
+    ? n + (n > 1 ? " cartes révisées" : " carte révisée") + ". Les prochaines reviendront au bon moment."
+    : "Toutes vos cartes sont à jour. Revenez demain, ou ajoutez de nouvelles cartes.";
+  document.getElementById("reviewDone").hidden = false;
+  document.getElementById("reviewBar").style.width = "100%";
+  document.getElementById("fermerRevision").focus();
+  updateCounts();
+  renderList();
+}
+function quitterRevision() {
+  zone.hidden = true;
+  document.body.style.overflow = "";
+  updateCounts();
+  renderList();
+  document.getElementById("startReview").focus();
+}
 function startReview() {
   reviewQueue = cards.filter(isDue);
   reviewTotal = reviewQueue.length;
-  if (reviewQueue.length === 0) {
-    document.getElementById("reviewArea").style.display = "none";
-    document.getElementById("reviewDone").style.display = "block";
-    return;
-  }
-  document.getElementById("reviewDone").style.display = "none";
+  reviewDoneIds = new Set();
+  zone.hidden = false;
+  document.body.style.overflow = "hidden";
+  document.getElementById("reviewDone").hidden = true;
+  if (reviewQueue.length === 0) { afficherFin(); return; }
   nextCard();
 }
 
 function nextCard() {
-  if (reviewQueue.length === 0) {
-    document.getElementById("reviewArea").style.display = "none";
-    document.getElementById("reviewDone").style.display = "block";
-    updateCounts();
-    renderList();
-    return;
-  }
+  if (reviewQueue.length === 0) { afficherFin(); return; }
   currentCard = reviewQueue.shift();
-  document.getElementById("reviewArea").style.display = "block";
+  document.getElementById("revCarte").hidden = false;
   document.getElementById("reviewMatiere").textContent = currentCard.matiere || "Sans matière";
+  // les cartes « Encore » reviennent en fin de séance : on compte les cartes validées, pas les passages
   document.getElementById("reviewProgress").textContent =
-    (reviewTotal - reviewQueue.length - 1 + 1) + " / " + reviewTotal;
+    reviewDoneIds.size + " / " + reviewTotal + (currentCard.retour ? " · 2e passage" : "");
+  document.getElementById("reviewBar").style.width = (reviewTotal ? reviewDoneIds.size / reviewTotal * 100 : 0) + "%";
   document.getElementById("reviewRecto").textContent = currentCard.recto;
   document.getElementById("reviewVerso").textContent = currentCard.verso;
-  document.getElementById("reviewVerso").style.display = "none";
-  document.getElementById("showAnswerRow").style.display = "flex";
-  document.getElementById("ratingRow").style.display = "none";
+  document.getElementById("reviewVerso").hidden = true;
+  document.getElementById("showAnswerRow").hidden = false;
+  document.getElementById("ratingRow").hidden = true;
+  document.getElementById("showAnswerBtn").focus();
 }
 
 function showAnswer() {
-  document.getElementById("reviewVerso").style.display = "block";
-  document.getElementById("showAnswerRow").style.display = "none";
-  document.getElementById("ratingRow").style.display = "flex";
+  document.getElementById("reviewVerso").hidden = false;
+  document.getElementById("showAnswerRow").hidden = true;
+  document.getElementById("ratingRow").hidden = false;
+  document.querySelector('#ratingRow [data-rating="2"]').focus();
 }
 
 function rateCard(rating) {
@@ -448,13 +652,18 @@ function rateCard(rating) {
 
   const due = new Date();
   due.setDate(due.getDate() + Math.max(c.interval, rating === 0 ? 0 : 1));
-  c.dueDate = due.toISOString().slice(0, 10);
+  c.dueDate = localISO(due);
 
   saveCards(cards);
+  logReview();
+  if (rating === 0) reviewQueue.push({ id: c.id, matiere: c.matiere, recto: c.recto, verso: c.verso, retour: true });
+  else reviewDoneIds.add(c.id);
   nextCard();
 }
 
 document.getElementById("startReview").addEventListener("click", startReview);
+document.getElementById("quitterRevision").addEventListener("click", quitterRevision);
+document.getElementById("fermerRevision").addEventListener("click", quitterRevision);
 document.getElementById("showAnswerBtn").addEventListener("click", showAnswer);
 document.getElementById("ratingRow").addEventListener("click", (e) => {
   const btn = e.target.closest("button[data-rating]");
@@ -462,19 +671,38 @@ document.getElementById("ratingRow").addEventListener("click", (e) => {
 });
 
 document.addEventListener("keydown", (e) => {
-  if (document.getElementById("reviewArea").style.display === "none") return;
-  if (e.code === "Space") {
-    e.preventDefault();
-    if (document.getElementById("showAnswerRow").style.display !== "none") showAnswer();
-  }
-  if (["1","2","3","4"].includes(e.key) && document.getElementById("ratingRow").style.display !== "none") {
-    rateCard(Number(e.key) - 1);
-  }
+  if (zone.hidden) return;
+  if (e.key === "Escape") { e.preventDefault(); quitterRevision(); return; }
+  const t = e.target;
+  if (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
+  if (e.code === "Space" && !document.getElementById("showAnswerRow").hidden) { e.preventDefault(); showAnswer(); }
+  if (["1","2","3","4"].includes(e.key) && !document.getElementById("ratingRow").hidden) { e.preventDefault(); rateCard(Number(e.key) - 1); }
 });
+
+// --- Onglets : Réviser / Mes cartes (l'onglet choisi reste dans l'adresse : #cartes) ---
+function montrerOnglet(nom) {
+  const cartes = nom === "cartes";
+  document.getElementById("ongReviser").setAttribute("aria-selected", String(!cartes));
+  document.getElementById("ongCartes").setAttribute("aria-selected", String(cartes));
+  document.getElementById("vueReviser").hidden = cartes;
+  document.getElementById("vueCartes").hidden = !cartes;
+  history.replaceState(null, "", cartes ? "#cartes" : location.pathname + location.search);
+}
+document.getElementById("ongReviser").addEventListener("click", () => montrerOnglet("reviser"));
+document.getElementById("ongCartes").addEventListener("click", () => montrerOnglet("cartes"));
 
 refreshMatiereOptions();
 updateCounts();
 renderList();
+if (location.hash === "#cartes") montrerOnglet("cartes");
+
+// Lien depuis la recherche globale du Hub : flashcards.html?q=…
+const rechercheInitiale = new URLSearchParams(location.search).get("q");
+if (rechercheInitiale) {
+  document.getElementById("searchBox").value = rechercheInitiale;
+  montrerOnglet("cartes");
+  renderList();
+}
 </script>
 </body>
 </html>

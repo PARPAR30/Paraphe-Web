@@ -1,7 +1,7 @@
 {
-  "name": "Mes Logiciels — Outils juridiques",
-  "short_name": "Mes Logiciels",
-  "description": "Fiches mémo, fiches d'arrêt, codes & articles, Suivi Juridique, Considérant, Quantième.",
+  "name": "Paraphe — Du cours au cabinet",
+  "short_name": "Paraphe",
+  "description": "Fiches mémo, fiches d'arrêt, codes & articles, Diligences, Considérant, Quantième.",
   "start_url": "Hub.html",
   "scope": "./",
   "display": "standalone",

@@ -2,97 +2,153 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Codes &amp; articles — Droit Toolkit</title>
+<title>Codes &amp; articles — Paraphe</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#131316">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Zilla+Slab:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23131316%22%2F%3E%3Cg%20stroke%3D%22%23F7F6F2%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%3E%3Cline%20x1%3D%2216%22%20y1%3D%227%22%20x2%3D%2216%22%20y2%3D%2224%22%2F%3E%3Cline%20x1%3D%228%22%20y1%3D%2210%22%20x2%3D%2224%22%20y2%3D%2210%22%2F%3E%3Cline%20x1%3D%2216%22%20y1%3D%2224%22%20x2%3D%2211%22%20y2%3D%2224%22%2F%3E%3Cline%20x1%3D%2216%22%20y1%3D%2224%22%20x2%3D%2221%22%20y2%3D%2224%22%2F%3E%3Cpath%20d%3D%22M6%2010a4%205%200%200%200%208%200%22%2F%3E%3Cpath%20d%3D%22M18%2010a4%205%200%200%200%208%200%22%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%227%22%20r%3D%221.6%22%20fill%3D%22%233B2FE8%22%2F%3E%3C%2Fsvg%3E">
+<script src="taille.js"></script><script src="navigation.js" defer></script>
+<link rel="stylesheet" href="fonts/fonts.css">
+<script src="pwa.js" defer></script>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
 <link rel="stylesheet" href="style.css">
+<style>
+  .liste-arrets{max-height:170px;overflow:auto;border:2px solid var(--encre);padding:var(--e2) var(--e3)}
+  .liste-arrets label{display:flex;gap:var(--e2);align-items:baseline;margin:var(--e1) 0;text-transform:none;letter-spacing:0;font-weight:500;font-size:calc(13.5px * var(--ech));color:var(--encre)}
+  .liste-arrets input{width:auto;flex:none}
+  .liens-article{margin:var(--e2) 0 0;font-size:calc(13px * var(--ech))}
+  .liens-article a{color:rgb(var(--acc));font-weight:600;text-decoration:none}
+  .liens-article a:hover{text-decoration:underline}
+  .card.cible,.art.cible{outline:3px solid rgb(var(--acc));outline-offset:2px}
+
+  main.codes{max-width:1100px}
+  .barre .etoile-filtre{display:flex;align-items:center;gap:6px;margin:0;text-transform:none;letter-spacing:0;font-weight:600;color:var(--encre)}
+  .compte-liste{margin:var(--e5) 0 var(--e2);font-size:calc(13px * var(--ech));color:var(--gris);font-weight:600}
+  /* un article = une ligne, qui se déplie */
+  .liste-art{border-top:2px solid var(--encre)}
+  .art{border-bottom:1px solid var(--filet);background:var(--carte)}
+  .art-tete{height:auto;display:grid;grid-template-columns:150px 1fr auto;gap:var(--e4);align-items:start;width:100%;text-align:left;border:0;background:none;
+    padding:var(--e3) var(--e4);min-height:0;text-transform:none;letter-spacing:0;font-weight:400;color:var(--encre);cursor:pointer}
+  .art-tete:hover{background:rgba(var(--acc),.05);color:var(--encre)}
+  .art-ref b{display:block;font:700 calc(16px * var(--ech))/1.2 var(--slab)}
+  .art-ref span{display:block;font-size:calc(12.5px * var(--ech));color:var(--gris);margin-top:2px}
+  .art-milieu{min-width:0}
+  .art-milieu .badge{margin-bottom:4px}
+  .art-extrait{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:calc(14px * var(--ech));color:var(--encre-2);line-height:1.5}
+  .art.ouvert .art-extrait{display:none}
+  .art-etat{display:flex;align-items:center;gap:var(--e3);font-size:calc(13px * var(--ech));color:var(--gris)}
+  .art-etat .etoile{color:rgb(var(--acc));font-size:calc(16px * var(--ech))}
+  .art-etat .chevron{transition:transform .15s}
+  .art.ouvert .art-etat .chevron{transform:rotate(180deg)}
+  .art-corps{padding:0 var(--e4) var(--e4) calc(150px + var(--e4) * 2)}
+  .art-corps[hidden]{display:none}
+  .art-texte{margin:0 0 var(--e3);font-size:calc(15px * var(--ech));line-height:1.65;white-space:pre-line}
+  .art-note{margin:0 0 var(--e3);padding-top:var(--e2);border-top:1px dashed var(--filet);color:var(--encre-2);font-size:calc(14px * var(--ech))}
+  .art-note b{text-transform:uppercase;font-size:calc(12px * var(--ech));letter-spacing:.05em;color:var(--gris);margin-right:6px}
+  .art-actions{display:flex;flex-wrap:wrap;gap:var(--e4);margin-top:var(--e3);padding-top:var(--e2);border-top:1px solid var(--filet)}
+  .lien-action{border:0;background:none;padding:0;min-height:28px;font-size:calc(12px * var(--ech));font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--encre)}
+  .lien-action:hover{background:none;color:rgb(var(--acc))}
+  .lien-action.actif{color:rgb(var(--acc))}
+  .lien-action.danger{color:var(--gris)}
+  .lien-action.danger:hover{background:none;color:var(--alerte)}
+  dialog.fenetre-article{border:3px solid var(--encre);background:var(--carte);color:var(--encre);padding:var(--e6);width:min(720px,calc(100vw - 32px));box-shadow:12px 12px 0 rgb(var(--acc))}
+  dialog.fenetre-article::backdrop{background:rgba(19,19,22,.5)}
+  dialog.fenetre-article h3{margin-top:0}
+  @media (max-width:640px){
+    .art-tete{grid-template-columns:1fr auto}
+    .art-ref{grid-column:1 / -1}
+    .art-corps{padding-left:var(--e4)}
+  }
+</style>
 </head>
 <body>
 <script src="theme.js"></script>
 <header class="topnav">
-  <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 32 32"><line x1="16" y1="7" x2="16" y2="24" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><line x1="8" y1="10" x2="24" y2="10" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><line x1="16" y1="24" x2="11" y2="24" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><line x1="16" y1="24" x2="21" y2="24" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M6 10a4 5 0 0 0 8 0" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/><path d="M18 10a4 5 0 0 0 8 0" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/><circle cx="16" cy="7" r="2.3" fill="rgb(59,47,232)"/></svg></span>Droit Toolkit</a>
+  <a class="brand" href="Hub.html"><span class="brand-mark" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 32 32"><rect x="5.25" y="4.25" width="18.5" height="21.5" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 9h4v20H9v-4h15z" fill="currentColor"/><rect x="9" y="9" width="11" height="2.2" fill="currentColor"/><rect x="9" y="13.4" width="7" height="2.2" fill="currentColor"/><rect x="15" y="18" width="5" height="4.5" style="fill:rgb(var(--acc,59,47,232))"/></svg></span>Paraphe</a>
   <nav>
-    <a href="index.html">Accueil</a>
+    <span data-paraphe-nav></span>
     <a href="flashcards.html">Fiches mémo</a>
     <a href="fiches-arret.html">Fiches d'arrêt</a>
     <a href="codes.html" class="active">Codes &amp; articles</a>
-    <a href="Hub.html">Tous mes logiciels</a>
     <button id="theme-toggle" aria-pressed="false">Nuit</button>
   </nav>
 </header>
-<main>
+<main class="codes">
   <p class="eyebrow">Références</p>
   <h1>Codes &amp; articles</h1>
-  <p class="muted">Colle ici les articles que tu utilises souvent (depuis Légifrance par exemple), ajoute une note personnelle et marque-les "à retenir". Une base d'articles de référence par matière est préchargée pour démarrer — pense à vérifier le texte exact et la numérotation en vigueur sur Légifrance.</p>
+  <p class="muted">Vos articles de référence, avec une note personnelle et un marqueur « à retenir ». Une base d'articles par matière est préchargée pour démarrer : vérifiez toujours le texte en vigueur sur Légifrance.</p>
 
-  <div class="card">
-    <div class="toolbar">
-      <input type="search" id="searchBox" placeholder="Rechercher un article, un numéro, une note...">
-      <select id="filterMatiere"><option value="">Toutes les matières</option></select>
-      <select id="filterCode"><option value="">Tous les codes</option></select>
-      <label style="display:flex; align-items:center; gap:0.3rem; margin:0;">
-        <input type="checkbox" id="filterStar" style="width:auto;"> À retenir uniquement
-      </label>
+  <div class="card barre">
+    <div class="barre-filtres">
+      <input type="search" id="searchBox" placeholder="Rechercher un article, un numéro, une note…" aria-label="Rechercher un article">
+      <select id="filterMatiere" aria-label="Filtrer par matière"><option value="">Toutes les matières</option></select>
+      <select id="filterCode" aria-label="Filtrer par code"><option value="">Tous les codes</option></select>
+      <label class="etoile-filtre"><input type="checkbox" id="filterStar" style="width:auto;"> À retenir</label>
+    </div>
+    <div class="barre-actions">
+      <button type="button" id="nouvelArticle" class="primary">+ Nouvel article</button>
+      <div class="barre-groupe" role="group" aria-label="Importer">
+        <span class="barre-titre">Importer</span>
+        <button type="button" id="importBtn" title="Reprendre un fichier .json enregistré depuis cet outil">Depuis un fichier</button>
+        <button type="button" id="promptIA" title="Copier un prompt qui fait convertir votre document (PDF, Word, texte…) par une IA au format d’import">Avec une IA</button>
+      </div>
+      <div class="barre-groupe" role="group" aria-label="Exporter">
+        <span class="barre-titre">Exporter</span>
+        <button type="button" id="exportBtn" title="Enregistrer une copie de vos articles (fichier .json)">Sauvegarde</button>
+        <button type="button" id="exportPdfBtn" title="Mettre en page vos articles pour les imprimer ou les enregistrer en PDF">Imprimer / PDF</button>
+      </div>
+      <input type="file" id="importFile" accept="application/json" hidden>
     </div>
   </div>
 
-  <div class="card">
-    <h3>Ajouter un article</h3>
-    <div class="row">
-      <div style="flex:1; min-width:180px;">
-        <label for="fMatiere">Matière</label>
-        <input type="text" id="fMatiere" list="matiereList" placeholder="ex. Droit des sociétés">
-        <datalist id="matiereList"></datalist>
-      </div>
-      <div style="flex:1; min-width:180px;">
-        <label for="fCode">Code</label>
-        <input type="text" id="fCode" list="codeList" placeholder="ex. Code civil">
-        <datalist id="codeList"></datalist>
-      </div>
-      <div style="flex:1; min-width:120px;">
-        <label for="fNumero">Numéro</label>
-        <input type="text" id="fNumero" placeholder="ex. 1240">
-      </div>
-    </div>
-    <label for="fTexte">Texte de l'article</label>
-    <textarea id="fTexte" placeholder="Colle le texte de l'article ici"></textarea>
-    <label for="fNote">Note personnelle</label>
-    <textarea id="fNote" placeholder="Ta note, exemple d'application, arrêt lié..."></textarea>
-    <div class="row" style="margin-top:0.4rem;">
-      <label style="display:flex; align-items:center; gap:0.3rem; margin:0;">
-        <input type="checkbox" id="fStar" style="width:auto;"> Marquer "à retenir"
-      </label>
-    </div>
-    <div class="row end" style="margin-top:0.8rem;">
-      <button id="addBtn" class="primary">Ajouter l'article</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="row between">
-      <h3 style="margin:0;">Articles</h3>
-      <div class="row">
-        <button id="exportBtn">Exporter (JSON)</button>
-        <button id="exportPdfBtn">Exporter (PDF)</button>
-        <button id="importBtn">Importer</button>
-        <input type="file" id="importFile" accept="application/json" style="display:none;">
-      </div>
-    </div>
-    <div id="articleList" style="margin-top:0.8rem;"></div>
-  </div>
+  <p class="compte-liste" id="compteListe"></p>
+  <div id="articleList" class="liste-art"></div>
 </main>
+
+<dialog class="fenetre-article" id="formArticle" aria-labelledby="formTitle">
+  <h3 id="formTitle">Nouvel article</h3>
+  <div class="row">
+    <div style="flex:1; min-width:180px;">
+      <label for="fMatiere">Matière</label>
+      <input type="text" id="fMatiere" list="matiereList" placeholder="ex. Droit des sociétés">
+      <datalist id="matiereList"></datalist>
+    </div>
+    <div style="flex:1; min-width:180px;">
+      <label for="fCode">Code</label>
+      <input type="text" id="fCode" list="codeList" placeholder="ex. Code civil">
+      <datalist id="codeList"></datalist>
+    </div>
+    <div style="flex:1; min-width:120px;">
+      <label for="fNumero">Numéro</label>
+      <input type="text" id="fNumero" placeholder="ex. 1240">
+    </div>
+  </div>
+  <label for="fTexte">Texte de l'article</label>
+  <textarea id="fTexte" placeholder="Collez le texte de l'article ici"></textarea>
+  <label for="fNote">Note personnelle</label>
+  <textarea id="fNote" placeholder="Votre note, exemple d'application, arrêt lié…"></textarea>
+  <div class="row" style="margin-top:0.4rem;">
+    <label style="display:flex; align-items:center; gap:0.3rem; margin:0;">
+      <input type="checkbox" id="fStar" style="width:auto;"> Marquer « à retenir »
+    </label>
+  </div>
+  <label>Arrêts liés <span class="muted" style="text-transform:none;letter-spacing:0;font-weight:400;">(depuis Fiches d'arrêt)</span></label>
+  <div id="fArrets" class="liste-arrets"></div>
+  <div class="row end" style="margin-top:var(--e4);">
+    <button type="button" id="cancelEditBtn">Annuler</button>
+    <button type="button" id="addBtn" class="primary">Ajouter l'article</button>
+  </div>
+</dialog>
 <div id="printArea"></div>
 
+<script src="commun.js"></script>
 <script>
 const STORAGE_KEY = "droit_codes";
+// Articles d'exemple supprimés par l'utilisateur : sans cette liste, ils revenaient à chaque chargement
+const DELETED_SEEDS_KEY = "droit_codes_seeds_supprimees";
 
 function mkSeedArticle(matiere, code, numero, texte, note, star) {
   return { matiere, code, numero, texte, note, star: !!star };
@@ -215,31 +271,20 @@ mkSeedArticle("Régime général des obligations", "Code civil", "1216",
 
 const OBSOLETE_SEED_IDS = new Set(["seed-1", "seed-2"]); // ancien jeu d'exemple (Code civil 1240/1103)
 
-function loadArticles() {
-  let existing = [];
-  try { existing = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-  catch { existing = []; }
-  existing = existing.filter(a => !OBSOLETE_SEED_IDS.has(a.id));
-  const existingIds = new Set(existing.map(a => a.id));
-  const missing = SEED.filter(a => !existingIds.has(a.id));
-  return existing.concat(missing);
-}
-function saveArticles(list) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-}
+const loadArticles = () =>
+  Commun.avecExemples(STORAGE_KEY, SEED, DELETED_SEEDS_KEY).filter(a => !OBSOLETE_SEED_IDS.has(a.id));
+const saveArticles = list => Commun.ecrire(STORAGE_KEY, list);
+const escapeHtml = Commun.echapper;
 
 let articles = loadArticles();
 saveArticles(articles);
 
-function escapeHtml(s) {
-  return String(s || "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
 
 function highlight(text, term) {
-  const escaped = escapeHtml(text);
-  if (!term) return escaped;
+  if (!term) return escapeHtml(text);
   const re = new RegExp("(" + term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "ig");
-  return escaped.replace(re, "<mark>$1</mark>");
+  // découpage sur le texte brut, puis échappement de chaque morceau
+  return String(text || "").split(re).map((part, i) => i % 2 ? "<mark>" + escapeHtml(part) + "</mark>" : escapeHtml(part)).join("");
 }
 
 function refreshCodeOptions() {
@@ -264,20 +309,81 @@ document.getElementById("addBtn").addEventListener("click", () => {
   const numero = document.getElementById("fNumero").value.trim();
   const texte = document.getElementById("fTexte").value.trim();
   if (!code || !numero || !texte) { alert("Merci de remplir le code, le numéro et le texte."); return; }
-  articles.push({
-    id: crypto.randomUUID(),
+  const champs = {
     matiere, code, numero, texte,
     note: document.getElementById("fNote").value.trim(),
-    star: document.getElementById("fStar").checked
-  });
+    star: document.getElementById("fStar").checked,
+    arrets: [...document.querySelectorAll("#fArrets input:checked")].map(i => i.value)
+  };
+  let id = editingId;
+  if (editingId) {
+    const a = articles.find(x => x.id === editingId);
+    if (a) Object.assign(a, champs);
+  } else {
+    id = crypto.randomUUID();
+    articles.push(Object.assign({ id }, champs));
+  }
   saveArticles(articles);
-  document.getElementById("fNumero").value = "";
-  document.getElementById("fTexte").value = "";
-  document.getElementById("fNote").value = "";
-  document.getElementById("fStar").checked = false;
+  endEdit();
   refreshCodeOptions();
+  ouverts.add(id);
   renderList();
+  Commun.montrer(document.getElementById("art-" + id));   // l'article enregistré, déplié sous vos yeux
 });
+
+// --- Arrêts disponibles (lus dans Fiches d'arrêt) ---
+const lireFichesArret = () => Commun.lire("droit_fiches_arret", []);
+function renderArretsChoix(selection) {
+  const fiches = lireFichesArret().slice().sort((a, b) => (a.titre || "").localeCompare(b.titre || ""));
+  const sel = new Set(selection || []);
+  document.getElementById("fArrets").innerHTML = fiches.length
+    ? fiches.map(f => `<label><input type="checkbox" value="${escapeHtml(f.id)}"${sel.has(f.id) ? " checked" : ""}> ${escapeHtml(f.titre)}${f.date ? " <span class=\"muted\">(" + escapeHtml(f.date.slice(0, 4)) + ")</span>" : ""}</label>`).join("")
+    : '<span class="muted">Aucune fiche d\'arrêt pour l\'instant.</span>';
+}
+
+// --- Modification : le formulaire d'ajout passe en mode édition ---
+let editingId = null;
+function startEdit(id) {
+  const a = articles.find(x => x.id === id);
+  if (!a) return;
+  editingId = id;
+  document.getElementById("fMatiere").value = a.matiere || "";
+  document.getElementById("fCode").value = a.code || "";
+  document.getElementById("fNumero").value = a.numero || "";
+  document.getElementById("fTexte").value = a.texte || "";
+  document.getElementById("fNote").value = a.note || "";
+  document.getElementById("fStar").checked = !!a.star;
+  renderArretsChoix(a.arrets);
+  document.getElementById("formTitle").textContent = "Modifier l'article";
+  document.getElementById("addBtn").textContent = "Enregistrer";
+  ouvrirFormulaire();
+}
+const fenetre = document.getElementById("formArticle");
+function ouvrirFormulaire() { fenetre.showModal ? fenetre.showModal() : fenetre.setAttribute("open", ""); document.getElementById(editingId ? "fTexte" : "fCode").focus(); }
+function nouvelArticle() {
+  editingId = null;
+  ["fNumero", "fTexte", "fNote"].forEach(id => document.getElementById(id).value = "");
+  document.getElementById("fStar").checked = false;
+  renderArretsChoix([]);
+  document.getElementById("formTitle").textContent = "Nouvel article";
+  document.getElementById("addBtn").textContent = "Ajouter l'article";
+  ouvrirFormulaire();
+}
+document.getElementById("nouvelArticle").addEventListener("click", nouvelArticle);
+function endEdit() {
+  editingId = null;
+  ["fNumero", "fTexte", "fNote"].forEach(id => document.getElementById(id).value = "");
+  document.getElementById("fStar").checked = false;
+  renderArretsChoix([]);
+  if (fenetre.open) fenetre.close();
+}
+document.getElementById("cancelEditBtn").addEventListener("click", endEdit);
+
+// Même forme de requête que Quantième : « article 1240 Code civil »
+function lienLegifrance(a) {
+  return "https://www.legifrance.gouv.fr/search/all?tab_selection=all&searchField=ALL&query="
+    + encodeURIComponent("article " + String(a.numero).trim() + " " + (a.code || "")) + "&page=1&init=true";
+}
 
 function toggleStar(id) {
   const a = articles.find(x => x.id === id);
@@ -286,89 +392,96 @@ function toggleStar(id) {
 
 function deleteArticle(id) {
   if (!confirm("Supprimer cet article ?")) return;
+  Commun.oublierExemple(DELETED_SEEDS_KEY, id);
   articles = articles.filter(a => a.id !== id);
   saveArticles(articles);
   refreshCodeOptions();
   renderList();
 }
 
+// Articles correspondant à la recherche et aux filtres, triés matière › code › numéro (liste et PDF)
+function articlesFiltres() {
+  const search = document.getElementById("searchBox").value.trim().toLowerCase();
+  const code = document.getElementById("filterCode").value;
+  const matiere = document.getElementById("filterMatiere").value;
+  const starOnly = document.getElementById("filterStar").checked;
+  return articles
+    .filter(a => (!code || a.code === code) && (!matiere || a.matiere === matiere) && (!starOnly || a.star) &&
+      (!search || [a.matiere, a.code, a.numero, a.texte, a.note].filter(Boolean).join(" ").toLowerCase().includes(search)))
+    .sort((a, b) => (a.matiere || "").localeCompare(b.matiere || "") || (a.code || "").localeCompare(b.code || "") ||
+      String(a.numero || "").localeCompare(String(b.numero || ""), undefined, { numeric: true }));
+}
+
+const ouverts = new Set();          // articles dépliés : conservés d'un affichage à l'autre
 function renderList() {
   const search = document.getElementById("searchBox").value.trim().toLowerCase();
-  const codeFilter = document.getElementById("filterCode").value;
-  const matiereFilter = document.getElementById("filterMatiere").value;
-  const starOnly = document.getElementById("filterStar").checked;
   const list = document.getElementById("articleList");
-
-  let filtered = articles.filter(a => {
-    if (codeFilter && a.code !== codeFilter) return false;
-    if (matiereFilter && a.matiere !== matiereFilter) return false;
-    if (starOnly && !a.star) return false;
-    if (search) {
-      const hay = (a.matiere + " " + a.code + " " + a.numero + " " + a.texte + " " + a.note).toLowerCase();
-      if (!hay.includes(search)) return false;
-    }
-    return true;
-  });
-
-  filtered.sort((a, b) => (a.matiere || "").localeCompare(b.matiere || "") || (a.code || "").localeCompare(b.code || "") || (a.numero || "").localeCompare(b.numero || "", undefined, {numeric:true}));
+  const filtered = articlesFiltres();
+  document.getElementById("compteListe").textContent = filtered.length
+    ? filtered.length + (filtered.length > 1 ? " articles" : " article") + (filtered.length < articles.length ? " sur " + articles.length : "")
+    : "";
 
   if (filtered.length === 0) {
-    list.innerHTML = '<div class="empty-state">Aucun article. Ajoutes-en un ci-dessus.</div>';
+    list.innerHTML = articles.length
+      ? '<div class="empty-state">Aucun article ne correspond à cette recherche.</div>'
+      : '<div class="empty-state">Aucun article. Ajoutez-en un avec « + Nouvel article ».</div>';
     return;
   }
 
-  list.innerHTML = filtered.map(a => `
-    <div class="card" style="margin-bottom:0.6rem;">
-      <div class="row between">
-        <div>
-          ${a.matiere ? `<span class="badge">${escapeHtml(a.matiere)}</span>` : ""}
-          <span class="muted" style="margin-left:0.4rem;">${escapeHtml(a.code)}</span>
-          <strong style="margin-left:0.4rem;">Art. ${escapeHtml(a.numero)}</strong>
-        </div>
-        <div class="row">
-          <button onclick="toggleStar('${a.id}')" title="À retenir" style="${a.star ? "color:rgb(var(--acc));border-color:rgb(var(--acc));" : ""}">
-            <svg width="14" height="14" viewBox="0 0 24 24" style="vertical-align:-2px; margin-right:4px;" fill="${a.star ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><polygon points="12 2 15.09 8.63 22 9.27 16.5 14.14 18.18 21 12 17.27 5.82 21 7.5 14.14 2 9.27 8.91 8.63"/></svg>À retenir
-          </button>
-          <button class="danger" onclick="deleteArticle('${a.id}')">Supprimer</button>
+  const titresArrets = Object.fromEntries(lireFichesArret().map(f => [f.id, f.titre + (f.date ? " (" + f.date.slice(0, 4) + ")" : "")]));
+  list.innerHTML = filtered.map(a => {
+    const ouvert = ouverts.has(a.id);
+    return `
+    <article class="art${ouvert ? " ouvert" : ""}" id="art-${escapeHtml(a.id)}">
+      <button type="button" class="art-tete" data-ouvrir="${escapeHtml(a.id)}" aria-expanded="${ouvert}">
+        <span class="art-ref"><b>Art. ${escapeHtml(a.numero)}</b><span>${escapeHtml(a.code)}</span></span>
+        <span class="art-milieu">${a.matiere ? `<span class="badge">${escapeHtml(a.matiere)}</span><br>` : ""}<span class="art-extrait">${highlight(a.texte, search)}</span></span>
+        <span class="art-etat">${a.star ? '<span class="etoile" title="À retenir" aria-label="À retenir">★</span>' : ""}<span class="chevron" aria-hidden="true">▾</span></span>
+      </button>
+      <div class="art-corps"${ouvert ? "" : " hidden"}>
+        <p class="art-texte">${highlight(a.texte, search)}</p>
+        ${a.note ? `<p class="art-note"><b>Note</b>${highlight(a.note, search)}</p>` : ""}
+        <p class="liens-article">
+          <a href="${lienLegifrance(a)}" target="_blank" rel="noopener">Vérifier sur Légifrance ↗</a>
+          ${(a.arrets || []).filter(id => titresArrets[id]).map(id =>
+            ` · <a href="fiches-arret.html#${encodeURIComponent(id)}">${escapeHtml(titresArrets[id])}</a>`).join("")}
+        </p>
+        <div class="art-actions">
+          <button type="button" class="lien-action${a.star ? " actif" : ""}" data-star="${escapeHtml(a.id)}">${a.star ? "★ À retenir" : "☆ Marquer à retenir"}</button>
+          <button type="button" class="lien-action" data-edit="${escapeHtml(a.id)}">Modifier</button>
+          <button type="button" class="lien-action danger" data-delete="${escapeHtml(a.id)}">Supprimer</button>
         </div>
       </div>
-      <p style="margin:0.6rem 0 0.2rem;">${highlight(a.texte, search)}</p>
-      ${a.note ? `<p class="muted" style="margin:0.4rem 0 0; padding-top:0.4rem; border-top:1px dashed var(--filet);"><strong style="text-transform:uppercase; font-size:11px; letter-spacing:.05em; color:var(--gris);">Note —</strong> ${highlight(a.note, search)}</p>` : ""}
-    </div>
-  `).join("");
+    </article>`;
+  }).join("");
 }
+
+document.getElementById("articleList").addEventListener("click", (e) => {
+  const el = e.target.closest("[data-ouvrir], [data-star], [data-delete], [data-edit]");
+  if (!el) return;
+  if (el.dataset.ouvrir) {
+    const id = el.dataset.ouvrir, art = el.closest(".art"), ouvrir = !ouverts.has(id);
+    ouvrir ? ouverts.add(id) : ouverts.delete(id);
+    art.classList.toggle("ouvert", ouvrir); el.setAttribute("aria-expanded", String(ouvrir));
+    art.querySelector(".art-corps").hidden = !ouvrir;
+    return;
+  }
+  if (el.dataset.star) toggleStar(el.dataset.star);
+  else if (el.dataset.edit) startEdit(el.dataset.edit);
+  else deleteArticle(el.dataset.delete);
+});
 
 document.getElementById("searchBox").addEventListener("input", renderList);
 document.getElementById("filterCode").addEventListener("change", renderList);
 document.getElementById("filterMatiere").addEventListener("change", renderList);
 document.getElementById("filterStar").addEventListener("change", renderList);
 
-document.getElementById("exportBtn").addEventListener("click", () => {
-  const blob = new Blob([JSON.stringify(articles, null, 2)], { type: "application/json" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "codes-articles-" + new Date().toISOString().slice(0,10) + ".json";
-  a.click();
-});
+document.getElementById("exportBtn").addEventListener("click", () =>
+  Commun.telecharger("codes-articles-" + Commun.dateLocale() + ".json", JSON.stringify(articles, null, 2)));
 
 document.getElementById("exportPdfBtn").addEventListener("click", () => {
-  const search = document.getElementById("searchBox").value.trim().toLowerCase();
-  const codeFilter = document.getElementById("filterCode").value;
-  const matiereFilter = document.getElementById("filterMatiere").value;
-  const starOnly = document.getElementById("filterStar").checked;
-
-  let filtered = articles.filter(a => {
-    if (codeFilter && a.code !== codeFilter) return false;
-    if (matiereFilter && a.matiere !== matiereFilter) return false;
-    if (starOnly && !a.star) return false;
-    if (search) {
-      const hay = (a.matiere + " " + a.code + " " + a.numero + " " + a.texte + " " + a.note).toLowerCase();
-      if (!hay.includes(search)) return false;
-    }
-    return true;
-  });
+  const filtered = articlesFiltres();
   if (!filtered.length) { alert("Aucun article à exporter avec ces filtres."); return; }
-  filtered.sort((a, b) => (a.matiere || "").localeCompare(b.matiere || "") || (a.code || "").localeCompare(b.code || "") || (a.numero || "").localeCompare(b.numero || "", undefined, { numeric: true }));
 
   const groups = {};
   filtered.forEach(a => {
@@ -378,7 +491,7 @@ document.getElementById("exportPdfBtn").addEventListener("click", () => {
 
   const today = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
   let html = `<div class="print-header">
-      <div><p class="print-brand">Droit Toolkit</p><h1>Codes &amp; articles</h1></div>
+      <div><p class="print-brand">Paraphe</p><h1>Codes &amp; articles</h1></div>
       <div class="print-meta"><b>${filtered.length}</b> article(s)<br>${today}</div>
     </div>`;
   Object.keys(groups).sort().forEach(m => {
@@ -394,43 +507,66 @@ document.getElementById("exportPdfBtn").addEventListener("click", () => {
       </div>`;
     });
   });
-  html += `<div class="print-footer"><span>Droit Toolkit — Codes &amp; articles</span><span>${today}</span></div>`;
+  html += `<div class="print-footer"><span>Paraphe — Codes &amp; articles</span><span>${today}</span></div>`;
 
   document.getElementById("printArea").innerHTML = html;
   window.print();
 });
 
 document.getElementById("importBtn").addEventListener("click", () => document.getElementById("importFile").click());
-document.getElementById("importFile").addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    try {
-      const imported = JSON.parse(reader.result);
-      if (!Array.isArray(imported)) throw new Error("format invalide");
-      const existingIds = new Set(articles.map(a => a.id));
-      let added = 0;
-      imported.forEach(a => {
-        if (a && a.code && a.numero && !existingIds.has(a.id)) {
-          articles.push(Object.assign({ id: crypto.randomUUID() }, a));
-          added++;
-        }
-      });
-      saveArticles(articles);
-      refreshCodeOptions();
-      renderList();
-      alert(added + " article(s) importé(s).");
-    } catch (err) {
-      alert("Fichier invalide : " + err.message);
-    }
-  };
-  reader.readAsText(file);
-  e.target.value = "";
-});
+const PROMPT_IA = `Tu vas extraire les articles de loi ou de règlement contenus dans le document ci-dessous (PDF, Word, page Légifrance copiée, polycopié…) et les convertir en JSON pour l'outil « Codes & articles » de Paraphe.
+
+FORMAT : un tableau JSON, un objet par article.
+[
+  {
+    "matiere": "Responsabilité civile",
+    "code": "Code civil",
+    "numero": "1240",
+    "texte": "Tout fait quelconque de l'homme, qui cause à autrui un dommage, oblige celui par la faute duquel il est arrivé à le réparer.",
+    "note": "",
+    "star": false
+  }
+]
+
+RÈGLES
+- code (obligatoire) : nom du code, seule la première lettre en majuscule : « Code civil », « Code de commerce », « Code du travail », « Code de procédure civile », « Code pénal », « Code de la consommation »… Pour un texte hors code, son intitulé : « Loi n° 89-462 du 6 juillet 1989 », « Règlement (UE) 2016/679 ».
+- numero (obligatoire) : le numéro seul, sans « Article » ni « art. », avec la lettre éventuelle : « 1240 », « L. 110-4 », « R. 1234-9 », « 1792-6 ».
+- texte : le texte de l'article recopié mot pour mot, alinéas séparés par \\n. Ne résume pas, ne reformule pas, ne modernise pas.
+- matiere : le thème de l'article (titre de la partie ou du chapitre du document, ou la matière évidente : « Contrats spéciaux », « Procédure civile »…).
+- note : commentaire du document sur cet article (jurisprudence citée, remarque de l'auteur), sinon "".
+- star : true seulement si le document signale l'article comme essentiel, sinon false.
+- Ne crée un objet que pour les articles dont le texte figure dans le document ; une simple mention (« v. art. 1231-1 ») ne suffit pas.
+- Un article qui apparaît plusieurs fois n'est repris qu'une fois.` + Commun.FIN_PROMPT("codes-articles.json");
+const IMPORT = {
+  liste: () => articles,
+  valide: a => a.code && a.numero,
+  defauts: () => ({ matiere: "", texte: "", note: "", star: false, arrets: [] }),
+  apres: n => { saveArticles(articles); refreshCodeOptions(); renderList(); alert(n + " article(s) importé(s)."); }
+};
+Commun.importerJSON(document.getElementById("importFile"), IMPORT);
+Commun.promptIA(document.getElementById("promptIA"), { prompt: PROMPT_IA, quoi: "des articles", input: document.getElementById("importFile"), options: IMPORT });
 
 refreshCodeOptions();
 renderList();
+renderArretsChoix([]);
+
+// Ouverture directe via codes.html#art-<id> (liens depuis Fiches d'arrêt)
+function ouvrirDepuisAncre() {
+  const id = decodeURIComponent(location.hash.replace(/^#art-/, ""));
+  if (!id) return;
+  if (!document.getElementById("art-" + id)) {        // filtré : on efface les filtres pour le montrer
+    document.getElementById("searchBox").value = ""; document.getElementById("filterCode").value = "";
+    document.getElementById("filterMatiere").value = ""; document.getElementById("filterStar").checked = false;
+  }
+  ouverts.add(id); renderList();
+  const el = document.getElementById("art-" + id);
+  if (!el) return;
+  document.querySelectorAll(".cible").forEach(c => c.classList.remove("cible"));
+  el.classList.add("cible");
+  el.scrollIntoView({ block: "center" });
+}
+window.addEventListener("hashchange", ouvrirDepuisAncre);
+ouvrirDepuisAncre();
 </script>
 </body>
 </html>

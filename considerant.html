@@ -1,13 +1,17 @@
+<!doctype html>
+<html lang="fr">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Considérant — fiches de raisonnement</title>
+<title>Considérant — Paraphe</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ccircle%20cx%3D%223%22%20cy%3D%2212%22%20r%3D%222.4%22%20fill%3D%22%233B2FE8%22%2F%3E%3Cg%20stroke%3D%22%233B2FE8%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M5.6%2012h3.6%22%2F%3E%3Cpath%20d%3D%22M9.2%205.6v12.8%22%2F%3E%3Cpath%20d%3D%22M9.2%205.6h9.4%22%2F%3E%3Cpath%20d%3D%22M9.2%2012h11%22%2F%3E%3Cpath%20d%3D%22M9.2%2018.4h7.6%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Zilla+Slab:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="taille.js"></script><script src="navigation.js" defer></script>
+<link rel="stylesheet" href="fonts/fonts.css">
+<script src="pwa.js" defer></script>
+<link rel="manifest" href="manifest.json">
 
 <style>
 :root{
+  --ech:1;   /* taille du texte commune (taille.js) */
   --fond:#F7F6F2; --papier:#FFFFFF; --papier-2:#FAF9F5; --papier-3:#E4E2DA;
   --encre:#131316; --encre-2:#5C5C63;
   --accent:#3B2FE8; --marge:#C62828;
@@ -25,25 +29,26 @@
 }
 *{box-sizing:border-box}
 html,body{height:100%;height:100dvh;margin:0;overflow:hidden}
-body{background:var(--fond);color:var(--encre);font-family:var(--sans);font-size:14px;display:flex;flex-direction:column}
+body{background:var(--fond);color:var(--encre);font-family:var(--sans);font-size:calc(14px * var(--ech));display:flex;flex-direction:column}
 button,select{font-family:inherit;font-size:inherit;color:inherit}
 :is(button,select):focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
 header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:8px 14px;background:var(--papier);border-bottom:1px solid var(--papier-3);z-index:30}
 .marque{display:flex;align-items:center;gap:10px;padding-right:15px;border-right:1px solid var(--papier-3)}
 .marque svg{flex:none;display:block}
-.mots b{display:block;font-family:var(--titre);font-weight:600;font-size:21px;line-height:1;letter-spacing:.005em}
-.mots span{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--encre-2);margin-top:3px}
+.mots b{display:block;font-family:var(--titre);font-weight:600;font-size:calc(21px * var(--ech));line-height:1;letter-spacing:.005em}
+.mots span{display:block;font-family:var(--mono);font-size:calc(12px * var(--ech));letter-spacing:.16em;text-transform:uppercase;color:var(--encre-2);margin-top:3px}
 .carte h2{font-family:var(--titre)}
-.groupe{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.groupe{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .sep{width:1px;height:20px;background:var(--papier-3)}
 button.b,select.b,a.b{background:var(--papier-2);border:1px solid var(--papier-3);border-radius:0;padding:5px 10px;cursor:pointer;line-height:1.3}
-button.b,a.b{font-weight:600;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase}
+button.b,a.b{font-weight:600;font-size:calc(12px * var(--ech));letter-spacing:.04em;text-transform:uppercase}
 a.b{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
 button.b:hover,select.b:hover,a.b:hover{border-color:var(--encre-2)}
 button.b[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-nuit="1"] .b[aria-pressed="true"]{color:#131316}   /* accent clair en nuit : texte d'encre */
 select.b{max-width:210px}
-#etatSauve{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--encre-2)}
+#etatSauve{margin-left:auto;font-family:var(--mono);font-size:calc(12px * var(--ech));color:var(--encre-2)}
 
 #toile{flex:1;position:relative;overflow:hidden;cursor:grab;touch-action:none;background:var(--fond)}
 #toile.tire{cursor:grabbing}
@@ -51,21 +56,23 @@ select.b{max-width:210px}
 #liens{position:absolute;left:-12000px;top:-12000px;width:24000px;height:24000px;pointer-events:none;overflow:visible}
 
 .cube{
-  position:absolute;max-width:250px;min-width:52px;padding:8px 13px;
+  /* width:max-content : le plan fait 0 px de large, sans cela le navigateur
+     réduisait chaque cube à son mot le plus long (un mot par ligne) */
+  position:absolute;width:max-content;max-width:250px;min-width:52px;padding:8px 13px;
   background:var(--papier);border:1px solid var(--papier-3);border-left:3px solid var(--teinte);
   border-radius:0;box-shadow:0 1px 0 var(--ombre);
-  font-family:var(--serif);font-size:14.5px;line-height:1.42;
+  font-family:var(--serif);font-size:calc(14.5px * var(--ech));line-height:1.42;
   cursor:grab;user-select:none;white-space:pre-wrap;overflow-wrap:break-word;
   transition:box-shadow .12s,border-color .12s;
 }
 .cube:hover{box-shadow:0 3px 0 var(--ombre)}
-.cube.tronc{font-family:var(--titre);font-size:22px;font-weight:600;background:var(--encre);color:var(--papier);border-color:var(--encre);border-left-color:var(--accent);padding:11px 18px}
+.cube.tronc{font-family:var(--titre);font-size:calc(22px * var(--ech));font-weight:600;background:var(--encre);color:var(--papier);border-color:var(--encre);border-left-color:var(--accent);padding:11px 18px}
 .cube.sel{border-color:var(--teinte);box-shadow:0 0 0 2px var(--teinte),0 3px 0 var(--ombre)}
 .cube.cible{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent)}
 .cube.porte{opacity:.7;cursor:grabbing}
 .cube.redige{cursor:text;user-select:text;white-space:pre-wrap;box-shadow:0 0 0 2px var(--accent)}
 .ref{
-  display:block;font-family:var(--mono);font-size:9.5px;line-height:13px;
+  display:block;font-family:var(--mono);font-size:calc(12px * var(--ech));line-height:13px;
   letter-spacing:.1em;color:var(--teinte);margin-bottom:1px;font-weight:500;
 }
 .cube code{font-family:var(--mono);font-size:.85em;color:var(--teinte);background:var(--papier-2);padding:0 3px;border-radius:0}
@@ -73,7 +80,7 @@ select.b{max-width:210px}
 .cube b{font-weight:600}
 .cube.muet{color:transparent}
 .cube.muet code,.cube.muet b{color:transparent;background:transparent}
-.cube.muet::after{content:'· · · ·';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--encre-2);font-family:var(--mono);font-size:12px;letter-spacing:2px}
+.cube.muet::after{content:'· · · ·';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--encre-2);font-family:var(--mono);font-size:calc(12px * var(--ech));letter-spacing:2px}
 
 .poignee{
   position:absolute;right:-2px;bottom:-2px;width:16px;height:16px;cursor:nwse-resize;
@@ -93,12 +100,12 @@ select.b{max-width:210px}
 }
 .cube.redige .poignee,.cube.muet .poignee{display:none}
 #largeur{width:96px;accent-color:var(--accent);cursor:pointer}
-.etiquette{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--encre-2)}
+.etiquette{font-family:var(--mono);font-size:calc(12px * var(--ech));letter-spacing:.1em;text-transform:uppercase;color:var(--encre-2)}
 .badge{
   position:absolute;right:-13px;top:50%;transform:translateY(-50%);
   width:22px;height:22px;border-radius:50%;border:1.6px solid var(--teinte);
   background:var(--teinte);color:var(--papier);
-  font-family:var(--mono);font-size:10px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:calc(12px * var(--ech));display:flex;align-items:center;justify-content:center;
   cursor:pointer;z-index:2
 }
 .badge.ouvert{background:var(--papier);color:var(--teinte);width:13px;height:13px;right:-8px;font-size:0}
@@ -111,14 +118,16 @@ select.b{max-width:210px}
 #reglette.on{display:flex}
 #reglette button{
   border:0;background:transparent;border-radius:0;padding:4px 8px;cursor:pointer;
-  font-size:12px;font-family:var(--sans);color:var(--encre);white-space:nowrap
+  font-size:calc(12px * var(--ech));font-family:var(--sans);color:var(--encre);white-space:nowrap
 }
 #reglette button:hover{background:var(--papier-3)}
 #reglette button.danger:hover{background:var(--marge);color:#fff}
+button.b.danger{color:var(--marge)}
+button.b.danger:hover{background:var(--marge);border-color:var(--marge);color:#fff}
 #reglette .pastilles{display:flex;gap:3px;align-items:center;padding:0 4px;border-left:1px solid var(--papier-3);margin-left:2px}
 #reglette .pastilles i{width:13px;height:13px;border-radius:50%;cursor:pointer;display:block}
 
-.hud{position:absolute;display:flex;gap:6px;align-items:center;font-family:var(--mono);font-size:11px;color:var(--encre-2);z-index:20}
+.hud{position:absolute;display:flex;gap:6px;align-items:center;font-family:var(--mono);font-size:calc(12px * var(--ech));color:var(--encre-2);z-index:20}
 #zoom{right:12px;bottom:12px}
 #zoom button{width:28px;height:28px;border-radius:0;border:1px solid var(--papier-3);background:var(--papier-2);cursor:pointer}
 #astuces{left:12px;bottom:12px;background:var(--papier-2);border:1px solid var(--papier-3);border-radius:0;padding:6px 14px;gap:12px}
@@ -126,17 +135,45 @@ select.b{max-width:210px}
 #compteur{left:12px;top:12px;background:var(--papier-2);border:1px solid var(--papier-3);border-radius:0;padding:6px 14px;display:none}
 #compteur.on{display:flex}
 #compteur b{color:var(--accent);font-weight:500}
-#message{position:absolute;left:50%;top:14px;transform:translateX(-50%);background:var(--encre);color:var(--papier);padding:6px 14px;border-radius:0;font-size:12px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:40}
+#message{position:absolute;left:50%;top:14px;transform:translateX(-50%);background:var(--encre);color:var(--papier);padding:6px 14px;border-radius:0;font-size:calc(12px * var(--ech));opacity:0;pointer-events:none;transition:opacity .25s;z-index:40}
 #message.on{opacity:1}
 
-#aide{position:absolute;inset:0;z-index:50;background:color-mix(in srgb,var(--papier) 88%,transparent);display:none;align-items:center;justify-content:center;padding:20px}
+#aide{position:absolute;top:0;right:0;bottom:0;width:min(400px,100%);z-index:50;background:var(--papier);border-left:2px solid var(--encre);box-shadow:-8px 0 0 var(--ombre);display:none;overflow:auto;padding:18px}
+#aide .carte{max-width:none;width:100%;box-shadow:none;border:0;padding:0;margin:0}
+.menu-b{position:relative}
+.menu-liste{position:absolute;top:calc(100% + 4px);left:0;z-index:60;min-width:220px;display:flex;flex-direction:column;gap:0;background:var(--papier);border:2px solid var(--encre);box-shadow:6px 6px 0 var(--ombre);padding:4px 0}
+.menu-liste[hidden]{display:none}
+.menu-liste button.b{border:0;background:none;text-align:left;padding:9px 14px;width:100%}
+.menu-liste button.b:hover,.menu-liste button.b:focus-visible{background:var(--papier-2);outline:none}
 #aide.on{display:flex}
+/* fenêtre « prompt IA » (construite par commun.js) */
+dialog.fenetre-ia{border:3px solid var(--encre);background:var(--papier);color:var(--encre);border-radius:0;padding:24px;width:min(640px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow:auto;box-shadow:12px 12px 0 var(--accent);font-family:var(--sans)}
+dialog.fenetre-ia::backdrop{background:rgba(19,19,22,.5)}
+.fenetre-ia h3{margin:0 0 8px;font-family:var(--titre);font-size:calc(22px * var(--ech))}
+.fenetre-ia .ia-etat{margin:0 0 12px;font-size:calc(14px * var(--ech));font-weight:600}
+.fenetre-ia .ia-etat.erreur{color:var(--marge)}
+.fenetre-ia .ia-etapes{margin:0;padding-left:1.4em;font-size:calc(14px * var(--ech));line-height:1.55}
+.fenetre-ia label{display:block;margin:16px 0 4px;font-size:calc(12px * var(--ech));font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--encre-2)}
+.fenetre-ia textarea{width:100%;box-sizing:border-box;padding:8px 12px;border:2px solid var(--encre);border-radius:0;background:transparent;color:var(--encre);font-family:var(--mono);font-size:calc(13px * var(--ech));resize:vertical}
+.fenetre-ia .muted{color:var(--encre-2)}
+.fenetre-ia .ia-note{margin:8px 0 0;font-size:calc(13px * var(--ech))}
+.fenetre-ia .ia-voir{margin-top:16px}
+.fenetre-ia .ia-voir summary{cursor:pointer;font-weight:600;font-size:calc(13.5px * var(--ech));color:var(--encre-2)}
+.fenetre-ia .ia-voir textarea{margin-top:8px;color:var(--encre-2)}
+.fenetre-ia button{margin-top:8px;background:var(--papier-2);color:var(--encre);border:2px solid var(--encre);border-radius:0;padding:8px 14px;cursor:pointer;font-family:var(--sans);font-weight:600;font-size:calc(12px * var(--ech));letter-spacing:.04em;text-transform:uppercase}
+.fenetre-ia button:hover{background:var(--encre);color:var(--fond)}
+.fenetre-ia button.primary{background:var(--encre);color:var(--fond)}
+.fenetre-ia button.primary:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-nuit="1"] .fenetre-ia button.primary:hover{color:#131316}
+.fenetre-ia .ia-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.fenetre-ia .ia-actions button{margin-top:0}
+.fenetre-ia .ia-actions [data-ia="fermer"]{margin-left:auto}
 .carte{background:var(--papier-2);border:1px solid var(--papier-3);border-radius:0;padding:26px 30px;max-width:560px;box-shadow:0 10px 0 var(--ombre)}
-.carte h2{font-family:var(--serif);font-size:23px;margin:0 0 4px}
+.carte h2{font-family:var(--serif);font-size:calc(23px * var(--ech));margin:0 0 4px}
 .carte p.sous{margin:0 0 18px;color:var(--encre-2);line-height:1.55}
 .carte dl{display:grid;grid-template-columns:auto 1fr;gap:9px 16px;margin:0 0 20px;align-items:baseline}
-.carte dt{font-family:var(--mono);font-size:11px;color:var(--accent);white-space:nowrap}
-.carte dd{margin:0;font-size:13px;line-height:1.5}
+.carte dt{font-family:var(--mono);font-size:calc(12px * var(--ech));color:var(--accent);white-space:nowrap}
+.carte dd{margin:0;font-size:calc(13px * var(--ech));line-height:1.5}
 #impression{display:none}
 @media print{
   @page{size:A4 landscape;margin:9mm}
@@ -162,6 +199,9 @@ select.b{max-width:210px}
   #astuces{display:none}
   #toile{min-height:0}
 }
+#aide .aide-plus{margin:14px 0 4px}
+#aide .aide-plus>summary{cursor:pointer;font-weight:600;opacity:.85}
+#aide .aide-plus>summary:hover{opacity:1}
 </style>
 
 <header>
@@ -178,11 +218,19 @@ select.b{max-width:210px}
     </svg>
     <div class="mots"><b>Considérant</b><span>fiches de raisonnement</span></div>
   </div>
-  <a class="b" href="Hub.html" title="Tous mes logiciels">⊞ Hub</a>
+  <span data-paraphe-nav></span>
   <div class="sep"></div>
   <div class="groupe">
-    <select class="b" id="fiches" title="Vos fiches"></select>
-    <button class="b" id="nouvelle">Nouvelle fiche</button>
+    <select class="b" id="fiches" title="Vos fiches" aria-label="Fiche affichée"></select>
+    <div class="menu-b">
+      <button class="b" type="button" aria-haspopup="menu" aria-expanded="false">Fiche ▾</button>
+      <div class="menu-liste" role="menu" hidden>
+        <button class="b" id="nouvelle" role="menuitem">Nouvelle fiche</button>
+        <button class="b" id="renommer" role="menuitem" title="Renommer la fiche affichée">Renommer</button>
+        <button class="b" id="dupliquer" role="menuitem" title="Dupliquer la fiche affichée">Dupliquer</button>
+        <button class="b danger" id="supprimerFiche" role="menuitem" title="Supprimer la fiche affichée">Supprimer</button>
+      </div>
+    </div>
   </div>
   <div class="sep"></div>
   <div class="groupe">
@@ -196,11 +244,17 @@ select.b{max-width:210px}
   </div>
   <div class="sep"></div>
   <div class="groupe">
-    <button class="b" id="expimg">Image</button>
-    <button class="b" id="imprimer">Imprimer</button>
-    <button class="b" id="expmd">Markdown</button>
-    <button class="b" id="sauvegarde">Sauvegarde</button>
-    <button class="b" id="importer">Importer</button>
+    <div class="menu-b">
+      <button class="b" type="button" aria-haspopup="menu" aria-expanded="false">Exporter ▾</button>
+      <div class="menu-liste" role="menu" hidden>
+        <button class="b" id="expimg" role="menuitem">Image (PNG)</button>
+        <button class="b" id="imprimer" role="menuitem">Imprimer</button>
+        <button class="b" id="expmd" role="menuitem">Markdown</button>
+        <button class="b" id="sauvegarde" role="menuitem">Sauvegarde (fichier)</button>
+        <button class="b" id="importer" role="menuitem">Importer une sauvegarde</button>
+        <button class="b" id="promptIA" role="menuitem" title="Copier un prompt qui fait convertir votre document (PDF, Word, texte…) en fiche par une IA">Depuis un document (prompt IA)</button>
+      </div>
+    </div>
     <button class="b" id="nuit" aria-pressed="false">Nuit</button>
     <button class="b" id="btnAide">Aide</button>
   </div>
@@ -237,12 +291,18 @@ select.b{max-width:210px}
   <div id="aide">
     <div class="carte">
       <h2>Considérant</h2>
-      <p class="sous">Un cube, une raison. Les traits disent laquelle s'appuie sur laquelle, et chaque branche porte son numéro — 2.3 se relit comme un considérant.</p>
+      <p class="sous">Dessinez le raisonnement d'une décision, d'un cours ou d'une question comme un arbre :
+        <b>une idée = un cube</b>. Les traits disent laquelle s'appuie sur laquelle, et chaque branche porte son
+        numéro — 2.3 se relit comme un considérant.</p>
+      <p class="sous"><b>Pour commencer, quatre gestes suffisent :</b></p>
       <dl>
         <dt>double-clic</dt><dd>écrire dans un cube. <kbd>Échap</kbd> ou clic ailleurs pour valider.</dd>
         <dt>Tab</dt><dd>créer un cube <b>enfant</b>, rattaché à celui qui est sélectionné.</dd>
         <dt>Entrée</dt><dd>créer un cube <b>voisin</b>, au même niveau.</dd>
         <dt>glisser</dt><dd>déplacer un cube et toute sa descendance. Lâchez-le <b>sur un autre cube</b> pour le rattacher ailleurs.</dd>
+      </dl>
+      <details class="aide-plus"><summary>Autres gestes</summary>
+      <dl>
         <dt>Alt + glisser</dt><dd>déplacer le cube seul, en laissant ses enfants où ils sont.</dd>
         <dt>coin bas-droit</dt><dd>étirer un cube. Double-clic sur la poignée pour revenir au format automatique.</dd>
         <dt>largeur</dt><dd>le curseur en haut règle d'un coup tous les cubes que vous n'avez pas étirés à la main.</dd>
@@ -251,7 +311,8 @@ select.b{max-width:210px}
         <dt>flèches</dt><dd>passer d'un cube à l'autre sans la souris.</dd>
         <dt>`accents graves`</dt><dd>colorent une référence : <code>`art. 1240 C. civ.`</code></dd>
       </dl>
-      <button class="b" id="fermerAide">Commencer</button>
+      </details>
+      <button class="b" id="fermerAide">Fermer l'aide</button>
     </div>
   </div>
 </div>
@@ -259,6 +320,7 @@ select.b{max-width:210px}
 <input type="file" id="fichier" accept="application/json" hidden>
 <div id="impression"><img alt=""></div>
 
+<script src="commun.js"></script>
 <script>
 (() => {
 "use strict";
@@ -286,9 +348,27 @@ function parcours(f, n = racine(), prof = 0, parent = null){
   f(n, prof, parent);
   for (const e of n.enfants) parcours(f, e, prof + 1, n);
 }
-function trouver(id){ let r = null; parcours(n => { if (n.id === id) r = n; }); return r; }
-function parentDe(id){ let r = null; parcours((n, p, par) => { if (n.id === id) r = par; }); return r; }
-function profDe(id){ let r = 0; parcours((n, p) => { if (n.id === id) r = p; }); return r; }
+// Index id → {nœud, parent, profondeur}, construit une fois par rendu : sans lui, chaque
+// recherche reparcourait tout l'arbre (coût quadratique au rendu, à chaque mouvement de glisser).
+let index = null;
+function avecIndex(fn){
+  if (index) return fn();
+  index = new Map();
+  parcours((n, prof, parent) => index.set(n.id, {n, parent, prof}));
+  try { return fn(); } finally { index = null; }
+}
+function trouver(id){
+  if (index) return index.get(id)?.n ?? null;
+  let r = null; parcours(n => { if (n.id === id) r = n; }); return r;
+}
+function parentDe(id){
+  if (index) return index.get(id)?.parent ?? null;
+  let r = null; parcours((n, p, par) => { if (n.id === id) r = par; }); return r;
+}
+function profDe(id){
+  if (index) return index.get(id)?.prof ?? 0;
+  let r = 0; parcours((n, p) => { if (n.id === id) r = p; }); return r;
+}
 function lignee(n){ const s = new Set(); (function w(x){ s.add(x.id); x.enfants.forEach(w); })(n); return s; }
 function visible(n){
   let p = parentDe(n.id);
@@ -327,7 +407,8 @@ function numeroter(){
   })(racine(), '');
 }
 
-function rendre(){
+function rendre(){ avecIndex(rendreIndexe); }
+function rendreIndexe(){
   numeroter();
   for (const el of cubes.values()) el.remove();
   cubes.clear();
@@ -394,7 +475,7 @@ function etirer(poignee, d, n){
       n.hMin = Math.round(Math.max(34, h0 + (e.clientY - y0) / vue.k));
       dimensionner(d, n);
       n.w = d.offsetWidth; n.h = d.offsetHeight;
-      tracerLiens([...cubes.keys()].map(trouver));
+      avecIndex(() => tracerLiens([...cubes.keys()].map(trouver)));
     };
     const fin = () => {
       poignee.removeEventListener('pointermove', suivre);
@@ -412,7 +493,8 @@ function etirer(poignee, d, n){
   });
 }
 
-function tracerLiens(vus){
+function tracerLiens(vus){ avecIndex(() => tracerLiensIndexe(vus)); }
+function tracerLiensIndexe(vus){
   liens.textContent = '';
   const dedans = new Set(vus.map(n => n.id));
   parcours(n => {
@@ -617,7 +699,7 @@ function ecouter(d, n){
         const el = cubes.get(id);
         if (el){ el.style.left = x.x + 'px'; el.style.top = x.y + 'px'; }
       }
-      tracerLiens([...cubes.keys()].map(trouver));
+      avecIndex(() => tracerLiens([...cubes.keys()].map(trouver)));
       const nouvelle = cibleSous(e.clientX, e.clientY, famille);
       if (nouvelle !== cible){
         if (cible) cubes.get(cible)?.classList.remove('cible');
@@ -879,15 +961,35 @@ document.getElementById('refaire').onclick = refaire;
 /* ============================================================
    Récitation
    ============================================================ */
-document.getElementById('recitation').onclick = e => {
-  recitation = !recitation;
-  e.currentTarget.setAttribute('aria-pressed', String(recitation));
+// état replié de chaque cube avant la récitation : restauré à la sortie (avant, tout était déplié)
+let plisAvant = null;
+document.getElementById('recitation').onclick = () => {
+  if (recitation){ quitterRecitation(); signaler('Récitation terminée'); return; }
+  recitation = true;
+  document.getElementById('recitation').setAttribute('aria-pressed', 'true');
   revelees.clear();
+  plisAvant = new Map();
+  parcours(n => plisAvant.set(n.id, n.plie));
   parcours(n => { if (n.id !== racine().id) n.plie = n.enfants.length > 0; });
-  if (!recitation) parcours(n => { n.plie = false; });
   rendre();
-  signaler(recitation ? 'Récitez, puis cliquez un cube pour vérifier' : 'Récitation terminée');
+  signaler('Récitez, puis cliquez un cube pour vérifier');
 };
+function quitterRecitation(){
+  if (!recitation) return;
+  recitation = false;
+  document.getElementById('recitation').setAttribute('aria-pressed', 'false');
+  revelees.clear();
+  parcours(n => { n.plie = plisAvant && plisAvant.has(n.id) ? plisAvant.get(n.id) : false; });
+  plisAvant = null;
+  rendre();
+}
+// ce qui est écrit sur le disque ignore les pliages temporaires de la récitation
+function sansPliagesDeRecitation(fn){
+  if (!recitation || !plisAvant) return fn();
+  const actuels = new Map();
+  parcours(n => { actuels.set(n.id, n.plie); if (plisAvant.has(n.id)) n.plie = plisAvant.get(n.id); });
+  try { return fn(); } finally { parcours(n => { n.plie = actuels.get(n.id); }); }
+}
 function majScore(){
   const c = document.getElementById('compteur');
   c.classList.toggle('on', recitation);
@@ -904,12 +1006,12 @@ const CLE = 'attendu-cubes-v1';
 const memoire = {};
 const rangement = {
   async lire(k){
-    if (window.storage){ try { const r = await window.storage.get(k); return r ? JSON.parse(r.value) : null; } catch { return null; } }
-    return memoire[k] ?? null;
+    try { const v = localStorage.getItem(k); return v != null ? JSON.parse(v) : null; }
+    catch { return memoire[k] ?? null; }
   },
   async ecrire(k, v){
-    if (window.storage){ try { await window.storage.set(k, JSON.stringify(v)); return true; } catch { return false; } }
-    memoire[k] = v; return true;
+    try { localStorage.setItem(k, JSON.stringify(v)); return true; }
+    catch { memoire[k] = v; return false; }
   }
 };
 
@@ -924,8 +1026,10 @@ function listerFiches(){
   choix.value = iFiche;
 }
 choix.onchange = () => {
-  iFiche = +choix.value; sel = null; pile.length = 0; refait.length = 0;
-  revelees.clear(); rendre(); recentrer(); sauver();
+  const cible = +choix.value;
+  quitterRecitation();
+  iFiche = cible; sel = null; pile.length = 0; refait.length = 0;
+  revelees.clear(); rendre(); recentrer(); sauver(); miseAJourLargeur();
 };
 
 let minuterieSauve;
@@ -935,18 +1039,70 @@ function enregistrerBientot(){
   minuterieSauve = setTimeout(enregistrer, 900);
 }
 async function enregistrer(){
-  await sauver();
+  clearTimeout(minuterieSauve);
+  const etat = document.getElementById('etatSauve');
+  if (!(await sauver())){
+    etat.textContent = 'NON enregistré — faites une Sauvegarde';
+    signaler('Stockage du navigateur indisponible : utilisez « Sauvegarde » pour ne rien perdre');
+    return;
+  }
   const h = new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
-  document.getElementById('etatSauve').textContent = 'enregistré à ' + h;
+  etat.textContent = 'enregistré à ' + h;
 }
-const sauver = () => rangement.ecrire(CLE, {fiches, iFiche, nuit: estNuit(), compteurId});
+const sauver = () => sansPliagesDeRecitation(() => rangement.ecrire(CLE, {fiches, iFiche, nuit: estNuit(), compteurId}));
+// une modification faite moins d'une seconde avant de fermer la fenêtre était perdue
+addEventListener('pagehide', () => { if (minuterieSauve) sauver(); });
 
 document.getElementById('nouvelle').onclick = () => {
-  fiches.push({racine: neuf('Nouvelle fiche', 0, 0)});
+  quitterRecitation();
+  fiches.push({racine: neuf('Nouvelle fiche', 0, 0), mesure: 2});
   iFiche = fiches.length - 1; sel = fiches[iFiche].racine.id;
-  pile.length = 0; rendre(); recentrer(); enregistrerBientot();
+  // les piles d'annulation portent sur l'arbre de l'ancienne fiche : « Rétablir » l'aurait recopié ici
+  pile.length = 0; refait.length = 0; rendre(); recentrer(); enregistrerBientot();
   rediger(racine(), true);
 };
+
+document.getElementById('renommer').onclick = () => {
+  const actuel = racine().t || '';
+  const t = prompt('Titre de la fiche :', actuel);
+  if (t == null || !t.trim() || t.trim() === actuel) return;
+  memoriser();
+  racine().t = t.trim();
+  rendre(); enregistrerBientot();
+  signaler('Fiche renommée');
+};
+document.getElementById('dupliquer').onclick = () => {
+  quitterRecitation();
+  // les identifiants n'ont besoin d'être uniques qu'à l'intérieur d'une fiche : la copie peut les garder
+  const copie = JSON.parse(JSON.stringify(fiches[iFiche]));
+  copie.racine.t = (copie.racine.t || 'Fiche') + ' (copie)';
+  fiches.splice(iFiche + 1, 0, copie);
+  iFiche++; sel = null; pile.length = 0; refait.length = 0;
+  rendre(); recentrer(); enregistrerBientot();
+  signaler('Fiche dupliquée');
+};
+document.getElementById('supprimerFiche').onclick = () => {
+  const titre = racine().t || 'Fiche sans titre';
+  if (!confirm(`Supprimer la fiche « ${titre} » et tous ses cubes ?\n\nAstuce : « Sauvegarde » garde une copie de toutes vos fiches.`)) return;
+  quitterRecitation();
+  fiches.splice(iFiche, 1);
+  if (!fiches.length) fiches.push({racine: neuf('Nouvelle fiche', 0, 0), mesure: 2});
+  iFiche = Math.min(iFiche, fiches.length - 1);
+  sel = null; pile.length = 0; refait.length = 0;
+  rendre(); recentrer(); enregistrerBientot();
+  signaler('Fiche supprimée');
+};
+
+// Les fiches créées avant la correction de largeur des cubes avaient été disposées pour
+// des cubes d'un mot de large : on les remet d'équerre une fois (Ctrl+Z pour revenir).
+function miseAJourLargeur(){
+  const f = fiches[iFiche];
+  if (!f || f.mesure === 2) return;
+  f.mesure = 2;
+  if (!racine().enfants.length) { enregistrerBientot(); return; }
+  ranger();
+  signaler('Cubes élargis : fiche remise d\'équerre — Ctrl+Z pour annuler');
+}
 
 function versMarkdown(){
   let out = '';
@@ -965,30 +1121,98 @@ function telecharger(nom, texte, type){
 const nomFichier = () => (racine().t || 'fiche').replace(/[^\w\-À-ÿ ]+/g, '').trim() || 'fiche';
 document.getElementById('expmd').onclick = () => telecharger(nomFichier() + '.md', versMarkdown(), 'text/markdown');
 document.getElementById('sauvegarde').onclick = () =>
-  telecharger('considerant-sauvegarde.json', JSON.stringify({fiches}, null, 1), 'application/json');
+  telecharger('considerant-sauvegarde.json', sansPliagesDeRecitation(() => JSON.stringify({fiches}, null, 1)), 'application/json');
 
 const fichier = document.getElementById('fichier');
 document.getElementById('importer').onclick = () => fichier.click();
+// Ajoute les fiches d'une sauvegarde Considérant ou d'une réponse d'IA ; renvoie le nombre de fiches.
+// Tout est validé AVANT de toucher aux fiches : un fichier abîmé laissait des fiches cassées en mémoire.
+// Les cubes venus d'une IA n'ont ni identifiant ni position : on les numérote et on range l'arbre.
+function importerFiches(texte){
+  const o = Commun.lireJSON(texte);
+  const brutes = Array.isArray(o) ? o : Array.isArray(o.fiches) ? o.fiches : o.racine ? [o] : null;
+  const noeudValide = n => n && typeof n === 'object' && typeof (n.t ?? n.texte ?? '') === 'string'
+    && (n.enfants == null || (Array.isArray(n.enfants) && n.enfants.every(noeudValide)));
+  if (!brutes || !brutes.length || !brutes.every(fi => fi && noeudValide(fi.racine)))
+    throw new Error('Ce contenu n\'est pas une fiche Considérant.');
+  let max = 0;
+  const numero = n => /^c\d+$/.test(n.id) ? +n.id.slice(1) : 0;
+  fiches.concat(brutes).forEach(fi => (function w(n){ max = Math.max(max, numero(n)); (n.enfants || []).forEach(w); })(fi.racine));
+  compteurId = max + 1;
+  const aRanger = new Set();
+  const nouvelles = brutes.map(fi => {
+    let sansPosition = false;
+    const norm = n => {
+      if (typeof n.x !== 'number' || typeof n.y !== 'number') sansPosition = true;
+      return Object.assign({}, n, {
+        id: numero(n) ? n.id : 'c' + (compteurId++),
+        t: String(n.t ?? n.texte ?? ''), x: +n.x || 0, y: +n.y || 0, plie: !!n.plie,
+        enfants: (n.enfants || []).map(norm)
+      });
+    };
+    const f = Object.assign({}, fi, {racine: norm(fi.racine)});
+    if (sansPosition){ f.mesure = 2; aRanger.add(f); }
+    return f;
+  });
+  quitterRecitation();
+  const premier = fiches.length;
+  fiches = fiches.concat(nouvelles);
+  sel = null;
+  for (let k = premier; k < fiches.length; k++) if (aRanger.has(fiches[k])){ iFiche = k; rendre(); ranger(); }
+  iFiche = fiches.length - 1;
+  pile.length = 0; refait.length = 0;
+  listerFiches(); rendre(); recentrer(); enregistrerBientot(); miseAJourLargeur();
+  return nouvelles.length;
+}
 fichier.onchange = async () => {
   const f = fichier.files[0]; if (!f) return;
-  try {
-    const o = JSON.parse(await f.text());
-    if (!o.fiches) throw 0;
-    fiches = fiches.concat(o.fiches);
-    let max = 0;
-    fiches.forEach(fi => (function w(n){ max = Math.max(max, +String(n.id).slice(1) || 0); n.enfants.forEach(w); })(fi.racine));
-    compteurId = max + 1;
-    iFiche = fiches.length - 1; sel = null;
-    rendre(); recentrer(); enregistrerBientot();
-    signaler('Sauvegarde importée');
-  } catch { signaler('Ce fichier n\'est pas une sauvegarde Considérant'); }
+  try { importerFiches(await f.text()); signaler('Sauvegarde importée'); }
+  catch { signaler('Ce fichier n\'est pas une sauvegarde Considérant'); }
   fichier.value = '';
 };
+
+const PROMPT_IA = `Tu vas transformer le document ci-dessous (cours, plan, fiche de révision, article de doctrine…) en carte mentale pour l'outil « Considérant » de Paraphe : un arbre de « cubes » courts qui se lit de gauche à droite, du sujet vers les détails.
+
+FORMAT : un objet JSON contenant une liste de fiches ; chaque fiche a une racine, chaque cube a un texte "t" et une liste "enfants".
+{
+  "fiches": [
+    {
+      "racine": {
+        "t": "Responsabilité du fait personnel",
+        "enfants": [
+          { "t": "Conditions", "enfants": [
+            { "t": "Une faute — \`art. 1240 C. civ.\`", "enfants": [] },
+            { "t": "Un dommage **certain**", "enfants": [] },
+            { "t": "Un lien de causalité", "enfants": [] }
+          ] },
+          { "t": "Exonérations", "enfants": [
+            { "t": "Force majeure", "enfants": [] }
+          ] }
+        ]
+      }
+    }
+  ]
+}
+
+RÈGLES
+- Une fiche par grand sujet du document (une seule si le document n'en traite qu'un). La racine porte l'intitulé du sujet.
+- Suis le plan du document (I, A, 1…) quand il en a un ; sinon construis un plan logique : notion, conditions, effets, exceptions…
+- Quatre niveaux sous la racine au plus, deux à six enfants par cube.
+- Chaque cube tient en une ligne courte (douze mots au plus) : c'est un aide-mémoire, pas un texte rédigé.
+- Mets les références entre accents graves pour les faire ressortir : \`art. 1240 C. civ.\`, \`Cass. ass. plén., 29 mars 1991, Blieck\`.
+- Encadre de ** un mot essentiel à retenir, avec parcimonie : **certain**.
+- Ne mets ni identifiant ni coordonnées : Paraphe dispose l'arbre tout seul.
+- Un cube sans suite a "enfants": [].` + Commun.FIN_PROMPT("considerant-fiches.json");
+Commun.promptIA(document.getElementById('promptIA'), {
+  prompt: PROMPT_IA, quoi: 'une fiche', input: fichier,
+  options: { importer: texte => importerFiches(texte), apres: n => signaler(n > 1 ? n + ' fiches importées' : 'Fiche importée') }
+});
 
 document.getElementById('nuit').onclick = e => {
   const on = !estNuit();
   document.documentElement.dataset.nuit = on ? '1' : '0';
   e.currentTarget.setAttribute('aria-pressed', String(on));
+  try { localStorage.setItem('droit_sombre', on ? '1' : '0'); } catch {}   // thème commun aux 6 outils
   rendre(); sauver();
 };
 const curseurLargeur = document.getElementById('largeur');
@@ -1008,7 +1232,22 @@ document.getElementById('zplus').onclick = () => zoomer(1.2);
 document.getElementById('zmoins').onclick = () => zoomer(1/1.2);
 document.getElementById('zrecentrer').onclick = recentrer;
 const aide = document.getElementById('aide');
-document.getElementById('btnAide').onclick = () => aide.classList.add('on');
+// menus « Fiche ▾ » et « Exporter ▾ » : s'ouvrent au clic, se ferment après un choix, un clic ailleurs ou Échap
+document.querySelectorAll('.menu-b').forEach(m => {
+  const bouton = m.querySelector('[aria-haspopup]'), liste = m.querySelector('.menu-liste');
+  const fermer = () => { liste.hidden = true; bouton.setAttribute('aria-expanded', 'false'); };
+  bouton.addEventListener('click', ev => {
+    ev.stopPropagation();
+    const ouvrir = liste.hidden;
+    document.querySelectorAll('.menu-liste').forEach(l => l.hidden = true);
+    document.querySelectorAll('.menu-b [aria-haspopup]').forEach(b => b.setAttribute('aria-expanded', 'false'));
+    if (ouvrir) { liste.hidden = false; bouton.setAttribute('aria-expanded', 'true'); liste.querySelector('button').focus(); }
+  });
+  liste.addEventListener('click', () => setTimeout(fermer, 0));
+  document.addEventListener('click', ev => { if (!m.contains(ev.target)) fermer(); });
+  document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && !liste.hidden) { fermer(); bouton.focus(); } });
+});
+document.getElementById('btnAide').onclick = () => { aide.classList.toggle('on'); if (!aide.classList.contains('on')) reglagesVus(); };
 document.getElementById('fermerAide').onclick = () => { aide.classList.remove('on'); reglagesVus(); };
 aide.addEventListener('click', e => { if (e.target === aide){ aide.classList.remove('on'); reglagesVus(); } });
 function reglagesVus(){ rangement.ecrire('attendu-aide-vue', true); }
@@ -1060,7 +1299,8 @@ function enJour(fn){
   try { return fn(); } finally { if (etait) document.documentElement.dataset.nuit = '1'; }
 }
 
-function composer(echelle, fond){
+function composer(echelle, fond){ return avecIndex(() => composerIndexe(echelle, fond)); }
+function composerIndexe(echelle, fond){
   let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
   parcours(n => {
     if (!visible(n) || !n.w) return;
@@ -1194,7 +1434,7 @@ function fichExemple(){
   c.enfants.push(fg, dom, lien);
   bloc('Régimes spéciaux', ['Loi Badinter, 5 juillet 1985', 'Produits défectueux — `art. 1245 et s.`', 'Troubles anormaux de voisinage']);
   bloc('Exonérations', ['Force majeure', 'Fait d\'un tiers', 'Faute de la victime']);
-  return {racine: r};
+  return {racine: r, mesure: 2};
 }
 
 (async function demarrer(){
@@ -1209,10 +1449,30 @@ function fichExemple(){
   } else {
     fiches = [fichExemple()];
   }
+  // lien depuis la recherche globale du Hub : #fiche=<n°>&cube=<id>
+  const ancre = new URLSearchParams(location.hash.slice(1));
+  const ficheVisee = +ancre.get('fiche');
+  if (ancre.has('fiche') && fiches[ficheVisee]) iFiche = ficheVisee;
+  // le thème choisi dans un autre outil de la suite l'emporte
+  let commun = null; try { commun = localStorage.getItem('droit_sombre'); } catch {}
+  if (commun !== null){
+    document.documentElement.dataset.nuit = commun === '1' ? '1' : '0';
+    document.getElementById('nuit').setAttribute('aria-pressed', String(commun === '1'));
+  }
   listerFiches();
   if (document.fonts) await document.fonts.ready.catch(() => {});
   rendre();
-  if (!sauvegarde) ranger(); else recentrer();
+  if (!sauvegarde) ranger(); else { recentrer(); miseAJourLargeur(); }
+  const cubeVise = ancre.get('cube') && trouver(ancre.get('cube'));
+  if (cubeVise){
+    selectionner(cubeVise.id);
+    const r = toile.getBoundingClientRect();
+    vue.k = Math.max(vue.k, 1);
+    vue.x = r.width / 2 - (cubeVise.x + (cubeVise.w || 140) / 2) * vue.k;
+    vue.y = r.height / 2 - (cubeVise.y + (cubeVise.h || 38) / 2) * vue.k;
+    appliquerVue();
+  }
+  if (ancre.has('fiche')) history.replaceState(null, '', location.pathname);
   if (!(await rangement.lire('attendu-aide-vue'))) aide.classList.add('on');
 })();
 

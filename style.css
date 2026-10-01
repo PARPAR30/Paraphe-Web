@@ -7,7 +7,7 @@
   --fond:   #F7F6F2;
   --encre:  #131316;
   --encre-2:#5C5C63;
-  --gris:   #8F8F89;
+  --gris:   #6B6B66;   /* texte discret : 4,8 à 5,4:1 sur papier et carte */
   --filet:  #DEDCD5;
   --carte:  #FFFFFF;
   --alerte: #C62828;
@@ -29,16 +29,29 @@
 
   --slab:"Zilla Slab",Georgia,serif;
   --sans:"Archivo",system-ui,sans-serif;
+
+  color-scheme:light;
 }
 
 body.sombre{
   --fond:   #131316;
   --encre:  #F4F3EE;
   --encre-2:#A9A9A2;
-  --gris:   #7C7C76;
+  --gris:   #9A9A93;
   --filet:  #2C2C31;
   --carte:  #1C1C20;
+  /* sur l'encre, le violet et le rouge de la charte sont trop sombres pour du texte (2,2 et 3:1) */
+  --acc: 140,132,255;
+  --alerte: #EF6F6F;
+  /* sur fond noir, l'ombre noire disparaissait : ombre claire, toujours plate */
+  --ombre:       8px 8px 0 rgba(244,243,238,.07);
+  --ombre-forte: 12px 12px 0 rgba(244,243,238,.10);
+  /* calendrier des champs date, barres de défilement… en sombre */
+  color-scheme:dark;
 }
+/* textes à la couleur d'accent : trop sombres sur fond noir (cf. charte §3.2) */
+body.sombre .eyebrow, body.sombre .groupe-tete a, body.sombre a.lien-croise,
+body.sombre .liens-article a, body.sombre .badge.etiquette{filter:brightness(1.6)}
 
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -77,14 +90,14 @@ header.topnav a.brand:hover{color:rgb(var(--acc))}
 
 header.topnav nav{display:flex;gap:var(--e2);flex-wrap:wrap;margin-left:auto;align-items:center}
 header.topnav nav a{
-  font-size:calc(11px * var(--ech));font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  font-size:calc(12px * var(--ech));font-weight:600;letter-spacing:.08em;text-transform:uppercase;
   color:var(--gris);text-decoration:none;padding:var(--e2) var(--e3);
   border:2px solid transparent;transition:all .15s ease;
 }
 header.topnav nav a:hover{color:var(--encre)}
 header.topnav nav a.active{color:var(--encre);border-color:var(--encre)}
 
-#theme-toggle{height:auto;padding:var(--e2) var(--e3);font-size:calc(11px * var(--ech))}
+#theme-toggle{height:auto;padding:var(--e2) var(--e3);font-size:calc(12px * var(--ech))}
 
 /* ═════════════════════════════════════════════════════════════════════
    MISE EN PAGE
@@ -96,6 +109,9 @@ main{max-width:900px;margin:0 auto;padding:var(--e7) var(--pad) var(--e8)}
   box-shadow:var(--ombre);
   padding:var(--e5);margin-bottom:var(--e5);
 }
+/* éléments de liste à l'intérieur d'une carte : filet simple, sans seconde ombre */
+.card .card{box-shadow:none;border:1px solid var(--filet);padding:var(--e4)}
+.card .card:hover{border-color:var(--encre)}
 
 .grid-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--e5);margin-top:var(--e6)}
 .grid-links a.tool{
@@ -112,7 +128,7 @@ main{max-width:900px;margin:0 auto;padding:var(--e7) var(--pad) var(--e8)}
    CHAMPS ET CONTRÔLES
    ═════════════════════════════════════════════════════════════════════ */
 label{
-  display:block;font-size:calc(11px * var(--ech));font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  display:block;font-size:calc(12px * var(--ech));font-weight:600;letter-spacing:.06em;text-transform:uppercase;
   color:var(--gris);margin:var(--e4) 0 var(--e1);
 }
 
@@ -139,6 +155,15 @@ textarea{
   background:transparent;border:2px solid var(--encre);border-radius:0;
 }
 
+/* cases à cocher carrées, conformes à la charte (coins vifs) */
+input[type="checkbox"]{
+  appearance:none;-webkit-appearance:none;flex:none;margin:0;
+  width:16px;height:16px;border:2px solid var(--encre);border-radius:0;background:transparent;
+  display:inline-grid;place-content:center;vertical-align:-3px;cursor:pointer;
+}
+input[type="checkbox"]::before{content:"";width:8px;height:8px;background:rgb(var(--acc));transform:scale(0);transition:transform .1s ease}
+input[type="checkbox"]:checked::before{transform:scale(1)}
+
 input:focus-visible, select:focus-visible, textarea:focus-visible,
 input:focus, select:focus, textarea:focus{
   outline:3px solid rgb(var(--acc));outline-offset:2px;
@@ -162,6 +187,8 @@ button.primary:hover{background:rgb(var(--acc));border-color:rgb(var(--acc));col
 
 button.danger{color:var(--alerte)}
 button.danger:hover{background:var(--alerte);border-color:var(--alerte);color:#fff}
+/* en sombre, l'accent et l'alerte sont clairs : texte d'encre dessus */
+body.sombre button.primary:hover, body.sombre button.danger:hover, body.sombre button.success:hover{color:#131316}
 
 button.success{color:var(--succes)}
 button.success:hover{background:var(--succes);border-color:var(--succes);color:#fff}
@@ -177,8 +204,9 @@ button[disabled]:hover{background:transparent;color:var(--encre)}
 .row.between{justify-content:space-between}
 
 .badge{
-  display:inline-flex;align-items:center;font-family:var(--slab);font-size:calc(11px * var(--ech));font-weight:600;
+  display:inline-flex;align-items:center;font-family:var(--slab);font-size:calc(12px * var(--ech));font-weight:600;
   padding:1px var(--e2);border:1px solid var(--filet);color:var(--gris);background:transparent;
+  margin-block:3px;                     /* deux lignes d'étiquettes ne se touchent pas */
 }
 
 .muted{color:var(--encre-2);font-size:calc(13.5px * var(--ech))}
@@ -191,6 +219,8 @@ mark{background:rgba(var(--acc),.18);color:var(--encre)}
 
 .toolbar{display:flex;gap:var(--e2);flex-wrap:wrap;margin-bottom:var(--e4);align-items:center}
 .toolbar input[type="search"], .toolbar select{width:auto;flex:1;min-width:160px}
+.toolbar input[type="search"]{flex:2}
+.card > .toolbar:last-child{margin-bottom:0}
 
 /* étiquette au-dessus d'un titre de page */
 .eyebrow{
@@ -208,12 +238,21 @@ mark{background:rgba(var(--acc),.18);color:var(--encre)}
 footer.tip{margin-top:var(--e7);color:var(--gris);font-size:calc(12px * var(--ech));text-align:center}
 
 @media (max-width:900px){
-  header.topnav{flex-direction:column;align-items:flex-start}
-  header.topnav nav{margin-left:0}
+  header.topnav{flex-direction:column;align-items:stretch;flex-wrap:nowrap}
+  /* le menu passe à la ligne : tous les liens restent visibles, rien n'est caché hors de l'écran */
+  header.topnav nav{margin-left:0;flex-wrap:wrap;width:100%;min-width:0;row-gap:var(--e1,4px)}
+  header.topnav nav a, #theme-toggle{flex:none;white-space:nowrap}
+  /* le bouton jour/nuit remonte sur la ligne du nom, à droite */
+  header.topnav{position:relative}
+  header.topnav #theme-toggle{position:absolute;top:var(--e2);right:var(--pad,20px)}
+}
+@media (max-width:360px){
+  header.topnav nav{gap:0}
+  header.topnav nav a{padding:var(--e2) 7px;letter-spacing:.04em}
 }
 
 /* ═════════════════════════════════════════════════════════════════════
-   EXPORT PDF — feuille imprimable partagée par les outils "Droit Toolkit"
+   EXPORT PDF — feuille imprimable partagée par les outils d'études de Paraphe
    Le contenu réel est injecté en JS dans #printArea juste avant l'impression.
    ═════════════════════════════════════════════════════════════════════ */
 #printArea{display:none}
@@ -273,4 +312,92 @@ footer.tip{margin-top:var(--e7);color:var(--gris);font-size:calc(12px * var(--ec
     margin-top:26px;padding-top:8px;border-top:.75pt solid #999;
     font-size:7.5pt;color:#888;display:flex;justify-content:space-between;
   }
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   RECHERCHE GLOBALE (Hub, portail) — recherche.js
+   ═════════════════════════════════════════════════════════════════════ */
+#recherche-globale{position:relative;max-width:640px;margin:0 auto var(--e7)}
+.rg-champ{
+  display:flex;align-items:center;gap:var(--e2);margin:0;height:48px;padding:0 var(--e3);
+  border:2px solid var(--encre);background:var(--carte);box-shadow:var(--ombre);
+  text-transform:none;letter-spacing:0;font-weight:500;color:var(--encre);cursor:text;
+}
+.rg-champ:focus-within{outline:3px solid rgb(var(--acc));outline-offset:2px}
+.rg-loupe{font-size:calc(20px * var(--ech));color:var(--gris);line-height:1}
+.rg-champ input{flex:1;border:0;height:auto;padding:0;background:transparent;font-size:calc(15px * var(--ech))}
+.rg-champ input:focus,.rg-champ input:focus-visible{outline:none}
+.rg-champ input::-webkit-search-cancel-button{-webkit-appearance:none}
+.rg-champ kbd{font-family:var(--sans);font-size:calc(12px * var(--ech));font-weight:600;color:var(--gris);border:1px solid var(--filet);padding:1px var(--e2);white-space:nowrap}
+.rg-res{
+  position:absolute;left:0;right:0;top:calc(100% + var(--e2));z-index:50;max-height:min(60vh,520px);overflow:auto;
+  background:var(--carte);border:2px solid var(--encre);box-shadow:var(--ombre-forte);text-align:left;
+}
+.rg-groupe{
+  position:sticky;top:0;background:var(--carte);padding:var(--e2) var(--e3) var(--e1);border-bottom:1px solid var(--filet);
+  font-size:calc(12px * var(--ech));font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgb(var(--acc));
+}
+.rg-l{display:flex;flex-direction:column;gap:2px;padding:var(--e2) var(--e3);border-bottom:1px solid var(--filet);color:var(--encre);text-decoration:none}
+.rg-l:hover,.rg-l.actif{background:rgba(var(--acc),.08)}
+.rg-titre{font-weight:600;font-size:calc(14px * var(--ech))}
+.rg-detail{font-size:calc(12px * var(--ech));color:var(--encre-2)}
+.rg-vide{padding:var(--e3);color:var(--gris);font-style:italic;font-size:calc(13px * var(--ech))}
+body.sombre .rg-groupe{filter:brightness(1.6)}
+
+/* bandeau de rappel (sauvegarde ancienne…) */
+.rappel{
+  display:flex;flex-wrap:wrap;align-items:center;gap:var(--e2) var(--e4);margin:0 0 var(--e6);padding:var(--e3) var(--e4);
+  border:2px solid rgb(var(--acc));background:rgba(var(--acc),.06);font-size:calc(13.5px * var(--ech));
+}
+.rappel span{flex:1;min-width:200px}
+
+/* ═════════════════════════════════════════════════════════════════════
+   FENÊTRE « PROMPT IA » (import d'un document converti par une IA)
+   ═════════════════════════════════════════════════════════════════════ */
+dialog.fenetre-ia{
+  border:3px solid var(--encre);background:var(--carte);color:var(--encre);border-radius:0;
+  padding:var(--e6);width:min(640px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow:auto;
+  box-shadow:12px 12px 0 rgb(var(--acc));
+}
+dialog.fenetre-ia::backdrop{background:rgba(19,19,22,.5)}
+.fenetre-ia h3{margin:0 0 var(--e2);font-family:var(--slab);font-size:calc(22px * var(--ech))}
+.fenetre-ia .ia-etat{margin:0 0 var(--e3);font-size:calc(14px * var(--ech));font-weight:600;color:var(--encre)}
+.fenetre-ia .ia-etat.erreur{color:var(--alerte)}
+.fenetre-ia .ia-etapes{margin:0;padding-left:1.4em;font-size:calc(14px * var(--ech));line-height:1.55}
+.fenetre-ia .ia-etapes li{margin-bottom:var(--e1)}
+.fenetre-ia textarea{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:calc(13px * var(--ech))}
+.fenetre-ia .ia-note{margin:var(--e2) 0 0;font-size:calc(13px * var(--ech))}
+.fenetre-ia .ia-voir{margin-top:var(--e4)}
+.fenetre-ia .ia-voir button{margin-top:var(--e2);height:auto;min-height:var(--h-ctrl)}
+.fenetre-ia .ia-voir summary{cursor:pointer;font-weight:600;font-size:calc(13.5px * var(--ech));color:var(--encre-2)}
+.fenetre-ia .ia-voir textarea{margin-top:var(--e2);color:var(--encre-2)}
+.fenetre-ia .ia-actions{display:flex;flex-wrap:wrap;gap:var(--e2);margin-top:var(--e4)}
+.fenetre-ia .ia-actions button{height:auto;min-height:var(--h-ctrl)}
+.fenetre-ia .ia-actions [data-ia="fermer"]{margin-left:auto}
+
+/* élément ramené à l'écran après une action (Commun.montrer) : un cadre d'accent qui s'efface */
+.signale{animation:signale 2.2s ease-out}
+@keyframes signale{0%,55%{outline:3px solid rgb(var(--acc));outline-offset:3px}100%{outline:3px solid transparent;outline-offset:3px}}
+@media (prefers-reduced-motion: reduce){.signale{animation:none;outline:3px solid rgb(var(--acc));outline-offset:3px}}
+
+/* ═════════════════════════════════════════════════════════════════════
+   BARRE D'OUTILS D'UNE LISTE : filtres en haut ; en dessous l'action
+   principale, puis les groupes « Importer » et « Exporter »
+   ═════════════════════════════════════════════════════════════════════ */
+.barre{display:flex;flex-direction:column;gap:var(--e4)}
+.barre-filtres{display:flex;flex-wrap:wrap;gap:var(--e2);align-items:center}
+.barre-filtres input[type="search"]{width:auto;flex:2 1 260px}
+.barre-filtres select{width:auto;flex:1 1 170px;min-width:0}
+.barre-actions{display:flex;flex-wrap:wrap;align-items:center;gap:var(--e3) var(--e6);padding-top:var(--e4);border-top:1px solid var(--filet)}
+.barre-actions > .primary{margin-right:auto}
+.barre-groupe{display:flex;align-items:center}
+.barre-titre{font-size:calc(12px * var(--ech));font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--gris);margin-right:var(--e3)}
+.barre-groupe button{height:34px;padding:0 var(--e3);font-size:calc(12px * var(--ech))}
+.barre-groupe button + button{margin-left:-2px}          /* boutons accolés : un seul trait entre eux */
+.barre-groupe button:hover,.barre-groupe button:focus-visible{position:relative;z-index:1}
+@media (max-width:640px){
+  .barre-filtres input[type="search"],.barre-filtres select{flex:1 1 100%;width:100%}
+  .barre-actions{gap:var(--e3)}
+  .barre-actions > .primary{flex:1 1 100%;margin-right:0}
+  .barre-titre{min-width:7.5em}                          /* les deux groupes s'alignent */
 }

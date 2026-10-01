@@ -1,6 +1,7 @@
 (() => {
   const KEY = 'droit_sombre';
-  if (localStorage.getItem(KEY) === '1') document.body.classList.add('sombre');
+  // stockage indisponible (mode privé, file://…) : le thème marche quand même, sans être retenu
+  try { if (localStorage.getItem(KEY) === '1') document.body.classList.add('sombre'); } catch (e) {}
 
   document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('theme-toggle');
@@ -13,7 +14,7 @@
     sync();
     btn.addEventListener('click', () => {
       document.body.classList.toggle('sombre');
-      localStorage.setItem(KEY, document.body.classList.contains('sombre') ? '1' : '0');
+      try { localStorage.setItem(KEY, document.body.classList.contains('sombre') ? '1' : '0'); } catch (e) {}
       sync();
     });
   });

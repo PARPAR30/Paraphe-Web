@@ -2,40 +2,51 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Fiches d'arrêt — Droit Toolkit</title>
+<title>Fiches d'arrêt — Paraphe</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#131316">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Zilla+Slab:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23131316%22%2F%3E%3Cg%20stroke%3D%22%23F7F6F2%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%3E%3Cline%20x1%3D%2216%22%20y1%3D%227%22%20x2%3D%2216%22%20y2%3D%2224%22%2F%3E%3Cline%20x1%3D%228%22%20y1%3D%2210%22%20x2%3D%2224%22%20y2%3D%2210%22%2F%3E%3Cline%20x1%3D%2216%22%20y1%3D%2224%22%20x2%3D%2211%22%20y2%3D%2224%22%2F%3E%3Cline%20x1%3D%2216%22%20y1%3D%2224%22%20x2%3D%2221%22%20y2%3D%2224%22%2F%3E%3Cpath%20d%3D%22M6%2010a4%205%200%200%200%208%200%22%2F%3E%3Cpath%20d%3D%22M18%2010a4%205%200%200%200%208%200%22%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%227%22%20r%3D%221.6%22%20fill%3D%22%233B2FE8%22%2F%3E%3C%2Fsvg%3E">
+<script src="taille.js"></script><script src="navigation.js" defer></script>
+<link rel="stylesheet" href="fonts/fonts.css">
+<script src="pwa.js" defer></script>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
 <link rel="stylesheet" href="style.css">
+<style>
+  .badge.etiquette{margin-left:0.3rem;border-color:rgba(var(--acc),.4);color:rgb(var(--acc))}
+  a.lien-croise{color:rgb(var(--acc));font-weight:600;text-decoration:none}
+  a.lien-croise:hover{text-decoration:underline}
+  main.arrets{max-width:1040px}
+  /* le formulaire n'apparaît qu'à la demande (nouvelle fiche ou modification) */
+  #panneauFiche{border-color:rgb(var(--acc));box-shadow:8px 8px 0 rgb(var(--acc))}
+  #panneauFiche[hidden]{display:none}
+  .panneau-tete{display:flex;justify-content:space-between;align-items:center;gap:var(--e3)}
+  .panneau-tete h3{margin:0}
+  .barre-liste{margin-bottom:var(--e5);padding-bottom:var(--e5);border-bottom:2px solid var(--encre)}   /* la liste commence nettement sous la barre */
+</style>
 </head>
 <body>
 <script src="theme.js"></script>
 <header class="topnav">
-  <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 32 32"><line x1="16" y1="7" x2="16" y2="24" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><line x1="8" y1="10" x2="24" y2="10" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><line x1="16" y1="24" x2="11" y2="24" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><line x1="16" y1="24" x2="21" y2="24" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M6 10a4 5 0 0 0 8 0" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/><path d="M18 10a4 5 0 0 0 8 0" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/><circle cx="16" cy="7" r="2.3" fill="rgb(59,47,232)"/></svg></span>Droit Toolkit</a>
+  <a class="brand" href="Hub.html"><span class="brand-mark" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 32 32"><rect x="5.25" y="4.25" width="18.5" height="21.5" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 9h4v20H9v-4h15z" fill="currentColor"/><rect x="9" y="9" width="11" height="2.2" fill="currentColor"/><rect x="9" y="13.4" width="7" height="2.2" fill="currentColor"/><rect x="15" y="18" width="5" height="4.5" style="fill:rgb(var(--acc,59,47,232))"/></svg></span>Paraphe</a>
   <nav>
-    <a href="index.html">Accueil</a>
+    <span data-paraphe-nav></span>
     <a href="flashcards.html">Fiches mémo</a>
     <a href="fiches-arret.html" class="active">Fiches d'arrêt</a>
     <a href="codes.html">Codes &amp; articles</a>
-    <a href="Hub.html">Tous mes logiciels</a>
     <button id="theme-toggle" aria-pressed="false">Nuit</button>
   </nav>
 </header>
-<main>
+<main class="arrets">
   <p class="eyebrow">Analyse de jurisprudence</p>
   <h1>Fiches d'arrêt</h1>
-  <p class="muted">Structure : faits, procédure, problème de droit, solution / motifs, portée.</p>
-  <p class="muted">Quelques arrêts de référence sont préchargés par matière pour démarrer — noms et dates sont à recouper avec ton cours avant un examen.</p>
+  <p class="muted">Une fiche par décision : faits, procédure, problème de droit, solution et portée. Quelques arrêts de référence sont préchargés pour démarrer ; recoupez noms et dates avec votre cours avant un examen.</p>
 
-  <div class="card">
-    <h3 id="formTitle">Nouvelle fiche</h3>
+  <div class="card" id="panneauFiche" hidden>
+    <div class="panneau-tete"><h3 id="formTitle">Nouvelle fiche</h3><button type="button" id="fermerPanneau" aria-label="Fermer le formulaire">Fermer</button></div>
     <input type="hidden" id="editId">
     <div class="row">
       <div style="flex:2; min-width:200px;">
@@ -63,6 +74,8 @@
     <label for="fMatiere">Matière</label>
     <input type="text" id="fMatiere" list="matiereList" placeholder="ex. Droit des obligations">
     <datalist id="matiereList"></datalist>
+    <label for="fTags">Étiquettes</label>
+    <input type="text" id="fTags" placeholder="ex. revirement, responsabilité, à revoir — séparées par des virgules">
 
     <label for="fFaits">Faits</label>
     <textarea id="fFaits" placeholder="Résumé des faits pertinents"></textarea>
@@ -76,32 +89,51 @@
     <label for="fSolution">Solution / motifs</label>
     <textarea id="fSolution" placeholder="Décision rendue et raisonnement"></textarea>
 
+    <label for="fAttendu">Attendu de principe</label>
+    <textarea id="fAttendu" placeholder="Citation exacte du principe posé (« Attendu que… », « Il résulte de… »)"></textarea>
+
     <label for="fPortee">Portée</label>
     <textarea id="fPortee" placeholder="Apport de l'arrêt, revirement, portée future"></textarea>
 
     <div class="row end" style="margin-top:0.8rem;">
-      <button id="cancelEditBtn" style="display:none;">Annuler</button>
+      <button id="cancelEditBtn">Annuler</button>
       <button id="saveBtn" class="primary">Enregistrer la fiche</button>
     </div>
   </div>
 
   <div class="card">
-    <div class="toolbar">
-      <input type="search" id="searchBox" placeholder="Rechercher (titre, faits, matière...)">
-      <select id="filterMatiere"><option value="">Toutes les matières</option></select>
-      <select id="filterJuridiction"><option value="">Toutes juridictions</option></select>
-      <button id="exportBtn">Exporter (JSON)</button>
-      <button id="exportPdfBtn">Exporter (PDF)</button>
-      <button id="importBtn">Importer</button>
-      <input type="file" id="importFile" accept="application/json" style="display:none;">
+    <div class="barre barre-liste">
+      <div class="barre-filtres">
+        <input type="search" id="searchBox" placeholder="Rechercher (titre, faits, matière…)" aria-label="Rechercher une fiche">
+        <select id="filterMatiere" aria-label="Filtrer par matière"><option value="">Toutes les matières</option></select>
+        <select id="filterJuridiction" aria-label="Filtrer par juridiction"><option value="">Toutes juridictions</option></select>
+        <select id="filterTag" aria-label="Filtrer par étiquette"><option value="">Toutes étiquettes</option></select>
+      </div>
+      <div class="barre-actions">
+      <button type="button" id="nouvelleFiche" class="primary">+ Nouvelle fiche</button>
+      <div class="barre-groupe" role="group" aria-label="Importer">
+        <span class="barre-titre">Importer</span>
+        <button type="button" id="importBtn" title="Reprendre un fichier .json enregistré depuis cet outil">Depuis un fichier</button>
+        <button type="button" id="promptIA" title="Copier un prompt qui fait convertir votre document (PDF, Word, texte…) par une IA au format d’import">Avec une IA</button>
+      </div>
+      <div class="barre-groupe" role="group" aria-label="Exporter">
+        <span class="barre-titre">Exporter</span>
+        <button type="button" id="exportBtn" title="Enregistrer une copie de vos fiches (fichier .json)">Sauvegarde</button>
+        <button type="button" id="exportPdfBtn" title="Mettre en page vos fiches pour les imprimer ou les enregistrer en PDF">Imprimer / PDF</button>
+      </div>
+      <input type="file" id="importFile" accept="application/json" hidden>
+    </div>
     </div>
     <div id="ficheList"></div>
   </div>
 </main>
 <div id="printArea"></div>
 
+<script src="commun.js"></script>
 <script>
 const STORAGE_KEY = "droit_fiches_arret";
+// Fiches d'exemple supprimées par l'utilisateur : sans cette liste, elles revenaient à chaque chargement
+const DELETED_SEEDS_KEY = "droit_fiches_arret_seeds_supprimees";
 
 function mkSeedFiche(titre, juridiction, date, matiere, faits, procedure, probleme, solution, portee) {
   return { titre, juridiction, date, matiere, faits, procedure, probleme, solution, portee };
@@ -228,25 +260,20 @@ mkSeedFiche(
 ),
 ].map((f, i) => Object.assign({ id: "seed-fa-" + i }, f));
 
-function loadFiches() {
-  let existing = [];
-  try { existing = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-  catch { existing = []; }
-  const existingIds = new Set(existing.map(f => f.id));
-  const missing = SEED.filter(f => !existingIds.has(f.id));
-  return existing.concat(missing);
-}
-function saveFiches(fiches) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(fiches));
-}
+const loadFiches = () => Commun.avecExemples(STORAGE_KEY, SEED, DELETED_SEEDS_KEY);
+const saveFiches = list => Commun.ecrire(STORAGE_KEY, list);
+const dateFr = iso => Commun.dateLongue(iso);
+const escapeHtml = Commun.echapper;
+
+// Rubriques d'une fiche, dans l'ordre d'affichage (liste et export PDF)
+const CHAMPS = [
+  ["faits", "Faits"], ["procedure", "Procédure"], ["probleme", "Problème de droit"],
+  ["solution", "Solution / motifs"], ["attendu", "Attendu de principe"], ["portee", "Portée"]
+];
 
 let fiches = loadFiches();
 saveFiches(fiches);
 let expanded = new Set();
-
-function escapeHtml(s) {
-  return String(s || "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
 
 function refreshFilters() {
   const matieres = [...new Set(fiches.map(f => f.matiere).filter(Boolean))].sort();
@@ -262,21 +289,37 @@ function refreshFilters() {
   const curJ = selJ.value;
   selJ.innerHTML = '<option value="">Toutes juridictions</option>' + juridictions.map(j => `<option value="${escapeHtml(j)}">${escapeHtml(j)}</option>`).join("");
   selJ.value = curJ;
+
+  const tags = [...new Set(fiches.flatMap(f => f.tags || []))].sort((a, b) => a.localeCompare(b));
+  const selT = document.getElementById("filterTag");
+  const curT = selT.value;
+  selT.innerHTML = '<option value="">Toutes étiquettes</option>' + tags.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join("");
+  selT.value = curT;
 }
 
 function resetForm() {
   document.getElementById("editId").value = "";
   document.getElementById("formTitle").textContent = "Nouvelle fiche";
-  ["fTitre","fDate","fMatiere","fFaits","fProcedure","fProbleme","fSolution","fPortee"].forEach(id => document.getElementById(id).value = "");
+  ["fTitre","fDate","fMatiere","fTags","fFaits","fProcedure","fProbleme","fSolution","fAttendu","fPortee"].forEach(id => document.getElementById(id).value = "");
   document.getElementById("fJuridiction").value = "Cour de cassation";
-  document.getElementById("cancelEditBtn").style.display = "none";
+  document.getElementById("panneauFiche").hidden = true;
 }
+function ouvrirPanneau() {
+  const pan = document.getElementById("panneauFiche");
+  pan.hidden = false;
+  pan.scrollIntoView({ behavior: "smooth", block: "start" });
+  document.getElementById("fTitre").focus({ preventScroll: true });
+}
+document.getElementById("nouvelleFiche").addEventListener("click", () => { resetForm(); ouvrirPanneau(); });
+document.getElementById("fermerPanneau").addEventListener("click", () => fermerFormulaire());
 
 function fillForm(f) {
   document.getElementById("editId").value = f.id;
   document.getElementById("formTitle").textContent = "Modifier la fiche";
   document.getElementById("fTitre").value = f.titre || "";
-  document.getElementById("fJuridiction").value = f.juridiction || "Cour de cassation";
+  const selJ = document.getElementById("fJuridiction");
+  if (f.juridiction && ![...selJ.options].some(o => o.value === f.juridiction)) selJ.add(new Option(f.juridiction));
+  selJ.value = f.juridiction || "Cour de cassation";
   document.getElementById("fDate").value = f.date || "";
   document.getElementById("fMatiere").value = f.matiere || "";
   document.getElementById("fFaits").value = f.faits || "";
@@ -284,8 +327,9 @@ function fillForm(f) {
   document.getElementById("fProbleme").value = f.probleme || "";
   document.getElementById("fSolution").value = f.solution || "";
   document.getElementById("fPortee").value = f.portee || "";
-  document.getElementById("cancelEditBtn").style.display = "inline-block";
-  window.scrollTo({top:0, behavior:"smooth"});
+  document.getElementById("fAttendu").value = f.attendu || "";
+  document.getElementById("fTags").value = (f.tags || []).join(", ");
+  ouvrirPanneau();
 }
 
 document.getElementById("saveBtn").addEventListener("click", () => {
@@ -303,6 +347,8 @@ document.getElementById("saveBtn").addEventListener("click", () => {
     probleme: document.getElementById("fProbleme").value.trim(),
     solution: document.getElementById("fSolution").value.trim(),
     portee: document.getElementById("fPortee").value.trim(),
+    attendu: document.getElementById("fAttendu").value.trim(),
+    tags: [...new Set(document.getElementById("fTags").value.split(",").map(t => t.trim()).filter(Boolean))],
   };
   if (id) {
     const idx = fiches.findIndex(f => f.id === id);
@@ -313,10 +359,22 @@ document.getElementById("saveBtn").addEventListener("click", () => {
   saveFiches(fiches);
   resetForm();
   refreshFilters();
+  expanded.add(data.id);
   renderList();
+  montrerFiche(data.id);
 });
 
-document.getElementById("cancelEditBtn").addEventListener("click", resetForm);
+// ramène la fiche sous les yeux (après enregistrement, ou quand on referme le formulaire)
+function montrerFiche(id) {
+  const el = id && document.getElementById("fiche-" + id);
+  Commun.montrer(el ? el.parentElement : null);
+}
+function fermerFormulaire() {
+  const id = document.getElementById("editId").value;
+  resetForm();
+  if (id) montrerFiche(id); else Commun.montrer(document.getElementById("ficheList"), { bloc: "start", signaler: false });
+}
+document.getElementById("cancelEditBtn").addEventListener("click", fermerFormulaire);
 
 function editFiche(id) {
   const f = fiches.find(x => x.id === id);
@@ -325,6 +383,7 @@ function editFiche(id) {
 
 function deleteFiche(id) {
   if (!confirm("Supprimer cette fiche ?")) return;
+  Commun.oublierExemple(DELETED_SEEDS_KEY, id);
   fiches = fiches.filter(f => f.id !== id);
   saveFiches(fiches);
   refreshFilters();
@@ -336,21 +395,21 @@ function toggleExpand(id) {
   renderList();
 }
 
-function renderList() {
-  const search = document.getElementById("searchBox").value.trim().toLowerCase();
-  const matiereFilter = document.getElementById("filterMatiere").value;
-  const juridictionFilter = document.getElementById("filterJuridiction").value;
-  const list = document.getElementById("ficheList");
+// Fiches correspondant à la recherche et aux filtres (liste et export PDF)
+function fichesFiltrees() {
+  const valeur = id => document.getElementById(id).value;
+  const search = valeur("searchBox").trim().toLowerCase();
+  const matiere = valeur("filterMatiere"), juridiction = valeur("filterJuridiction"), tag = valeur("filterTag");
+  return fiches.filter(f =>
+    (!matiere || f.matiere === matiere) &&
+    (!juridiction || f.juridiction === juridiction) &&
+    (!tag || (f.tags || []).includes(tag)) &&
+    (!search || Object.values(f).join(" ").toLowerCase().includes(search)));
+}
 
-  let filtered = fiches.filter(f => {
-    if (matiereFilter && f.matiere !== matiereFilter) return false;
-    if (juridictionFilter && f.juridiction !== juridictionFilter) return false;
-    if (search) {
-      const hay = Object.values(f).join(" ").toLowerCase();
-      if (!hay.includes(search)) return false;
-    }
-    return true;
-  });
+function renderList() {
+  const list = document.getElementById("ficheList");
+  const filtered = fichesFiltrees();
 
   filtered.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
 
@@ -359,60 +418,96 @@ function renderList() {
     return;
   }
 
-  const fieldLabels = [
-    ["faits", "Faits"], ["procedure", "Procédure"], ["probleme", "Problème de droit"],
-    ["solution", "Solution / motifs"], ["portee", "Portée"]
-  ];
 
   list.innerHTML = filtered.map(f => {
     const isOpen = expanded.has(f.id);
     return `
     <div class="card" style="margin-bottom:0.6rem;">
-      <div class="row between" style="cursor:pointer;" onclick="toggleExpand('${f.id}')">
+      <div class="row between" style="cursor:pointer;" data-toggle="${escapeHtml(f.id)}" id="fiche-${escapeHtml(f.id)}">
         <div>
           <strong>${escapeHtml(f.titre)}</strong>
           <span class="badge" style="margin-left:0.5rem;">${escapeHtml(f.juridiction || "")}</span>
           ${f.matiere ? `<span class="badge" style="margin-left:0.3rem;">${escapeHtml(f.matiere)}</span>` : ""}
+          ${(f.tags || []).map(t => `<span class="badge etiquette">#${escapeHtml(t)}</span>`).join("")}
         </div>
-        <span class="muted">${escapeHtml(f.date || "")} ${isOpen ? "▲" : "▼"}</span>
+        <span class="muted" style="white-space:nowrap;">${escapeHtml(dateFr(f.date))} ${isOpen ? "▲" : "▼"}</span>
       </div>
       ${isOpen ? `
         <hr class="sep">
-        ${fieldLabels.map(([key,label]) => f[key] ? `<p><strong>${label}.</strong> ${escapeHtml(f[key]).replace(/\n/g,"<br>")}</p>` : "").join("")}
+        ${CHAMPS.map(([key,label]) => f[key] ? `<p><strong>${label}.</strong> ${escapeHtml(f[key]).replace(/\n/g,"<br>")}</p>` : "").join("")}
+        ${articlesLies(f.id)}
         <div class="row end">
-          <button onclick="event.stopPropagation(); editFiche('${f.id}')">Modifier</button>
-          <button class="danger" onclick="event.stopPropagation(); deleteFiche('${f.id}')">Supprimer</button>
+          <button data-memo="${escapeHtml(f.id)}" title="Créer des cartes de révision (problème, solution, attendu, portée)">→ Fiches mémo</button>
+          <button data-edit="${escapeHtml(f.id)}">Modifier</button>
+          <button class="danger" data-delete="${escapeHtml(f.id)}">Supprimer</button>
         </div>
       ` : ""}
     </div>`;
   }).join("");
 }
 
+document.getElementById("ficheList").addEventListener("click", (e) => {
+  const el = e.target.closest("[data-toggle], [data-edit], [data-delete], [data-memo]");
+  if (!el) return;
+  if (el.dataset.memo) versFichesMemo(el.dataset.memo);
+  else if (el.dataset.edit) editFiche(el.dataset.edit);
+  else if (el.dataset.delete) deleteFiche(el.dataset.delete);
+  else toggleExpand(el.dataset.toggle);
+});
+
 document.getElementById("searchBox").addEventListener("input", renderList);
 document.getElementById("filterMatiere").addEventListener("change", renderList);
 document.getElementById("filterJuridiction").addEventListener("change", renderList);
+document.getElementById("filterTag").addEventListener("change", renderList);
 
-document.getElementById("exportBtn").addEventListener("click", () => {
-  const blob = new Blob([JSON.stringify(fiches, null, 2)], { type: "application/json" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "fiches-arret-" + new Date().toISOString().slice(0,10) + ".json";
-  a.click();
-});
+// --- Liens avec Codes & articles : articles qui citent cette fiche (champ « arrets » côté Codes) ---
+function articlesLies(id) {
+  const lies = Commun.lire("droit_codes", []).filter(a => (a.arrets || []).includes(id));
+  if (!lies.length) return "";
+  return `<p><strong>Articles liés.</strong> ` + lies.map(a =>
+    `<a class="lien-croise" href="codes.html#art-${encodeURIComponent(a.id)}">Art. ${escapeHtml(a.numero)} ${escapeHtml(a.code || "")}</a>`).join(" · ") + `</p>`;
+}
+
+// --- Génère des cartes de révision dans Fiches mémo (mises à jour si déjà créées) ---
+function versFichesMemo(id) {
+  const f = fiches.find(x => x.id === id);
+  if (!f) return;
+  const nom = f.titre + (f.date ? " (" + f.date.slice(0, 4) + ")" : "");
+  const paires = [
+    ["probleme", `${nom} — quel problème de droit ?`, f.probleme],
+    ["solution", `${nom} — quelle solution ?`, f.solution],
+    ["attendu", `${nom} — attendu de principe ?`, f.attendu],
+    ["portee", `${nom} — quelle portée ?`, f.portee],
+  ].filter(p => p[2]);
+  if (!paires.length) { alert("Cette fiche n'a ni problème, ni solution, ni portée à réviser."); return; }
+  const cartes = Commun.lire("droit_flashcards", []), aujourdhui = Commun.dateLocale();
+  let crees = 0, maj = 0;
+  paires.forEach(([cle, recto, verso]) => {
+    const cid = "fa-" + f.id + "-" + cle;
+    const ex = cartes.find(c => c.id === cid);
+    if (ex) { Object.assign(ex, { matiere: f.matiere || ex.matiere, recto, verso }); maj++; }
+    else { cartes.push({ id: cid, matiere: f.matiere || "", recto, verso, ease: 2.5, interval: 0, reps: 0, dueDate: aujourdhui }); crees++; }
+  });
+  if (!Commun.ecrire("droit_flashcards", cartes)) return;
+  alert(crees + " carte(s) créée(s)" + (maj ? ", " + maj + " mise(s) à jour" : "") + " dans Fiches mémo.");
+}
+
+// --- Ouverture directe d'une fiche via fiches-arret.html#<id> (liens depuis Codes & articles) ---
+function ouvrirDepuisAncre() {
+  const id = decodeURIComponent(location.hash.replace(/^#(fiche-)?/, ""));
+  if (!id || !fiches.some(f => f.id === id)) return;
+  expanded.add(id);
+  renderList();
+  const el = document.getElementById("fiche-" + id);
+  if (el) el.scrollIntoView({ block: "center" });
+}
+window.addEventListener("hashchange", ouvrirDepuisAncre);
+
+document.getElementById("exportBtn").addEventListener("click", () =>
+  Commun.telecharger("fiches-arret-" + Commun.dateLocale() + ".json", JSON.stringify(fiches, null, 2)));
 
 document.getElementById("exportPdfBtn").addEventListener("click", () => {
-  const search = document.getElementById("searchBox").value.trim().toLowerCase();
-  const matiereFilter = document.getElementById("filterMatiere").value;
-  const juridictionFilter = document.getElementById("filterJuridiction").value;
-  let filtered = fiches.filter(f => {
-    if (matiereFilter && f.matiere !== matiereFilter) return false;
-    if (juridictionFilter && f.juridiction !== juridictionFilter) return false;
-    if (search) {
-      const hay = Object.values(f).join(" ").toLowerCase();
-      if (!hay.includes(search)) return false;
-    }
-    return true;
-  });
+  const filtered = fichesFiltrees();
   if (!filtered.length) { alert("Aucune fiche à exporter avec ces filtres."); return; }
   filtered.sort((a, b) => (a.matiere || "").localeCompare(b.matiere || "") || (b.date || "").localeCompare(a.date || ""));
 
@@ -422,20 +517,10 @@ document.getElementById("exportPdfBtn").addEventListener("click", () => {
     (groups[m] = groups[m] || []).push(f);
   });
 
-  const fieldLabels = [
-    ["faits", "Faits"], ["procedure", "Procédure"], ["probleme", "Problème de droit"],
-    ["solution", "Solution / motifs"], ["portee", "Portée"]
-  ];
-  const fmtDate = d => {
-    if (!d) return "";
-    const parts = d.split("-");
-    if (parts.length !== 3) return d;
-    return new Date(d).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
-  };
 
   const today = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
   let html = `<div class="print-header">
-      <div><p class="print-brand">Droit Toolkit</p><h1>Fiches d'arrêt</h1></div>
+      <div><p class="print-brand">Paraphe</p><h1>Fiches d'arrêt</h1></div>
       <div class="print-meta"><b>${filtered.length}</b> fiche(s)<br>${today}</div>
     </div>`;
   Object.keys(groups).sort().forEach(m => {
@@ -444,52 +529,72 @@ document.getElementById("exportPdfBtn").addEventListener("click", () => {
       html += `<div class="print-item">
         <h3>${escapeHtml(f.titre)}
           ${f.juridiction ? `<span class="print-tag">${escapeHtml(f.juridiction)}</span>` : ""}
-          ${f.date ? `<span class="print-tag accent">${escapeHtml(fmtDate(f.date))}</span>` : ""}
+          ${f.date ? `<span class="print-tag accent">${escapeHtml(dateFr(f.date))}</span>` : ""}
         </h3>
         <dl>
-          ${fieldLabels.map(([key, label]) => f[key] ? `<dt>${label}</dt><dd>${escapeHtml(f[key]).replace(/\n/g, "<br>")}</dd>` : "").join("")}
+          ${CHAMPS.map(([key, label]) => f[key] ? `<dt>${label}</dt><dd>${escapeHtml(f[key]).replace(/\n/g, "<br>")}</dd>` : "").join("")}
         </dl>
       </div>`;
     });
   });
-  html += `<div class="print-footer"><span>Droit Toolkit — Fiches d'arrêt</span><span>${today}</span></div>`;
+  html += `<div class="print-footer"><span>Paraphe — Fiches d'arrêt</span><span>${today}</span></div>`;
 
   document.getElementById("printArea").innerHTML = html;
   window.print();
 });
 
 document.getElementById("importBtn").addEventListener("click", () => document.getElementById("importFile").click());
-document.getElementById("importFile").addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    try {
-      const imported = JSON.parse(reader.result);
-      if (!Array.isArray(imported)) throw new Error("format invalide");
-      const existingIds = new Set(fiches.map(f => f.id));
-      let added = 0;
-      imported.forEach(f => {
-        if (f && f.titre && !existingIds.has(f.id)) {
-          fiches.push(Object.assign({ id: crypto.randomUUID() }, f));
-          added++;
-        }
-      });
-      saveFiches(fiches);
-      refreshFilters();
-      renderList();
-      alert(added + " fiche(s) importée(s).");
-    } catch (err) {
-      alert("Fichier invalide : " + err.message);
-    }
-  };
-  reader.readAsText(file);
-  e.target.value = "";
-});
+const PROMPT_IA = `Tu vas établir la fiche d'arrêt de chaque décision de justice contenue dans le document ci-dessous (décision copiée depuis Légifrance ou Judilibre, PDF, commentaire d'arrêt…) et la convertir en JSON pour l'outil « Fiches d'arrêt » de Paraphe.
+
+FORMAT : un tableau JSON, un objet par décision.
+[
+  {
+    "titre": "Cass. civ. 1re, 12 janv. 2022, n° 20-12.345",
+    "juridiction": "Cour de cassation",
+    "date": "2022-01-12",
+    "matiere": "Droit des contrats",
+    "faits": "",
+    "procedure": "",
+    "probleme": "",
+    "solution": "",
+    "portee": "",
+    "attendu": "",
+    "tags": ["vente", "vice caché"]
+  }
+]
+
+RÈGLES
+- titre (obligatoire) : référence usuelle abrégée (« Cass. com., 3 mars 2021, n° 19-13.533 », « CE, ass., 20 oct. 1989, Nicolo »), ou le nom sous lequel l'arrêt est connu s'il en a un.
+- juridiction : exactement une de ces valeurs : "Cour de cassation", "Conseil d'État", "Conseil constitutionnel", "CJUE", "CEDH", "Cour d'appel", "Tribunal judiciaire", "Autre" (tribunal de commerce, conseil de prud'hommes, tribunal administratif…).
+- date : date de la décision au format AAAA-MM-JJ, sinon "".
+- faits : les faits utiles, qualifiés juridiquement (« un vendeur », « l'acquéreur », « le salarié »), sans les noms des personnes physiques.
+- procedure : qui a agi, devant quelle juridiction, ce qui a été décidé avant, qui forme le recours et sur quel moyen.
+- probleme : la question de droit, formulée de façon abstraite, en une phrase interrogative.
+- solution : ce que décide la juridiction (rejet, cassation, annulation…) et pourquoi, en reprenant le raisonnement de la décision.
+- portee : ce que le document dit de la portée (revirement, confirmation, décision publiée au Bulletin…). Si le document n'en dit rien, laisse "" plutôt que de supposer.
+- attendu : le motif de principe (ou « attendu que » / « considérant que ») recopié mot pour mot entre guillemets, s'il existe ; sinon "".
+- matiere : la matière (« Responsabilité civile », « Droit du travail »…).
+- tags : trois mots-clés au plus, courts, en minuscules.
+- Rédige en français juridique, avec des phrases complètes ; reste fidèle à la décision, sans ajouter de jurisprudence qui n'est pas dans le document.` + Commun.FIN_PROMPT("fiches-arret.json");
+const JURIDICTIONS = ["Cour de cassation", "Conseil d'État", "Conseil constitutionnel", "CJUE", "CEDH", "Cour d'appel", "Tribunal judiciaire", "Autre"];
+const IMPORT = {
+  liste: () => fiches,
+  valide: f => {
+    if (!f.titre) return false;
+    if (!JURIDICTIONS.includes(f.juridiction)) f.juridiction = f.juridiction ? "Autre" : "";   // valeur hors liste
+    if (!Array.isArray(f.tags)) f.tags = String(f.tags || "").split(",").map(t => t.trim()).filter(Boolean);
+    return true;
+  },
+  defauts: () => ({ juridiction: "", date: "", matiere: "", faits: "", procedure: "", probleme: "", solution: "", portee: "", attendu: "", tags: [] }),
+  apres: n => { saveFiches(fiches); refreshFilters(); renderList(); alert(n + " fiche(s) importée(s)."); }
+};
+Commun.importerJSON(document.getElementById("importFile"), IMPORT);
+Commun.promptIA(document.getElementById("promptIA"), { prompt: PROMPT_IA, quoi: "des fiches d'arrêt", input: document.getElementById("importFile"), options: IMPORT });
 
 resetForm();
 refreshFilters();
 renderList();
+ouvrirDepuisAncre();
 </script>
 </body>
 </html>

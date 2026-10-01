@@ -2,89 +2,453 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Hub — Mes logiciels</title>
+<title>Paraphe — Du cours au cabinet</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Mes Logiciels">
+<meta name="apple-mobile-web-app-title" content="Paraphe">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#131316">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Zilla+Slab:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23131316%22%2F%3E%3Cg%20stroke%3D%22%23F7F6F2%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%3E%3Cline%20x1%3D%2216%22%20y1%3D%227%22%20x2%3D%2216%22%20y2%3D%2224%22%2F%3E%3Cline%20x1%3D%228%22%20y1%3D%2210%22%20x2%3D%2224%22%20y2%3D%2210%22%2F%3E%3Cline%20x1%3D%2216%22%20y1%3D%2224%22%20x2%3D%2211%22%20y2%3D%2224%22%2F%3E%3Cline%20x1%3D%2216%22%20y1%3D%2224%22%20x2%3D%2221%22%20y2%3D%2224%22%2F%3E%3Cpath%20d%3D%22M6%2010a4%205%200%200%200%208%200%22%2F%3E%3Cpath%20d%3D%22M18%2010a4%205%200%200%200%208%200%22%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%227%22%20r%3D%221.6%22%20fill%3D%22%233B2FE8%22%2F%3E%3C%2Fsvg%3E">
+<script src="taille.js"></script>
+<script src="migration.js"></script>
+<link rel="stylesheet" href="fonts/fonts.css">
+<script src="pwa.js" defer></script>
+<link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
 <link rel="stylesheet" href="style.css">
 <style>
-  .hub-header{ text-align:center; padding:var(--e8) var(--pad) var(--e6); }
-  .hub-mark{
-    display:inline-flex; align-items:center; justify-content:center;
-    width:52px; height:52px; color:var(--encre);
-    margin-bottom:var(--e4);
+  /* Page d'ouverture de l'application : on choisit un outil. La sauvegarde vit dans sa propre fenêtre. */
+  .hub-barre{display:flex;align-items:center;justify-content:space-between;gap:var(--e4);padding:var(--e4) var(--pad);border-bottom:3px solid var(--encre)}
+  .hub-marque{display:inline-flex;align-items:center;gap:var(--e2);font:700 calc(19px * var(--ech))/1 var(--slab);color:var(--encre);text-decoration:none;letter-spacing:-.01em}
+  .hub-marque svg{display:block;flex:none}
+  .hub-actions{display:flex;align-items:center;gap:var(--e2)}
+  .hub-sauver{position:relative}
+  /* taille du texte : trois « A » de plus en plus grands */
+  .taille{display:flex;border:2px solid var(--encre);margin-right:var(--e2)}
+  .taille button{border:0;min-height:36px;min-width:36px;padding:0 8px;font-family:var(--slab);font-weight:700;line-height:1;text-transform:none;letter-spacing:0;background:transparent;color:var(--encre)}
+  .taille button + button{border-left:1px solid var(--filet)}
+  .taille button:nth-child(1){font-size:13px}.taille button:nth-child(2){font-size:16px}.taille button:nth-child(3){font-size:19px}
+  .taille button[aria-pressed="true"]{background:var(--encre);color:var(--fond)}
+  .hub-sauver .pastille{position:absolute;top:-5px;right:-5px;width:10px;height:10px;background:rgb(var(--acc));border:2px solid var(--fond)}
+
+  .hub{max-width:1040px;margin:0 auto;padding:var(--e8) var(--pad) var(--e8)}
+  .hub-accueil{margin-bottom:var(--e6)}
+  .hub-accueil h1{font-size:calc(52px * var(--ech));line-height:1;letter-spacing:-.035em;margin:0 0 var(--e3)}
+  .hub-accueil h1 .point-final{display:inline-block;width:.15em;height:.15em;margin-left:.04em;background:rgb(var(--acc))}
+  .hub-accueil p{margin:0;color:var(--encre-2);font-size:calc(17px * var(--ech));max-width:56ch}
+
+  .hub #recherche-globale{max-width:none;margin:0}
+  .rappel{margin:var(--e6) 0 0}
+  .rappel .row{gap:var(--e2)}
+
+  .famille{margin-top:var(--e8)}
+  .famille-tete{display:flex;align-items:baseline;flex-wrap:wrap;gap:var(--e1) var(--e4);border-bottom:2px solid var(--encre);padding-bottom:var(--e3)}
+  .famille-tete h2{margin:0;font-size:calc(26px * var(--ech))}
+  .famille-tete p{margin:0;color:var(--encre-2);font-size:calc(14px * var(--ech))}
+  .famille .grid-links{grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:var(--e5)}
+  .famille .grid-links a.tool{display:flex;flex-direction:column}
+  .famille .grid-links a.tool p{flex:1}
+  .tool-contenu{margin-top:var(--e4);padding-top:var(--e3);border-top:1px solid var(--filet);display:flex;justify-content:space-between;align-items:center;gap:var(--e3);
+    font-size:calc(12px * var(--ech));font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--gris)}
+  .tool-contenu b{color:var(--encre);font-weight:700}
+  .tool-contenu .ouvrir{color:rgb(var(--acc))}
+  .grid-links a.tool:hover .tool-contenu .ouvrir{text-decoration:underline}
+
+  .hub-pied{margin-top:var(--e8);padding-top:var(--e4);border-top:1px solid var(--filet);display:flex;flex-wrap:wrap;gap:var(--e2) var(--e4);align-items:center;justify-content:space-between;color:var(--gris);font-size:calc(13px * var(--ech))}
+  .lien{border:0;background:none;padding:0;min-height:0;font:inherit;font-weight:600;color:rgb(var(--acc));text-decoration:underline;text-underline-offset:3px;cursor:pointer;letter-spacing:0;text-transform:none}
+  .lien:hover{background:none;color:var(--encre)}
+
+  /* fenêtre « Sauvegarde » */
+  dialog.fenetre{border:3px solid var(--encre);background:var(--carte);color:var(--encre);padding:0;max-width:min(560px,calc(100vw - 32px));width:100%;box-shadow:12px 12px 0 rgb(var(--acc))}
+  dialog.fenetre::backdrop{background:rgba(19,19,22,.5)}
+  .fenetre-tete{display:flex;align-items:center;justify-content:space-between;gap:var(--e3);padding:var(--e4) var(--e5);border-bottom:2px solid var(--encre)}
+  .fenetre-tete h2{margin:0;font-size:calc(22px * var(--ech))}
+  .fenetre-corps{padding:var(--e5)}
+  .fenetre-corps > p{margin:0 0 var(--e4);color:var(--encre-2);font-size:calc(14.5px * var(--ech));line-height:1.55}
+  .etat-sauvegarde{display:flex;align-items:center;gap:var(--e3);padding:var(--e3) var(--e4);border:2px solid var(--filet);margin-bottom:var(--e5);font-size:calc(14px * var(--ech))}
+  .etat-sauvegarde i{width:10px;height:10px;flex:none;background:var(--succes)}
+  .etat-sauvegarde.ancienne i{background:rgb(var(--acc))}
+  .fenetre-actions{display:grid;grid-template-columns:1fr;gap:var(--e3)}
+  .fenetre-actions button{min-height:48px}
+  .fenetre-corps > p.fenetre-note{margin:var(--e4) 0 0;color:var(--gris);font-size:calc(12.5px * var(--ech));line-height:1.5}
+  .alerte-espace{margin:var(--e4) 0 0;padding:var(--e3) var(--e4);border:2px solid var(--alerte);color:var(--alerte);font-size:calc(13px * var(--ech))}
+  /* premier lancement : trois écrans */
+  dialog.bienvenue{max-width:min(640px,calc(100vw - 32px))}
+  dialog.bienvenue .fenetre-corps{min-height:410px}   /* même hauteur aux trois étapes : les boutons ne sautent pas */
+  .etape[hidden]{display:none}
+  .etape-visuel{border:2px solid var(--encre);background:var(--fond);padding:var(--e5);margin-bottom:var(--e5);min-height:150px;display:grid;place-items:center}
+  .etape .eyebrow{margin-bottom:var(--e2)}
+  .etape h2{font-size:calc(28px * var(--ech));margin:0 0 var(--e3);line-height:1.1}
+  .etape p{margin:0;color:var(--encre-2);font-size:calc(15px * var(--ech));line-height:1.6}
+  .v-outils{display:grid;gap:var(--e3);width:100%}
+  .v-outils > div{display:grid;grid-template-columns:92px 1fr;align-items:center;gap:var(--e3)}
+  .v-outils b{font:700 calc(12px * var(--ech))/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:rgb(var(--acc))}
+  .v-outils span{display:flex;flex-wrap:wrap;gap:var(--e2)}
+  .v-outils i{font-style:normal;border:2px solid var(--encre);background:var(--carte);padding:6px 10px;font-size:calc(13px * var(--ech));font-weight:600;white-space:nowrap}
+  .v-local{display:flex;align-items:center;gap:var(--e6);flex-wrap:wrap;justify-content:center}
+  .v-local ul{list-style:none;margin:0;padding:0;display:grid;gap:var(--e2);font-weight:600;font-size:calc(14px * var(--ech))}
+  .v-local li::before{content:"";display:inline-block;width:9px;height:9px;background:rgb(var(--acc));margin-right:10px;vertical-align:1px}
+  .v-sauve{display:flex;align-items:center;gap:var(--e4);flex-wrap:wrap;justify-content:center;font-size:calc(14px * var(--ech));color:var(--encre-2)}
+  .v-sauve .faux-bouton{position:relative;border:2px solid var(--encre);background:var(--carte);color:var(--encre);padding:10px 16px;font:700 calc(12px * var(--ech))/1 var(--sans);letter-spacing:.08em;text-transform:uppercase}
+  .v-sauve .faux-bouton::after{content:"";position:absolute;top:-6px;right:-6px;width:10px;height:10px;background:rgb(var(--acc));border:2px solid var(--fond)}
+  .bienvenue-pied{display:flex;align-items:center;justify-content:space-between;gap:var(--e3);padding:var(--e4) var(--e5);border-top:2px solid var(--encre)}
+  .points{display:flex;gap:6px}
+  .points i{width:22px;height:6px;background:var(--filet)}
+  .points i.on{background:rgb(var(--acc))}
+  .bienvenue-pied .droite{display:flex;gap:var(--e2);align-items:center}
+  @media (max-width:560px){
+    .hub-accueil h1{font-size:calc(40px * var(--ech))}
+    .hub-barre{flex-wrap:wrap;row-gap:var(--e3)}
+    .hub-actions{width:100%;justify-content:space-between;flex-wrap:wrap;row-gap:var(--e2)}
+    .taille{margin-right:0}
+    .v-outils > div{grid-template-columns:1fr}
   }
-  .hub-topbar{ display:flex; justify-content:flex-end; padding:var(--e3) var(--pad) 0; }
-  section.groupe{ margin-bottom:var(--e8); }
-  .groupe-tete{ display:flex; align-items:baseline; justify-content:space-between; gap:var(--e3); margin-bottom:var(--e4); flex-wrap:wrap; }
-  .groupe-tete h2{ margin:0; font-size:1.3rem; }
-  .groupe-tete a{ font-size:13px; font-weight:600; color:rgb(var(--acc)); text-decoration:none; }
-  .groupe-tete a:hover{ text-decoration:underline; }
 </style>
 </head>
 <body>
   <script src="theme.js"></script>
-  <div class="hub-topbar"><button id="theme-toggle" aria-pressed="false">Nuit</button></div>
-  <div class="hub-header">
-    <div class="hub-mark" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 32 32"><line x1="16" y1="7" x2="16" y2="24" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><line x1="8" y1="10" x2="24" y2="10" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><line x1="16" y1="24" x2="11" y2="24" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><line x1="16" y1="24" x2="21" y2="24" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M6 10a4 5 0 0 0 8 0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/><path d="M18 10a4 5 0 0 0 8 0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/><circle cx="16" cy="7" r="2.1" fill="rgb(59,47,232)"/></svg></div>
-    <p class="eyebrow">Tout au même endroit</p>
-    <h1>Mes logiciels</h1>
-    <p class="muted">Un seul point d'accès pour les outils d'études et les outils de pratique du droit.</p>
-  </div>
+  <header class="hub-barre">
+    <a class="hub-marque" href="Hub.html" aria-label="Paraphe, accueil">
+      <svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true"><rect x="5.25" y="4.25" width="18.5" height="21.5" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 9h4v20H9v-4h15z" fill="currentColor"/><rect x="9" y="9" width="11" height="2.2" fill="currentColor"/><rect x="9" y="13.4" width="7" height="2.2" fill="currentColor"/><rect x="15" y="18" width="5" height="4.5" style="fill:rgb(var(--acc,59,47,232))"/></svg>
+      Paraphe
+    </a>
+    <div class="hub-actions">
+      <div class="taille" role="group" aria-label="Taille du texte" title="Taille du texte, dans tous les outils">
+        <button type="button" data-taille="1" aria-label="Texte normal">A</button><button type="button" data-taille="1.12" aria-label="Texte grand">A</button><button type="button" data-taille="1.25" aria-label="Texte très grand">A</button>
+      </div>
+      <button type="button" class="hub-sauver" id="ouvrirSauvegarde">Sauvegarde<span class="pastille" id="pastilleSauvegarde" hidden></span></button>
+      <button type="button" id="theme-toggle" aria-pressed="false">Nuit</button>
+    </div>
+  </header>
 
-  <main style="padding-top:0;">
+  <main class="hub">
+    <section class="hub-accueil">
+      <p class="eyebrow">Du cours au cabinet</p>
+      <h1>Paraphe<span class="point-final" aria-hidden="true"></span></h1>
+      <p>Six outils pour étudier et pratiquer le droit. Choisissez-en un pour commencer, ou cherchez directement dans tout ce que vous avez déjà saisi.</p>
+    </section>
 
-    <section class="groupe">
-      <div class="groupe-tete">
-        <h2>Études de droit — Droit Toolkit</h2>
-        <a href="index.html">Voir le portail →</a>
+    <div id="recherche-globale"></div>
+
+    <div class="rappel" id="rappelSauvegarde" hidden>
+      <span id="rappelTexte"></span>
+      <div class="row">
+        <button type="button" class="primary" id="rappelSauver">Sauvegarder maintenant</button>
+        <button type="button" id="rappelPlusTard">Plus tard</button>
+      </div>
+    </div>
+
+    <section class="famille" aria-labelledby="t-etudier">
+      <div class="famille-tete">
+        <h2 id="t-etudier">Étudier</h2>
+        <p>Réviser le cours et préparer les examens.</p>
       </div>
       <div class="grid-links">
         <a class="tool" href="flashcards.html">
           <h3><span class="tool-num" aria-hidden="true">1</span>Fiches mémo</h3>
-          <p>Révision par répétition espacée pour mémoriser définitions, articles et notions.</p>
+          <p>Des cartes question-réponse pour retenir définitions et articles. Celles que vous connaissez bien reviennent moins souvent.</p>
+          <div class="tool-contenu"><span data-compte="memo"></span><span class="ouvrir">Ouvrir →</span></div>
         </a>
         <a class="tool" href="fiches-arret.html">
           <h3><span class="tool-num" aria-hidden="true">2</span>Fiches d'arrêt</h3>
-          <p>Fiches structurées (faits, procédure, problème, solution, portée) avec recherche par matière.</p>
+          <p>Une fiche par décision&nbsp;: faits, procédure, problème de droit, solution et portée.</p>
+          <div class="tool-contenu"><span data-compte="arret"></span><span class="ouvrir">Ouvrir →</span></div>
         </a>
         <a class="tool" href="codes.html">
           <h3><span class="tool-num" aria-hidden="true">3</span>Codes &amp; articles</h3>
-          <p>Articles de loi classés par matière et par code, avec annotations personnelles.</p>
+          <p>Vos articles de référence, classés par code, avec vos notes et ceux à retenir.</p>
+          <div class="tool-contenu"><span data-compte="codes"></span><span class="ouvrir">Ouvrir →</span></div>
         </a>
       </div>
     </section>
 
-    <section class="groupe">
-      <div class="groupe-tete">
-        <h2>Pratique &amp; rédaction</h2>
+    <section class="famille" aria-labelledby="t-pratiquer">
+      <div class="famille-tete">
+        <h2 id="t-pratiquer">Pratiquer</h2>
+        <p>Suivre les dossiers, construire un raisonnement, calculer les délais.</p>
       </div>
       <div class="grid-links">
-        <a class="tool" href="Suivijuridique.html">
-          <h3><span class="tool-num" aria-hidden="true">4</span>Suivi Juridique</h3>
-          <p>Tableau de bord de suivi de dossiers : clients, échéances, finances, notes.</p>
+        <a class="tool" href="diligences.html">
+          <h3><span class="tool-num" aria-hidden="true">4</span>Diligences</h3>
+          <p>Le suivi des dossiers&nbsp;: sociétés, contrats, litiges, échéances et honoraires.</p>
+          <div class="tool-contenu"><span data-compte="diligences"></span><span class="ouvrir">Ouvrir →</span></div>
         </a>
         <a class="tool" href="considerant.html">
           <h3><span class="tool-num" aria-hidden="true">5</span>Considérant</h3>
-          <p>Fiches de raisonnement juridique — structurer un considérant, une argumentation.</p>
+          <p>Un raisonnement en arbre, une idée par cube, pour structurer une argumentation.</p>
+          <div class="tool-contenu"><span data-compte="considerant"></span><span class="ouvrir">Ouvrir →</span></div>
         </a>
         <a class="tool" href="quantieme.html">
           <h3><span class="tool-num" aria-hidden="true">6</span>Quantième</h3>
-          <p>Calcul des délais de procédure française à partir d'une date de départ.</p>
+          <p>Les délais de procédure calculés à partir d'une date, et posés sur une frise.</p>
+          <div class="tool-contenu"><span data-compte="quantieme"></span><span class="ouvrir">Ouvrir →</span></div>
         </a>
       </div>
     </section>
 
-    <footer class="tip">Chaque logiciel enregistre ses données localement dans son propre fichier/navigateur — pense à exporter régulièrement si l'outil le propose.</footer>
+    <footer class="hub-pied">
+      <span>Vos données restent sur cet appareil. Aucun compte, aucun envoi sur internet.</span>
+      <span class="row" style="gap:var(--e4)"><button type="button" class="lien" id="revoirBienvenue">Revoir la présentation</button><button type="button" class="lien" id="piedSauvegarde">Mettre mes données à l'abri</button></span>
+    </footer>
   </main>
+
+  <dialog class="fenetre" id="fenetreSauvegarde" aria-labelledby="t-sauvegarde">
+    <div class="fenetre-tete">
+      <h2 id="t-sauvegarde">Sauvegarde</h2>
+      <button type="button" id="fermerSauvegarde">Fermer</button>
+    </div>
+    <div class="fenetre-corps">
+      <p>Vos fiches, dossiers et réglages sont enregistrés sur cet appareil, et nulle part ailleurs. Une sauvegarde les réunit dans un seul fichier, pièces jointes comprises&nbsp;: rangez-le sur une clé USB ou dans votre cloud, ou servez-vous-en pour tout retrouver sur un autre ordinateur.</p>
+      <div class="etat-sauvegarde" id="etatSauvegarde"><i aria-hidden="true"></i><span id="derniereSauvegarde">Aucune sauvegarde pour l'instant.</span></div>
+      <div class="fenetre-actions">
+        <button type="button" class="primary" id="toutExporter">Créer une sauvegarde</button>
+        <button type="button" id="toutRestaurer">Restaurer une sauvegarde…</button>
+      </div>
+      <input type="file" id="fichierRestauration" accept="application/json,.json" hidden>
+      <p class="fenetre-note">Restaurer remplace les données actuelles par celles du fichier choisi. Chaque outil garde aussi ses propres exports (PDF, fichiers de révision…) dans son menu.</p>
+      <p class="alerte-espace" id="alerteEspace" hidden></p>
+    </div>
+  </dialog>
+
+  <dialog class="fenetre bienvenue" id="bienvenue" aria-labelledby="bv-titre-1">
+    <div class="fenetre-corps">
+      <section class="etape" data-etape="1">
+        <div class="etape-visuel" aria-hidden="true">
+          <div class="v-outils">
+            <div><b>Étudier</b><span><i>Fiches mémo</i><i>Fiches d'arrêt</i><i>Codes &amp; articles</i></span></div>
+            <div><b>Pratiquer</b><span><i>Diligences</i><i>Considérant</i><i>Quantième</i></span></div>
+          </div>
+        </div>
+        <p class="eyebrow">Bienvenue · 1 sur 3</p>
+        <h2 id="bv-titre-1">Six outils pour le droit, au même endroit</h2>
+        <p>Pour étudier : des fiches mémo, des fiches d'arrêt et vos articles de référence. Pour pratiquer : le suivi des dossiers, la construction d'un raisonnement et le calcul des délais de procédure. Tout s'ouvre depuis cet accueil.</p>
+      </section>
+      <section class="etape" data-etape="2" hidden>
+        <div class="etape-visuel" aria-hidden="true">
+          <div class="v-local">
+            <svg width="92" height="92" viewBox="0 0 32 32"><rect x="5.25" y="4.25" width="18.5" height="21.5" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 9h4v20H9v-4h15z" fill="currentColor"/><rect x="9" y="9" width="11" height="2.2" fill="currentColor"/><rect x="9" y="13.4" width="7" height="2.2" fill="currentColor"/><rect x="15" y="18" width="5" height="4.5" style="fill:rgb(var(--acc))"/></svg>
+            <ul><li>Aucun compte à créer</li><li>Rien n'est envoyé sur internet</li><li>Fonctionne sans connexion</li></ul>
+          </div>
+        </div>
+        <p class="eyebrow">Bienvenue · 2 sur 3</p>
+        <h2 id="bv-titre-2">Vos données restent sur cet appareil</h2>
+        <p>Ce que vous saisissez (fiches, dossiers, raisonnements) est enregistré sur cet ordinateur, et nulle part ailleurs. Personne d'autre n'y a accès, pas même l'auteur de Paraphe.</p>
+      </section>
+      <section class="etape" data-etape="3" hidden>
+        <div class="etape-visuel" aria-hidden="true">
+          <div class="v-sauve"><span class="faux-bouton">Sauvegarde</span><span>en haut de l'accueil</span></div>
+        </div>
+        <p class="eyebrow">Bienvenue · 3 sur 3</p>
+        <h2 id="bv-titre-3">Pensez à faire une sauvegarde</h2>
+        <p>Comme vos données ne sont qu'ici, une panne ou un changement d'ordinateur peut les faire disparaître. Le bouton « Sauvegarde » les réunit dans un seul fichier, à ranger sur une clé USB ou dans votre cloud. Paraphe vous le rappellera si vous oubliez.</p>
+      </section>
+    </div>
+    <div class="bienvenue-pied">
+      <button type="button" class="lien" id="bvPasser">Passer</button>
+      <div class="points" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+      <div class="droite">
+        <button type="button" id="bvPrecedent" hidden>Précédent</button>
+        <button type="button" class="primary" id="bvSuivant">Suivant</button>
+      </div>
+    </div>
+  </dialog>
+
+<script>
+(() => {
+  const CLE_DERNIERE = 'paraphe_derniere_sauvegarde';
+  const CLE_PLUS_TARD = 'paraphe_rappel_plus_tard';
+  const QUOTA = 5 * 1024 * 1024;             // ~5 millions de caractères par site
+  const $ = id => document.getElementById(id);
+  const lire = k => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } };
+  const pluriel = (n, un, plusieurs) => n + ' ' + (n > 1 ? plusieurs : un);
+
+  // ── taille du texte (commune aux six outils, voir taille.js) ──
+  const boutonsTaille = [...document.querySelectorAll('[data-taille]')];
+  const majTaille = () => boutonsTaille.forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.taille) === (window.PARAPHE_TAILLE || 1))));
+  boutonsTaille.forEach(b => b.addEventListener('click', () => { window.parapheTaille && window.parapheTaille(Number(b.dataset.taille)); majTaille(); }));
+  majTaille();
+
+  // ── ce que chaque outil contient déjà ──
+  (() => {
+    const compte = {};
+    const tab = k => { const v = lire(k); return Array.isArray(v) ? v.length : 0; };
+    const n1 = tab('droit_flashcards'), n2 = tab('droit_fiches_arret'), n3 = tab('droit_codes');
+    if (n1) compte.memo = pluriel(n1, 'carte', 'cartes');
+    if (n2) compte.arret = pluriel(n2, 'fiche', 'fiches');
+    if (n3) compte.codes = pluriel(n3, 'article', 'articles');
+    const profils = lire('sj-profiles') || [];
+    if (Array.isArray(profils) && profils.length) {
+      let dossiers = 0;
+      // profils chiffrés par code PIN : illisibles ici, on ne compte que les autres
+      profils.forEach(p => { const d = lire('sjp-' + p.id + '-data'); if (d && (Array.isArray(d.lit) || Array.isArray(d.ctr) || Array.isArray(d.cons))) dossiers += (d.lit || []).length + (d.ctr || []).length + (d.cons || []).length; });
+      compte.diligences = dossiers ? pluriel(dossiers, 'dossier', 'dossiers') : pluriel(profils.length, 'profil', 'profils');
+    }
+    const c = lire('attendu-cubes-v1');
+    if (c && Array.isArray(c.fiches) && c.fiches.length) compte.considerant = pluriel(c.fiches.length, 'fiche', 'fiches');
+    document.querySelectorAll('[data-compte]').forEach(el => {
+      const v = compte[el.dataset.compte];
+      if (!v) { el.textContent = ''; el.nextElementSibling.textContent = 'Commencer →'; return; }
+      const [n, ...mots] = v.split(' ');
+      el.innerHTML = '<b>' + n + '</b> ' + mots.join(' ');
+    });
+  })();
+
+  // ── pièces jointes PDF de Diligences (IndexedDB) ──
+  const ouvrirPieces = () => window.parapheOuvrirPJ();   // base IndexedDB des PDF (migration.js)
+  async function lirePieces() {
+    try {
+      const db = await ouvrirPieces();
+      return await new Promise((ok, ko) => {
+        const st = db.transaction('pieces').objectStore('pieces'), out = {};
+        const rq = st.openCursor();
+        rq.onsuccess = () => { const c = rq.result; if (c) { out[c.key] = c.value; c.continue(); } else ok(out); };
+        rq.onerror = () => ko(rq.error);
+      });
+    } catch { return {}; }
+  }
+  async function ecrirePieces(pieces) {
+    const ids = Object.keys(pieces || {});
+    if (!ids.length) return;
+    const db = await ouvrirPieces();
+    await new Promise((ok, ko) => {
+      const t = db.transaction('pieces', 'readwrite');
+      ids.forEach(id => t.objectStore('pieces').put(pieces[id], id));
+      t.oncomplete = ok; t.onerror = t.onabort = () => ko(t.error);
+    });
+  }
+
+  // ── état de la sauvegarde ──
+  const joursDepuis = iso => iso ? Math.floor((Date.now() - new Date(iso)) / 86400000) : null;
+  function afficherEtat() {
+    let derniere = null, total = 0;
+    try {
+      derniere = localStorage.getItem(CLE_DERNIERE);
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        total += k.length + (localStorage.getItem(k) || '').length;
+      }
+    } catch {}
+    const j = joursDepuis(derniere);
+    $('derniereSauvegarde').textContent = derniere
+      ? 'Dernière sauvegarde le ' + new Date(derniere).toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' }) + (j >= 1 ? ' (il y a ' + pluriel(j, 'jour', 'jours') + ')' : '') + '.'
+      : 'Aucune sauvegarde pour l’instant.';
+    $('etatSauvegarde').classList.toggle('ancienne', !derniere || j > 14);
+    const pct = Math.round(total / QUOTA * 100);
+    $('alerteEspace').hidden = pct < 80;
+    $('alerteEspace').textContent = 'L’espace de stockage est presque plein (' + pct + ' %). Créez une sauvegarde, puis faites du tri dans les outils.';
+  }
+
+  const fenetre = $('fenetreSauvegarde');
+  const ouvrir = () => { afficherEtat(); fenetre.showModal ? fenetre.showModal() : fenetre.setAttribute('open', ''); };
+  const fermer = () => fenetre.close ? fenetre.close() : fenetre.removeAttribute('open');
+  $('ouvrirSauvegarde').addEventListener('click', ouvrir);
+  $('piedSauvegarde').addEventListener('click', ouvrir);
+  $('fermerSauvegarde').addEventListener('click', fermer);
+  fenetre.addEventListener('click', e => { if (e.target === fenetre) fermer(); });   // clic hors de la fenêtre
+
+  // ── créer une sauvegarde (les sauvegardes de l'ancien format restent restaurables) ──
+  $('toutExporter').addEventListener('click', async () => {
+    const donnees = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k !== CLE_DERNIERE) donnees[k] = localStorage.getItem(k);
+    }
+    const paquet = { format: 'paraphe-sauvegarde', version: 1, date: new Date().toISOString(),
+                     localStorage: donnees, pieces: await lirePieces() };
+    const url = URL.createObjectURL(new Blob([JSON.stringify(paquet)], { type: 'application/json' }));
+    const a = document.createElement('a');
+    a.href = url; a.download = 'paraphe-sauvegarde-' + new Date().toLocaleDateString('sv-SE') + '.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+    try { localStorage.setItem(CLE_DERNIERE, paquet.date); } catch {}
+    afficherEtat(); majRappel();
+  });
+
+  // ── restaurer ──
+  const fichier = $('fichierRestauration');
+  $('toutRestaurer').addEventListener('click', () => fichier.click());
+  fichier.addEventListener('change', async () => {
+    const f = fichier.files[0]; fichier.value = '';
+    if (!f) return;
+    let paquet;
+    // FileReader plutôt que f.text() : compatible avec les anciennes vues web (Safari < 14)
+    const lireFichier = () => new Promise((ok, ko) => { const fr = new FileReader(); fr.onload = () => ok(fr.result); fr.onerror = ko; fr.readAsText(f); });
+    try { paquet = JSON.parse(await lireFichier()); } catch { alert('Ce fichier n\'est pas lisible.'); return; }
+    if (!paquet || !['paraphe-sauvegarde', 'mes-logiciels-sauvegarde'].includes(paquet.format) || typeof paquet.localStorage !== 'object') {
+      alert('Ce fichier n\'est pas une sauvegarde de Paraphe.\n(Les exports d\'un seul outil se réimportent depuis l\'outil lui-même.)');
+      return;
+    }
+    const quand = new Date(paquet.date).toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' });
+    if (!confirm('Restaurer la sauvegarde du ' + quand + ' ?\n\nLes données actuelles seront remplacées par celles du fichier.')) return;
+    const echecs = [];
+    // PDF d'abord : les fiches qui les référencent ne doivent pas arriver sans eux
+    try { await ecrirePieces(paquet.pieces); } catch { echecs.push('pièces jointes PDF'); }
+    Object.keys(paquet.localStorage).forEach(k => {
+      try { localStorage.setItem(k, paquet.localStorage[k]); } catch { echecs.push(k); }
+    });
+    alert(echecs.length
+      ? 'Restauration incomplète (espace plein ?) pour : ' + echecs.join(', ')
+      : 'Sauvegarde restaurée : vos six outils ont retrouvé leurs données.');
+    location.reload();
+  });
+
+  // ── rappel : aucune sauvegarde depuis plus de 14 jours (ou jamais) alors que des données existent ──
+  function majRappel() {
+    let derniere = null, donnees = false, plusTard = null;
+    try {
+      derniere = localStorage.getItem(CLE_DERNIERE);
+      plusTard = localStorage.getItem(CLE_PLUS_TARD);
+      donnees = ['droit_flashcards', 'droit_fiches_arret', 'droit_codes', 'attendu-cubes-v1', 'sj-profiles']
+        .some(k => localStorage.getItem(k));
+    } catch {}
+    const j = joursDepuis(derniere);
+    const aFaire = donnees && (j === null || j > 14);
+    $('pastilleSauvegarde').hidden = !aFaire;
+    const reporte = plusTard && joursDepuis(plusTard) < 7;
+    $('rappelSauvegarde').hidden = !aFaire || !!reporte;
+    if (aFaire) $('rappelTexte').innerHTML = j === null
+      ? '<b>Vos données ne sont que sur cet appareil.</b> Une sauvegarde permet de les retrouver en cas de panne ou de changement d’ordinateur.'
+      : '<b>Dernière sauvegarde il y a ' + j + '\u00a0jours.</b> Pensez à en refaire une.';
+  }
+  $('rappelSauver').addEventListener('click', () => $('toutExporter').click());
+  $('rappelPlusTard').addEventListener('click', () => { try { localStorage.setItem(CLE_PLUS_TARD, new Date().toISOString()); } catch {} majRappel(); });
+  majRappel();
+
+  // ── premier lancement : trois écrans, une seule fois, pour un nouvel utilisateur ──
+  const CLE_BIENVENUE = 'paraphe_bienvenue_vue';
+  const bv = $('bienvenue'), etapes = [...bv.querySelectorAll('.etape')], points = [...bv.querySelectorAll('.points i')];
+  let etape = 0;
+  const montrer = i => {
+    etape = i;
+    etapes.forEach((e, k) => e.hidden = k !== i);
+    points.forEach((p, k) => p.classList.toggle('on', k <= i));
+    $('bvPrecedent').hidden = i === 0;
+    $('bvSuivant').textContent = i === etapes.length - 1 ? 'Commencer' : 'Suivant';
+    bv.setAttribute('aria-labelledby', 'bv-titre-' + (i + 1));
+  };
+  const terminer = () => { try { localStorage.setItem(CLE_BIENVENUE, '1'); } catch {} if (bv.open) bv.close(); };
+  const lancer = () => { montrer(0); bv.showModal ? bv.showModal() : bv.setAttribute('open', ''); $('bvSuivant').focus(); };
+  $('bvSuivant').addEventListener('click', () => etape < etapes.length - 1 ? montrer(etape + 1) : terminer());
+  $('bvPrecedent').addEventListener('click', () => montrer(Math.max(0, etape - 1)));
+  $('bvPasser').addEventListener('click', terminer);
+  bv.addEventListener('close', terminer);                     // Échap compte comme « vu »
+  bv.addEventListener('keydown', e => { if (e.key === 'ArrowRight') $('bvSuivant').click(); if (e.key === 'ArrowLeft' && etape) montrer(etape - 1); });
+  $('revoirBienvenue').addEventListener('click', lancer);
+  (() => {
+    let vue = true, donnees = false;
+    try {
+      vue = localStorage.getItem(CLE_BIENVENUE) === '1';
+      donnees = ['droit_flashcards', 'droit_fiches_arret', 'droit_codes', 'attendu-cubes-v1', 'sj-profiles', 'quantieme_agenda']
+        .some(k => localStorage.getItem(k));
+    } catch {}
+    if (vue) return;
+    // quelqu'un qui utilise déjà les outils n'a pas besoin de la présentation
+    if (donnees) { try { localStorage.setItem(CLE_BIENVENUE, '1'); } catch {} return; }
+    lancer();
+  })();
+})();
+</script>
+<script src="recherche.js"></script>
 </body>
 </html>

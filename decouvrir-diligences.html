@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Découvrir Diligences — Paraphe</title>
+<meta name="description" content="Visite guidée des fonctionnalités de Diligences.">
+<meta name="theme-color" content="#131316">
+<link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
+<link rel="manifest" href="manifest.json">
+<script src="taille.js"></script>
+<link rel="stylesheet" href="fonts/fonts.css">
+<script src="pwa.js" defer></script>
+<style>
+/* Mise en page : une visite guidée en sept chapitres, texte à gauche et capture à droite (alternées),
+   sommaire collant en haut. Charte Paraphe : aplats, coins vifs, ombres plates décalées. */
+:root{
+  --fond:#F7F6F2; --carte:#FFFFFF; --encre:#131316; --encre-2:#5C5C63; --gris:#6B6B66; --filet:#DEDCD5;
+  --acc:#3B2FE8; --acc-texte:#3B2FE8; --acc-fond:rgba(59,47,232,.07); --alerte:#C62828;
+  --ombre:8px 8px 0 rgba(19,19,22,.12); --ombre-forte:12px 12px 0 rgba(19,19,22,.16);
+  --slab:"Zilla Slab",Georgia,serif; --sans:"Archivo",system-ui,-apple-system,sans-serif;
+  --e1:4px; --e2:8px; --e3:12px; --e4:16px; --e5:20px; --e6:24px; --e7:32px; --e8:40px;
+}
+body.sombre{
+  --fond:#131316; --carte:#1C1C20; --encre:#F4F3EE; --encre-2:#A9A9A2; --gris:#9A9A93; --filet:#2C2C31;
+  --acc:#5B50F0; --acc-texte:#9D96F8; --acc-fond:rgba(157,150,248,.10); --alerte:#EF6B6B;
+  --ombre:8px 8px 0 rgba(244,243,238,.07); --ombre-forte:12px 12px 0 rgba(244,243,238,.10); color-scheme:dark }
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--fond);transition:background .15s ease,color .15s ease;color:var(--encre);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.page{max-width:1180px;margin:0 auto;padding-inline:clamp(16px,4vw,48px)}
+h1,h2,h3{font-family:var(--slab);font-weight:700;letter-spacing:-.02em;margin:0;text-wrap:balance}
+p{margin:0}
+a{color:var(--acc-texte)}
+:focus-visible{outline:3px solid var(--acc-texte);outline-offset:2px}
+.etiquette{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--acc-texte)}
+
+/* ── En-tête ── */
+.tete{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:var(--e8);align-items:center;padding-block:56px 48px}
+.tete h1{font-size:clamp(40px,5.2vw,64px);line-height:1.02;margin:var(--e3) 0 var(--e4)}
+.tete .accroche{font-size:19px;color:var(--encre-2);max-width:34ch}
+.faits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;margin-top:var(--e7);border-top:2px solid var(--encre)}
+.faits div{padding:var(--e3) 0;border-bottom:1px solid var(--filet)}
+.faits b{display:block;font-family:var(--slab);font-size:26px;font-weight:700;line-height:1.1;font-variant-numeric:lining-nums tabular-nums}
+.faits span{font-size:13px;color:var(--encre-2)}
+.cadre{display:block;width:100%;padding:0;border:2px solid var(--encre);background:var(--carte);box-shadow:var(--ombre-forte);cursor:zoom-in}
+.cadre img{display:block;width:100%;height:auto}
+.cadre:hover{transform:translate(-2px,-2px);box-shadow:14px 14px 0 rgba(59,47,232,.22)}
+@media (prefers-reduced-motion:no-preference){.cadre{transition:transform .15s ease,box-shadow .15s ease}}
+
+/* ── Sommaire ── */
+.sommaire{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--fond);border-block:2px solid var(--encre)}
+.sommaire ol{list-style:none;margin:0 auto;padding:0 clamp(16px,4vw,48px);max-width:1180px;display:flex;gap:var(--e1);overflow-x:auto;scrollbar-width:none}
+.sommaire ol::-webkit-scrollbar{display:none}
+.sommaire a{display:block;white-space:nowrap;padding:var(--e3) var(--e3);font-size:12.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--encre-2);text-decoration:none;border-bottom:3px solid transparent}
+.sommaire a:hover,.sommaire a.actif{color:var(--encre);border-bottom-color:var(--acc)}
+.sommaire .num{font-family:var(--slab);color:var(--acc-texte);margin-right:6px}
+
+/* ── Chapitres ── */
+.chapitre{padding-block:72px 16px;scroll-margin-top:52px}
+.chapitre>header{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--e2);max-width:760px;margin-bottom:var(--e7)}
+.chapitre>header h2{font-size:clamp(30px,3.6vw,42px);line-height:1.08}
+.chapitre>header p{font-size:18px;color:var(--encre-2)}
+.fonc{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:var(--e8);align-items:start;padding-block:var(--e7);border-top:1px solid var(--filet)}
+.fonc.inv{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}
+.fonc.inv .texte{order:2}
+.texte h3{font-size:24px;line-height:1.2;margin-bottom:var(--e3)}
+.texte p{color:var(--encre-2);max-width:62ch}
+.texte ul{margin:var(--e4) 0 0;padding:0;list-style:none;display:grid;gap:var(--e2)}
+.texte li{position:relative;padding-left:22px;font-size:15px}
+.texte li::before{content:"";position:absolute;left:0;top:.62em;width:10px;height:2px;background:var(--acc-texte)}
+.ref{font-family:var(--slab);font-weight:600;white-space:nowrap}
+.duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--e5)}
+.legende{font-size:12.5px;color:var(--gris);margin-top:var(--e2)}
+.note{margin-top:var(--e4);padding:var(--e3) var(--e4);border-left:3px solid var(--acc-texte);background:var(--acc-fond);font-size:14px;color:var(--encre-2)}
+.note.alerte{border-left-color:var(--alerte)}
+
+/* ── Fin de page ── */
+.fin{margin-block:72px 56px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:2px solid var(--encre);background:var(--carte);box-shadow:var(--ombre)}
+.fin>div{padding:var(--e6)}
+.fin>div+div{border-left:1px solid var(--filet)}
+.fin h3{font-size:20px;margin-bottom:var(--e2)}
+.fin p{font-size:14.5px;color:var(--encre-2)}
+.pied{padding-block:0 40px;font-size:12.5px;color:var(--gris)}
+
+/* ── Loupe ── */
+dialog{padding:0;border:2px solid var(--encre);background:var(--carte);color:var(--encre);max-width:min(1440px,96vw);max-height:94vh;box-shadow:var(--ombre-forte)}
+dialog::backdrop{background:rgba(19,19,22,.78)}
+dialog img{display:block;max-width:100%;max-height:calc(94vh - 56px);width:auto;height:auto}
+dialog .barre{display:flex;justify-content:space-between;align-items:center;gap:var(--e4);padding:var(--e2) var(--e4);border-top:1px solid var(--filet);font-size:13.5px}
+dialog button{font:600 12px var(--sans);letter-spacing:.06em;text-transform:uppercase;padding:var(--e2) var(--e4);border:2px solid var(--encre);background:transparent;color:var(--encre);cursor:pointer}
+dialog button:hover{background:var(--encre);color:var(--fond)}
+
+@media (max-width:860px){
+  .tete,.fonc,.fonc.inv{grid-template-columns:minmax(0,1fr);gap:var(--e5)}
+  .fonc.inv .texte{order:0}
+  .tete{padding-block:32px 32px}
+  .fin{grid-template-columns:minmax(0,1fr)}
+  .fin>div+div{border-left:0;border-top:1px solid var(--filet)}
+}
+@media (max-width:520px){ .duo{grid-template-columns:minmax(0,1fr)} }
+
+/* ── Barre du site ── */
+.barre-site{display:flex;align-items:center;justify-content:space-between;gap:var(--e3);padding:var(--e3) clamp(16px,4vw,48px);border-bottom:3px solid var(--encre);max-width:none}
+.barre-site a{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--encre-2);text-decoration:none}
+.barre-site a:hover{color:var(--encre)}
+.barre-site .actions{display:flex;gap:var(--e2);align-items:center}
+.barre-site .ouvrir{color:var(--fond);background:var(--encre);padding:var(--e2) var(--e3)}
+.barre-site .ouvrir:hover{color:#fff;background:var(--acc)}
+#theme-toggle{font:600 11px var(--sans);letter-spacing:.08em;text-transform:uppercase;padding:var(--e2) var(--e3);border:2px solid var(--encre);background:transparent;color:var(--encre);cursor:pointer}
+#theme-toggle:hover{background:var(--encre);color:var(--fond)}
+</style>
+</head>
+<body>
+<script src="theme.js"></script>
+<nav class="barre-site" aria-label="Navigation du site">
+  <a href="Hub.html">← Tous les outils Paraphe</a>
+  <div class="actions">
+    <a class="ouvrir" href="diligences.html">Ouvrir Diligences</a>
+    <button id="theme-toggle" type="button" aria-pressed="false">Nuit</button>
+  </div>
+</nav>
+<div class="page">
+  <header class="tete">
+    <div>
+      <span class="etiquette">Paraphe · outil de pratique</span>
+      <h1>Diligences</h1>
+      <p class="accroche">Le poste de pilotage du juriste : sociétés, contrats, litiges et consultations, avec leurs échéances, leurs pièces et leurs honoraires. Tout reste sur votre machine.</p>
+      <div class="faits">
+        <div><b>18 écrans</b><span>du tableau de bord au rapport exécutif</span></div>
+        <div><b>5 profils</b><span>séparés, sur le même appareil</span></div>
+        <div><b>AES-256</b><span>chiffrement des profils protégés par un code</span></div>
+        <div><b>Hors ligne</b><span>aucun serveur, aucun compte</span></div>
+      </div>
+    </div>
+    <button class="cadre" type="button" data-legende="Le tableau de bord, en thème clair"><img src="img/diligences/dashboard.jpg" alt="Tableau de bord de Diligences : indicateurs, graphiques, échéances et litiges actifs" width="1440" height="900"></button>
+  </header>
+</div>
+
+<nav class="sommaire" aria-label="Sommaire">
+  <ol>
+    <li><a href="#tableau"><span class="num">1</span>Accueil</a></li>
+    <li><a href="#referentiel"><span class="num">2</span>Référentiel</a></li>
+    <li><a href="#dossier"><span class="num">3</span>Dossier d'un litige</a></li>
+    <li><a href="#echeances"><span class="num">4</span>Échéances</a></li>
+    <li><a href="#analyse"><span class="num">5</span>Analyse</a></li>
+    <li><a href="#outils"><span class="num">6</span>Données et outils</a></li>
+    <li><a href="#securite"><span class="num">7</span>Sécurité</a></li>
+  </ol>
+</nav>
+
+<main class="page">
+
+  <section class="chapitre" id="tableau">
+    <header><span class="etiquette">Chapitre 1</span><h2>Ce qui demande votre attention, en un écran</h2>
+      <p>À l'ouverture, l'Accueil dit où vous en êtes : ce qui arrive bientôt, ce qui est en retard, et par où commencer si vous démarrez.</p></header>
+    <div class="fonc">
+      <div class="texte">
+        <h3>Accueil</h3>
+        <p>La première fois, trois étapes vous guident : ajouter une société, puis un contrat ou un litige, puis revenir ici. Ensuite, l'Accueil se lit de haut en bas.</p>
+        <ul>
+          <li>Des actions rapides : ajouter une société, un contrat, ouvrir un litige, noter une consultation, calculer une prescription.</li>
+          <li>Une phrase de synthèse, par exemple « Dans les 30 prochains jours : 1 contrat arrive à échéance, 2 audiences sont prévues ».</li>
+          <li>Quatre chiffres : contrats en cours, litiges en cours, contrats qui finissent sous 30 jours, montant en jeu.</li>
+          <li>Les échéances et audiences avec un compte à rebours <span class="ref">J-4</span>, et les actions en attente tirées des tâches des dossiers.</li>
+          <li>Des statistiques et un glossaire des mots juridiques, repliés en bas de page ; un bandeau « Alertes du jour » à la première ouverture de la journée.</li>
+        </ul>
+      </div>
+      <button class="cadre" type="button" data-legende="Tableau de bord"><img loading="lazy" src="img/diligences/dashboard.jpg" alt="Tableau de bord" width="1440" height="900"></button>
+    </div>
+    <div class="fonc inv">
+      <div class="texte">
+        <h3>Rapport exécutif</h3>
+        <p>Une synthèse d'une page à remettre à une direction : litiges prioritaires classés par risque, échéances et audiences à 30 jours, répartition par niveau et par statut. Elle s'imprime ou s'enregistre en PDF.</p>
+      </div>
+      <button class="cadre" type="button" data-legende="Rapport exécutif"><img loading="lazy" src="img/diligences/rapport.jpg" alt="Rapport exécutif" width="1440" height="900"></button>
+    </div>
+  </section>
+
+  <section class="chapitre" id="referentiel">
+    <header><span class="etiquette">Chapitre 2</span><h2>Un référentiel qui relie tout</h2>
+      <p>Quatre registres, rangés dans le menu sous « Mes dossiers » (Contrats, Litiges, Consultations, Sociétés) et reliés entre eux : un litige pointe vers son contrat, qui pointe vers la société cliente.</p></header>
+    <div class="fonc">
+      <div class="texte">
+        <h3>Litiges</h3>
+        <p>Chaque litige porte son objet, l'adversaire, la juridiction, le numéro RG, le montant du risque et son niveau, le statut, l'audience à venir et l'avocat.</p>
+        <ul>
+          <li>Tri par colonne, filtres par statut, niveau, juridiction, période et étiquettes.</li>
+          <li>Épingles pour garder les dossiers chauds en tête de liste.</li>
+          <li>Vue liste ou vue cartes, export CSV réimportable.</li>
+        </ul>
+      </div>
+      <button class="cadre" type="button" data-legende="Liste des litiges"><img loading="lazy" src="img/diligences/litiges.jpg" alt="Liste des litiges" width="1440" height="900"></button>
+    </div>
+    <div class="fonc inv">
+      <div class="texte">
+        <h3>Contrats</h3>
+        <p>Type, cocontractant, société cliente, dates, valeur et statut. L'échéance s'affiche avec son badge <span class="ref">J-20</span> ou <span class="ref">EXPIRÉ</span>, et les litiges nés du contrat sont listés sur la même ligne.</p>
+        <ul>
+          <li>Filtre par période de fin, duplication d'un contrat, export CSV.</li>
+        </ul>
+      </div>
+      <button class="cadre" type="button" data-legende="Contrats"><img loading="lazy" src="img/diligences/contrats.jpg" alt="Liste des contrats" width="1440" height="900"></button>
+    </div>
+    <div class="fonc">
+      <div class="texte">
+        <h3>Sociétés et consultations</h3>
+        <p>Les sociétés (forme, SIREN, adresse, capital, statut) servent de clients et de parties. Les consultations suivent les demandes internes, avec leur priorité (normale, urgente, critique) et leur statut jusqu'à la réponse.</p>
+      </div>
+      <div class="duo">
+        <div><button class="cadre" type="button" data-legende="Sociétés, vue cartes"><img loading="lazy" src="img/diligences/societes.jpg" alt="Sociétés en vue cartes" width="1440" height="900"></button><p class="legende">Sociétés, vue cartes</p></div>
+        <div><button class="cadre" type="button" data-legende="Consultations"><img loading="lazy" src="img/diligences/consultations.jpg" alt="Consultations" width="1440" height="900"></button><p class="legende">Consultations</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapitre" id="dossier">
+    <header><span class="etiquette">Chapitre 3</span><h2>Le dossier d'un litige, de l'assignation au relevé d'honoraires</h2>
+      <p>Un clic sur un litige ouvre sa fiche complète. C'est là que se fait l'essentiel du travail quotidien.</p></header>
+    <div class="fonc">
+      <div class="texte">
+        <h3>La fiche, en cinq onglets</h3>
+        <p>L'en-tête réunit les actions du dossier : « Modifier ce litige », « Calculer les délais », « Rédiger un courrier », « Ajouter les étapes d'une procédure » et « Imprimer / PDF ». En dessous, cinq onglets :</p>
+        <ul>
+          <li><b>Résumé</b> : « Où en est ce litige ? » (statut, prochaine audience, montant en jeu, dernier événement) et ce qu'il reste à faire, puis les informations générales et le bloc « Où en est la procédure ? ».</li>
+          <li><b>Chronologie et tâches</b> : la frise des événements, le formulaire pour en ajouter, et les tâches à faire.</li>
+          <li><b>Documents et notes</b> : les pièces jointes PDF et les notes internes du dossier.</li>
+          <li><b>Temps et honoraires</b> : le chronomètre, la saisie libre et le relevé.</li>
+          <li><b>Historique</b> : la trace des modifications du dossier.</li>
+        </ul>
+      </div>
+      <button class="cadre" type="button" data-legende="Fiche d'un litige"><img loading="lazy" src="img/diligences/dossier.jpg" alt="Fiche d'un litige" width="1440" height="900"></button>
+    </div>
+    <div class="fonc inv">
+      <div class="texte">
+        <h3>Frise chronologique</h3>
+        <p>Les événements (mise en demeure, assignation, audience, jugement, appel, expertise, transaction) se placent sur une frise horizontale à l'échelle : faites-la défiler en la faisant glisser, cliquez sur un événement pour le modifier. Les boutons « 7j », « 30j » et « 90j » ne gardent que les événements proches d'aujourd'hui ; « Tout » les remontre tous.</p>
+        <ul>
+          <li>Filtre par mot et par type, impression de la fiche.</li>
+          <li>Chaque événement peut porter des documents et des PDF.</li>
+        </ul>
+      </div>
+      <button class="cadre" type="button" data-legende="Frise chronologique du litige"><img loading="lazy" src="img/diligences/frise.jpg" alt="Frise chronologique" width="1136" height="556"></button>
+    </div>
+    <div class="fonc">
+      <div class="texte">
+        <h3>Temps et honoraires</h3>
+        <p>Dans l'onglet du même nom : un chronomètre par dossier, ou une saisie libre (« 1h30 », « 45min », « 0,75 »). Le taux horaire et la TVA donnent les totaux HT, TVA et TTC.</p>
+        <ul>
+          <li>Relevé d'honoraires en PDF, prêt à envoyer au client.</li>
+          <li>Report du total dans les honoraires engagés du litige.</li>
+          <li>Le chronomètre continue si vous changez de page, et l'onglet affiche ⏱ tant qu'il tourne.</li>
+        </ul>
+      </div>
+      <button class="cadre" type="button" data-legende="Temps et honoraires"><img loading="lazy" src="img/diligences/temps.jpg" alt="Panneau temps et honoraires" width="1136" height="386"></button>
+    </div>
+    <div class="fonc inv">
+      <div class="texte">
+        <h3>Pièces jointes PDF</h3>
+        <p>Dans l'onglet « Documents et notes », glissez les PDF du dossier (10 Mo maximum chacun). Ils sont rangés dans une base du navigateur séparée, pour ne pas saturer l'espace des données, et chiffrés si le profil est protégé par un code.</p>
+      </div>
+      <button class="cadre" type="button" data-legende="Pièces jointes"><img loading="lazy" src="img/diligences/pieces.jpg" alt="Pièces jointes du litige" width="1136" height="358"></button>
+    </div>
+    <div class="fonc">
+      <div class="texte">
+        <h3>Checklist de procédure</h3>
+        <p>Dans l'onglet « Chronologie et tâches », « Tâches à faire » propose des listes par phase, avec une barre de progression. Cinq modèles sont prêts à l'emploi : litige commercial, procédure d'appel, expertise judiciaire, recouvrement, prud'hommes. Les tâches non faites remontent dans le tableau de bord.</p>
+      </div>
+      <button class="cadre" type="button" data-legende="Checklist de procédure"><img loading="lazy" src="img/diligences/checklist.jpg" alt="Checklist de procédure" width="1136" height="710"></button>
+    </div>
+    <div class="fonc inv">
+      <div class="texte">
+        <h3>Courriers préremplis</h3>
+        <p>Cinq modèles se remplissent avec les données du dossier : client, adversaire, numéro RG, juridiction, montant, date d'audience et chronologie de la procédure. Ce qui manque s'affiche entre crochets, par exemple <span class="ref">[n° RG]</span>.</p>
+        <ul>
+          <li>Mise en demeure (art. 1344 C. civ.), relance amiable, point d'étape au client, demande de renvoi, trame de conclusions.</li>
+          <li>Vos propres modèles, avec les mêmes champs.</li>
+          <li>Copie, export Word ou impression en PDF.</li>
+        </ul>
+      </div>
+      <button class="cadre" type="button" data-legende="Courrier prérempli"><img loading="lazy" src="img/diligences/courrier.jpg" alt="Fenêtre de courrier prérempli" width="1440" height="900"></button>
+    </div>
+    <div class="fonc">
+      <div class="texte">
+        <h3>Délais calculés avec Quantième</h3>
+        <p>Le bouton « Calculer les délais » ouvre Quantième, le calculateur de délais de la suite, à la date de l'assignation. Vous choisissez la procédure parmi 123, vous vérifiez la frise, puis « Envoyer au litige » verse les échéances dans la frise du dossier, sans doublon.</p>
+      </div>
+      <button class="cadre" type="button" data-legende="Quantième, ouvert depuis un litige"><img loading="lazy" src="img/diligences/quantieme.jpg" alt="Quantième ouvert depuis un litige" width="1440" height="900"></button>
+    </div>
+    <div class="fonc inv">
+      <div class="texte">
+        <h3>Alerte de conflit d'intérêts</h3>
+        <p>Pendant la saisie de l'adversaire, Diligences le compare à vos sociétés clientes et aux clients de vos contrats, sans tenir compte des accents ni des formes sociales. « Acme Industries » correspond donc à « ACME Industries SAS ». La création demande une confirmation explicite.</p>
+      </div>
+      <button class="cadre" type="button" data-legende="Alerte de conflit d'intérêts"><img loading="lazy" src="img/diligences/conflit.jpg" alt="Alerte de conflit d'intérêts dans le formulaire" width="1440" height="900"></button>
+    </div>
+  </section>
+
+  <section class="chapitre" id="echeances">
+    <header><span class="etiquette">Chapitre 4</span><h2>Piloter les échéances</h2>
+      <p>Quatre vues pour ne rien laisser passer : le statut des litiges, le calendrier, les renouvellements et la prescription.</p></header>
+    <div class="fonc">
+      <div class="texte">
+        <h3>Litiges par étape</h3>
+        <p>Un tableau en colonnes (actif, en appel, transaction, gagné, perdu), appelé « Litiges par étape » dans le menu. Faites glisser une carte pour changer le statut d'un litige. En tête : total, dossiers ouverts, critiques, audiences à 30 jours et exposition.</p>
+      </div>
+      <button class="cadre" type="button" data-legende="Litiges par étape"><img loading="lazy" src="img/diligences/kanban.jpg" alt="Litiges rangés par étape, en colonnes" width="1440" height="900"></button>
+    </div>
+    <div class="fonc inv">
+      <div class="texte">
+        <h3>Calendrier et export .ics</h3>
+        <p>Vue mensuelle des audiences, événements et fins de contrats, avec la liste des prochains événements. L'export .ics les envoie dans Calendrier, Outlook ou Google Agenda, avec rappels : 2 jours avant une audience, 30 jours avant la fin d'un contrat.</p>
+      </div>
+      <button class="cadre" type="button" data-legende="Calendrier"><img loading="lazy" src="img/diligences/calendrier.jpg" alt="Calendrier mensuel" width="1440" height="900"></button>
+    </div>
+    <div class="fonc">
+      <div class="texte">
+        <h3>Prévisionnel</h3>
+        <p>Les renouvellements de contrats par mois sur 6, 12 ou 24 mois, les contrats expirés, les échéances à 30 et 90 jours, et les audiences à préparer.</p>
+      </div>
+      <button class="cadre" type="button" data-legende="Échéances et prévisionnel"><img loading="lazy" src="img/diligences/previsionnel.jpg" alt="Prévisionnel des échéances" width="1440" height="900"></button>
+    </div>
+    <div class="fonc inv">
+      <div class="texte">
+        <h3>Prescription</h3>
+        <p>Pour chaque litige ouvert, le délai de prescription restant, calculé depuis la date de découverte (à défaut, la date d'ouverture). Le type est détecté d'après le dossier ou choisi à la main.</p>
+        <ul>
+          <li>Civil, 5 ans (<span class="ref">art. 2224 C. civ.</span>) ; commercial, 5 ans (<span class="ref">L. 110-4 C. com.</span>) ; social, 2 ans (<span class="ref">L. 1471-1 C. trav.</span>).</li>
+          <li>Vices cachés, 2 ans (<span class="ref">art. 1648 C. civ.</span>) ; garantie décennale, 10 ans (<span class="ref">art. 1792 C. civ.</span>) ; et d'autres.</li>
+        </ul>
+        <p class="note">Les délais sont indicatifs : ils ne tiennent pas compte des causes d'interruption ou de suspension, et ne remplacent pas une vérification.</p>
+      </div>
+      <button class="cadre" type="button" data-legende="Calcul de prescription"><img loading="lazy" src="img/diligences/prescription.jpg" alt="Calcul de prescription par litige" width="1440" height="900"></button>
+    </div>
+  </section>
+
+  <section class="chapitre" id="analyse">
+    <header><span class="etiquette">Chapitre 5</span><h2>Analyser et retrouver</h2>
+      <p>Des vues de synthèse pour comprendre le portefeuille, et deux façons de retrouver n'importe quelle fiche en quelques touches.</p></header>
+    <div class="fonc">
+      <div class="texte">
+        <h3>Statistiques</h3>
+        <p>Contrats par statut et par type, litiges par niveau de risque, taux de succès, budget juridique par dossier et répartition du risque entre les litiges ouverts.</p>
+      </div>
+      <button class="cadre" type="button" data-legende="Statistiques"><img loading="lazy" src="img/diligences/stats.jpg" alt="Statistiques" width="1440" height="900"></button>
+    </div>
+    <div class="fonc inv">
+      <div class="texte">
+        <h3>Graphe des relations et Vue 360°</h3>
+        <p>Le graphe montre qui est lié à qui : sociétés, contrats et litiges. La Vue 360° rassemble pour une société ses contrats, ses litiges (ceux de ses contrats et ceux où elle est adversaire), ses consultations et le risque total.</p>
+      </div>
+      <div class="duo">
+        <div><button class="cadre" type="button" data-legende="Graphe des relations"><img loading="lazy" src="img/diligences/graphe.jpg" alt="Graphe des relations" width="1440" height="900"></button><p class="legende">Graphe des relations</p></div>
+        <div><button class="cadre" type="button" data-legende="Vue 360° d'une société"><img loading="lazy" src="img/diligences/vue360.jpg" alt="Vue 360 d'une société" width="1440" height="900"></button><p class="legende">Vue 360° d'une société</p></div>
+      </div>
+    </div>
+    <div class="fonc">
+      <div class="texte">
+        <h3>Recherche et palette de commandes</h3>
+        <p>La recherche fouille les quatre registres à la fois, avec des filtres par module. La palette (<span class="ref">Ctrl+K</span> ou <span class="ref">⌘K</span>) ouvre une fiche ou une page sans quitter le clavier.</p>
+      </div>
+      <div class="duo">
+        <div><button class="cadre" type="button" data-legende="Recherche globale"><img loading="lazy" src="img/diligences/recherche.jpg" alt="Recherche globale" width="1440" height="900"></button><p class="legende">Recherche</p></div>
+        <div><button class="cadre" type="button" data-legende="Palette de commandes"><img loading="lazy" src="img/diligences/palette.jpg" alt="Palette de commandes" width="1440" height="900"></button><p class="legende">Palette Ctrl+K</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapitre" id="outils">
+    <header><span class="etiquette">Chapitre 6</span><h2>Vos données, vos outils</h2>
+      <p>Tout s'exporte, tout se réimporte, et l'interface s'adapte à vos habitudes.</p></header>
+    <div class="fonc">
+      <div class="texte">
+        <h3>Sauvegarde et exports</h3>
+        <ul>
+          <li>Sauvegarde JSON complète, PDF compris, et restauration.</li>
+          <li>CSV des contrats et des litiges, réimportables : une ligne dont la référence existe déjà met la fiche à jour.</li>
+          <li>Import de sociétés, contrats ou litiges depuis un tableur, avec des consignes prêtes à coller dans une IA pour convertir un fichier Excel.</li>
+          <li>Export HTML autonome, lisible sur n'importe quel ordinateur.</li>
+        </ul>
+      </div>
+      <button class="cadre" type="button" data-legende="Données et export"><img loading="lazy" src="img/diligences/donnees.jpg" alt="Écran Données et export" width="1440" height="900"></button>
+    </div>
+    <div class="fonc inv">
+      <div class="texte">
+        <h3>Assistant IA</h3>
+        <p>Posez une question juridique au service de votre choix (Claude, ChatGPT, Gemini, Mistral, DeepSeek ou Perplexity), avec votre propre clé API, gardée sur votre appareil. La fiche d'un litige fait aussi le point sur le dossier : échéances (audience, prescription), activité récente et informations à compléter.</p>
+        <p class="note alerte">Les questions posées à l'assistant sont envoyées au fournisseur choisi. Le point sur le dossier, lui, est établi sur votre machine.</p>
+      </div>
+      <button class="cadre" type="button" data-legende="Assistant IA"><img loading="lazy" src="img/diligences/assistant.jpg" alt="Assistant IA" width="1440" height="900"></button>
+    </div>
+    <div class="fonc">
+      <div class="texte">
+        <h3>Journal, notes rapides et apparence</h3>
+        <p>Le journal retrace les créations, modifications et suppressions. Une note rapide se prend depuis n'importe quelle page et peut être rattachée à un dossier. Thème sombre ou clair (partagé avec les autres outils de Paraphe), palette, couleur d'accent et indicateurs du tableau de bord se règlent dans Apparence.</p>
+      </div>
+      <div class="duo">
+        <div><button class="cadre" type="button" data-legende="Apparence"><img loading="lazy" src="img/diligences/apparence.jpg" alt="Écran Apparence" width="1440" height="900"></button><p class="legende">Apparence</p></div>
+        <div><button class="cadre" type="button" data-legende="Tableau de bord en thème sombre"><img loading="lazy" src="img/diligences/dashboard-sombre.jpg" alt="Tableau de bord en thème sombre" width="1440" height="900"></button><p class="legende">Thème sombre</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapitre" id="securite">
+    <header><span class="etiquette">Chapitre 7</span><h2>Confidentialité et sécurité</h2>
+      <p>Diligences n'a ni serveur ni compte. Les données vivent dans le navigateur ou l'application de bureau, sur votre appareil.</p></header>
+    <div class="fonc">
+      <div class="texte">
+        <h3>Profils et code PIN</h3>
+        <p>Jusqu'à cinq profils séparés sur un même appareil, chacun avec ses données. Un profil peut être protégé par un code de 4 à 8 chiffres : ses données et ses PDF sont alors chiffrés en AES-256, avec une clé dérivée du code (PBKDF2). Le code lui-même n'est stocké nulle part.</p>
+        <p class="note">Un code de 4 chiffres suffit contre un regard indiscret. Contre une personne qui copierait les fichiers, préférez 6 chiffres ou plus. Sans le code, les données sont irrécupérables : gardez une sauvegarde exportée.</p>
+      </div>
+      <div class="duo">
+        <div><button class="cadre" type="button" data-legende="Choix du profil"><img loading="lazy" src="img/diligences/profils.jpg" alt="Écran de choix du profil" width="1440" height="900"></button><p class="legende">Choix du profil</p></div>
+        <div><button class="cadre" type="button" data-legende="Saisie du code PIN"><img loading="lazy" src="img/diligences/pin.jpg" alt="Saisie du code PIN" width="1440" height="900"></button><p class="legende">Code PIN</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fin" aria-label="Pour commencer">
+    <div><h3>Ouvrir</h3><p>Depuis le Hub de Paraphe, sur le site ou dans l'application de bureau. Le premier profil se crée tout seul à la première ouverture.</p></div>
+    <div><h3>Sauvegarder</h3><p>« Tout exporter » dans le Hub produit un seul fichier avec les données des six outils, PDF compris. À ranger hors de l'ordinateur.</p></div>
+    <div><h3>Travailler hors ligne</h3><p>Une fois ouvert en ligne, le site reste utilisable sans connexion. L'application de bureau l'est toujours.</p></div>
+  </section>
+
+  <p class="pied">Captures réalisées avec des données de démonstration fictives. Diligences fait partie de Paraphe, avec Quantième, Considérant, Fiches mémo, Fiches d'arrêt et Codes et articles.</p>
+</main>
+
+<dialog id="loupe" aria-label="Capture agrandie">
+  <img id="loupe-img" alt="">
+  <div class="barre"><span id="loupe-legende"></span><button type="button" id="loupe-fermer">Fermer</button></div>
+</dialog>
+
+<script>
+(() => {
+  // Loupe : un clic sur une capture l'ouvre en grand
+  const loupe = document.getElementById("loupe"), img = document.getElementById("loupe-img"), leg = document.getElementById("loupe-legende");
+  document.querySelectorAll(".cadre").forEach(b => b.addEventListener("click", () => {
+    const source = b.querySelector("img");
+    img.src = source.src; img.alt = source.alt; leg.textContent = b.dataset.legende || source.alt;
+    if (loupe.showModal) loupe.showModal();
+  }));
+  document.getElementById("loupe-fermer").addEventListener("click", () => loupe.close());
+  loupe.addEventListener("click", e => { if (e.target === loupe) loupe.close(); });
+
+  // Sommaire : chapitre courant souligné
+  const liens = [...document.querySelectorAll(".sommaire a")];
+  const parId = Object.fromEntries(liens.map(a => [a.getAttribute("href").slice(1), a]));
+  if ("IntersectionObserver" in window) {
+    const obs = new IntersectionObserver(entrees => entrees.forEach(e => {
+      if (e.isIntersecting) { liens.forEach(a => a.classList.remove("actif")); const a = parId[e.target.id]; if (a) a.classList.add("actif"); }
+    }), { rootMargin: "-40% 0px -55% 0px" });
+    document.querySelectorAll(".chapitre").forEach(s => obs.observe(s));
+  }
+})();
+</script>
+
+</body>
+</html>
