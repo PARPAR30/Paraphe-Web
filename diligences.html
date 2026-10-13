@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8"><script src="donnees.js"></script>
   <meta name="theme-color" content="#131316">
   <meta name="application-name" content="Diligences">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -939,10 +939,12 @@ nav#nav::-webkit-scrollbar-thumb:hover { background: var(--gold-fond); }
 /* navigation commune : barre repliée → seulement le logo */
 #sidebar.collapsed .pxn-texte { display: none; }
 #sidebar.collapsed .pxn button { display: none; }
+.sb-nav { padding: 10px 16px 0; flex-shrink: 0; display: flex; }
+#sidebar.collapsed .sb-nav { padding: 10px 0 0; justify-content: center; }
 .pxn-sb .pxn a, .pxn-sb .pxn button { min-height: 28px; }
 html .pxn-sb .pxn a.pxn-accueil { padding: 0 7px; gap: 5px; letter-spacing: .02em; }
 html .pxn-sb .pxn button.pxn-menu { padding: 0 5px; }
-.logo-actions { gap: 4px; flex-wrap: wrap; row-gap: 4px; }
+.logo-actions { gap: 4px; flex-wrap: nowrap; }
 #hub-btn {
   width: 28px; height: 28px; background: none; border: 1px solid var(--border);
   border-radius: 0; cursor: pointer; color: var(--text2); text-decoration: none;
@@ -5899,6 +5901,7 @@ body.light .kanban-card-aud.urgent{color:#B91C1C}
 <div id="sb-overlay"></div>
 
 <div id="sidebar">
+  <div class="sb-nav"><span data-paraphe-nav class="pxn-sb"></span></div>
   <div class="logo">
     <div class="logo-icon"><svg width="19" height="19" viewBox="0 0 32 32"><rect x="5.25" y="4.25" width="18.5" height="21.5" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 9h4v20H9v-4h15z" fill="currentColor"/><rect x="9" y="9" width="11" height="2.2" fill="currentColor"/><rect x="9" y="13.4" width="7" height="2.2" fill="currentColor"/><rect x="15" y="18" width="5" height="4.5" style="fill:currentColor"/></svg></div>
     <div class="logo-text">
@@ -5906,7 +5909,6 @@ body.light .kanban-card-aud.urgent{color:#B91C1C}
       <p>Paraphe</p>
     </div>
     <div class="logo-actions">
-      <span data-paraphe-nav class="pxn-sb"></span>
       <button id="theme-btn" title="Changer le thème"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <button id="collapse-btn" title="Réduire"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15,18 9,12 15,6"/></svg></button>
     </div>
@@ -14073,16 +14075,35 @@ var aiProviders = {
 var aiModeles = {};   // modèle précis choisi par fournisseur (sj_ai_modeles)
 function aiModeleDe(p) { return aiModeles[p] || (aiProviders[p] ? aiProviders[p].defaut : ''); }
 
+// Les clés d'IA : dans l'application de bureau, elles vivent dans le Trousseau du système (macOS) ou le
+// Gestionnaire d'identifiants (Windows), pas dans le stockage de la page. Celles d'une version précédente,
+// encore dans le stockage, y sont passées au premier lancement, puis effacées d'ici. Si le Trousseau ne répond
+// pas, ou sur le site web, elles restent dans le stockage de la page, comme avant.
+function aiChargerCles() {
+  var locales = {};
+  try { locales = JSON.parse(localStorage.getItem('sj_ai_keys') || 'null') || {}; } catch(e) {}
+  if (!window.parapheCles) return Promise.resolve(locales);
+  return window.parapheCles.lire().then(function(k) {
+    if (!Object.keys(locales).length) return k;
+    var fusion = Object.assign({}, locales, k);   // en cas de doublon, le Trousseau l'emporte
+    return window.parapheCles.ecrire(fusion).then(function() { return window.parapheCles.lire(); }).then(function(relues) {
+      if (JSON.stringify(relues) === JSON.stringify(fusion)) { try { localStorage.removeItem('sj_ai_keys'); } catch(e) {} }
+      return relues;
+    });
+  }).catch(function(e) { console.warn('[Paraphe] Trousseau indisponible, clés gardées dans la page :', e); return locales; });
+}
+
 function aiLoadSavedSettings() {
+  var lieu = document.getElementById('ai-cle-lieu');
+  if (lieu && window.parapheCles) lieu.hidden = false;
+  aiChargerCles().then(function(k) {
+    aiApiKeys = k || {};
+    Object.keys(aiApiKeys).forEach(function(p) {
+      var inp = document.getElementById('ai-apikey-' + p);
+      if (inp && aiApiKeys[p]) { inp.value = aiApiKeys[p]; aiValidateKey(p); }
+    });
+  });
   try {
-    var saved = localStorage.getItem('sj_ai_keys');
-    if (saved) {
-      aiApiKeys = JSON.parse(saved);
-      Object.keys(aiApiKeys).forEach(function(p) {
-        var inp = document.getElementById('ai-apikey-' + p);
-        if (inp && aiApiKeys[p]) { inp.value = aiApiKeys[p]; aiValidateKey(p); }
-      });
-    }
     aiModeles = JSON.parse(localStorage.getItem('sj_ai_modeles') || '{}') || {};
     var savedModel = localStorage.getItem('sj_ai_model');
     var m = savedModel ? JSON.parse(savedModel) : null;
@@ -14159,13 +14180,26 @@ function aiSaveKey() {
   var inp = document.getElementById('ai-apikey-' + provider);
   if (!inp) return;
   aiApiKeys[provider] = inp.value.trim();
-  try { localStorage.setItem('sj_ai_keys', JSON.stringify(aiApiKeys)); } catch(e) {}
+  if (!aiApiKeys[provider]) delete aiApiKeys[provider];
   var btn = document.querySelector('.ai-apikey-save-btn');
-  if (!btn) return;
-  var orig = btn.textContent;
-  btn.textContent = 'Sauvegardée !';
-  btn.style.background = 'var(--success)';
-  setTimeout(function() { btn.textContent = orig; btn.style.background = ''; }, 2000);
+  var confirmer = function(ok) {
+    if (!btn) return;
+    var orig = btn.textContent;
+    btn.textContent = ok ? 'Sauvegardée !' : 'Non enregistrée';
+    btn.style.background = ok ? 'var(--success)' : '';
+    setTimeout(function() { btn.textContent = orig; btn.style.background = ''; }, 2000);
+  };
+  var dansLaPage = function() {
+    try { localStorage.setItem('sj_ai_keys', JSON.stringify(aiApiKeys)); return true; } catch(e) { return false; }
+  };
+  if (!window.parapheCles) { confirmer(dansLaPage()); return; }
+  window.parapheCles.ecrire(aiApiKeys).then(function() {
+    try { localStorage.removeItem('sj_ai_keys'); } catch(e) {}
+    confirmer(true);
+  }, function(e) {
+    console.warn('[Paraphe] Trousseau indisponible, clé gardée dans la page :', e);
+    confirmer(dansLaPage());
+  });
 }
 
 // ── Accord avant tout envoi à un service d'IA ──
@@ -14808,6 +14842,7 @@ window.addEventListener('DOMContentLoaded', function() {
           <a href="https://www.perplexity.ai/settings/api" target="_blank" rel="noopener" style="font-size:.75rem;color:var(--gold)">Obtenir une clé Perplexity ↗</a>
         </div>
         <button class="btn btn-g btn-sm ai-apikey-save-btn" onclick="aiSaveKey()" style="margin-top:10px;width:100%">Sauvegarder la clé</button>
+        <p id="ai-cle-lieu" style="margin:8px 0 0;font-size:.72rem;color:var(--text2);line-height:1.5" hidden>Votre clé est rangée dans le trousseau sécurisé de votre ordinateur, pas dans un fichier. Elle n'est jamais incluse dans une sauvegarde.</p>
         <details style="margin-top:10px;font-size:.75rem;color:var(--text2)">
           <summary style="cursor:pointer;font-weight:600">Modèle précis (facultatif)</summary>
           <input id="ai-model-precis" autocomplete="off" spellcheck="false" style="width:100%;box-sizing:border-box;margin-top:6px;background:var(--navy);border:1px solid var(--border);border-radius:0;padding:7px 10px;color:var(--text);font-size:.78rem;font-family:monospace">

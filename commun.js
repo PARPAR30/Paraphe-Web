@@ -46,6 +46,20 @@ const Commun = (() => {
     return existants.concat(exemples.filter(x => !ids.has(x.id) && !supprimes.has(x.id)));
   }
 
+  // « Tout supprimer » : double confirmation, puis vide la liste ET mémorise les exemples préchargés comme supprimés
+  // (sinon ils reviendraient au prochain chargement). `exemples` : la liste des exemples préchargés de l'outil.
+  function toutSupprimer({ cleDonnees, cleSupprimes, exemples, nombre, un, des, apres }) {
+    if (!nombre) { alert("Il n'y a rien à supprimer : votre liste est déjà vide."); return false; }
+    if (!confirm("Supprimer " + des + " ?\n\nLes " + nombre + " " + un + " seront effacé(e)s de cet appareil. Pensez à faire une sauvegarde avant : bouton « Sauvegarde » ci-dessus, ou « Mes données » à l'accueil.")) return false;
+    if (!confirm("Dernière confirmation.\n\nCette suppression est définitive : " + nombre + " " + un + " vont disparaître, sans possibilité de les récupérer. Tout supprimer ?")) return false;
+    const oublies = new Set(lire(cleSupprimes, []));
+    (exemples || []).forEach(x => { if (String(x.id).startsWith("seed-")) oublies.add(x.id); });
+    try { localStorage.setItem(cleSupprimes, JSON.stringify([...oublies])); } catch {}
+    if (!ecrire(cleDonnees, [])) return false;
+    if (apres) apres();
+    return true;
+  }
+
   function telecharger(nom, texte, type = "application/json") {
     const url = URL.createObjectURL(new Blob([texte], { type }));
     const a = document.createElement("a");
@@ -194,5 +208,5 @@ SORTIE
 
 Voici le document :`;
 
-  return { echapper, dateLocale, dateLongue, lire, ecrire, oublierExemple, avecExemples, telecharger, montrer, lireJSON, ajouter, importerJSON, copier, promptIA, FIN_PROMPT };
+  return { echapper, dateLocale, dateLongue, lire, ecrire, oublierExemple, toutSupprimer, avecExemples, telecharger, montrer, lireJSON, ajouter, importerJSON, copier, promptIA, FIN_PROMPT };
 })();

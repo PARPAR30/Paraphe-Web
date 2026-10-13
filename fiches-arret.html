@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8"><script src="donnees.js"></script>
 <title>Fiches d'arrêt — Paraphe</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
@@ -31,9 +31,11 @@
 <body>
 <script src="theme.js"></script>
 <header class="topnav">
-  <a class="brand" href="Hub.html"><span class="brand-mark" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 32 32"><rect x="5.25" y="4.25" width="18.5" height="21.5" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 9h4v20H9v-4h15z" fill="currentColor"/><rect x="9" y="9" width="11" height="2.2" fill="currentColor"/><rect x="9" y="13.4" width="7" height="2.2" fill="currentColor"/><rect x="15" y="18" width="5" height="4.5" style="fill:rgb(var(--acc,59,47,232))"/></svg></span>Paraphe</a>
-  <nav>
+  <div class="topnav-g">
+    <a class="brand" href="Hub.html"><span class="brand-mark" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 32 32"><rect x="5.25" y="4.25" width="18.5" height="21.5" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 9h4v20H9v-4h15z" fill="currentColor"/><rect x="9" y="9" width="11" height="2.2" fill="currentColor"/><rect x="9" y="13.4" width="7" height="2.2" fill="currentColor"/><rect x="15" y="18" width="5" height="4.5" style="fill:rgb(var(--acc,59,47,232))"/></svg></span>Paraphe</a>
     <span data-paraphe-nav></span>
+  </div>
+  <nav>
     <a href="flashcards.html">Fiches mémo</a>
     <a href="fiches-arret.html" class="active">Fiches d'arrêt</a>
     <a href="codes.html">Codes &amp; articles</a>
@@ -61,6 +63,7 @@
           <option>Conseil constitutionnel</option>
           <option>Tribunal des conflits</option>
           <option>CJUE</option>
+          <option>CIJ</option>
           <option>CEDH</option>
           <option>Cour d'appel</option>
           <option>Tribunal judiciaire</option>
@@ -75,6 +78,8 @@
     <label for="fMatiere">Matière</label>
     <input type="text" id="fMatiere" list="matiereList" placeholder="ex. Droit des obligations">
     <datalist id="matiereList"></datalist>
+    <label for="fNiveau">Niveau d'étude</label>
+    <select id="fNiveau"><option value="">Non précisé</option><option>L1</option><option>L2</option><option>L3</option><option>M1</option><option>M2</option></select>
     <label for="fTags">Étiquettes</label>
     <input type="text" id="fTags" placeholder="ex. revirement, responsabilité, à revoir — séparées par des virgules">
 
@@ -107,6 +112,7 @@
       <div class="barre-filtres">
         <input type="search" id="searchBox" placeholder="Rechercher (titre, faits, matière…)" aria-label="Rechercher une fiche">
         <select id="filterMatiere" aria-label="Filtrer par matière"><option value="">Toutes les matières</option></select>
+        <select id="filterNiveau" aria-label="Filtrer par niveau d'étude"><option value="">Tous niveaux</option><option>L1</option><option>L2</option><option>L3</option><option>M1</option><option>M2</option></select>
         <select id="filterJuridiction" aria-label="Filtrer par juridiction"><option value="">Toutes juridictions</option></select>
         <select id="filterTag" aria-label="Filtrer par étiquette"><option value="">Toutes étiquettes</option></select>
       </div>
@@ -122,6 +128,10 @@
         <button type="button" id="exportBtn" title="Enregistrer une copie de vos fiches (fichier .json)">Sauvegarde</button>
         <button type="button" id="exportPdfBtn" title="Mettre en page vos fiches pour les imprimer ou les enregistrer en PDF">Imprimer / PDF</button>
       </div>
+      <div class="barre-groupe" role="group" aria-label="Supprimer">
+        <span class="barre-titre">Supprimer</span>
+        <button type="button" id="toutSupprimer" class="danger" title="Effacer toutes vos fiches d'arrêt (double confirmation)">Tout supprimer…</button>
+      </div>
       <input type="file" id="importFile" accept="application/json" hidden>
     </div>
     </div>
@@ -131,6 +141,7 @@
 <div id="printArea"></div>
 
 <script src="commun.js"></script>
+<script src="jurisprudence.js"></script>
 <script>
 const STORAGE_KEY = "droit_fiches_arret";
 // Fiches d'exemple supprimées par l'utilisateur : sans cette liste, elles revenaient à chaque chargement
@@ -261,7 +272,19 @@ mkSeedFiche(
 ),
 ].map((f, i) => Object.assign({ id: "seed-fa-" + i }, f));
 
-const loadFiches = () => Commun.avecExemples(STORAGE_KEY, SEED, DELETED_SEEDS_KEY);
+// Niveau des premières fiches d'exemple (écrites avant l'ajout du champ)
+const NIVEAU_ANCIEN = { "Blanco": "L2", "Société commerciale de l'Ouest africain (\"Bac d'Eloka\")": "L2", "Époux Bertin": "L2",
+  "Association du personnel relevant des établissements pour inadaptés (APREI)": "L3", "Motte": "L3", "Comité d'établissement de Saint-Chamond": "L3",
+  "Benjamin": "L2", "Commune de Morsang-sur-Orge": "L2", "Mercier": "L2", "Myr'Ho c. Boot Shop (\"Bootshop\")": "L3" };
+SEED.forEach(f => { if (NIVEAU_ANCIEN[f.titre]) f.niveau = NIVEAU_ANCIEN[f.titre]; });
+// Un exemple n'est ajouté que si l'utilisateur n'a pas déjà la même décision (même date, même titre)
+const cleDecision = f => (f.date || "") + "|" + String(f.titre || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+function loadFiches() {
+  const existantes = Commun.lire(STORAGE_KEY, []);
+  const vues = new Set(existantes.map(cleDecision)), ids = new Set(existantes.map(f => f.id));
+  const exemples = SEED.concat(window.JURISPRUDENCE || []).filter(f => ids.has(f.id) || !vues.has(cleDecision(f)));
+  return Commun.avecExemples(STORAGE_KEY, exemples, DELETED_SEEDS_KEY);
+}
 const saveFiches = list => Commun.ecrire(STORAGE_KEY, list);
 const dateFr = iso => Commun.dateLongue(iso);
 const escapeHtml = Commun.echapper;
@@ -301,7 +324,7 @@ function refreshFilters() {
 function resetForm() {
   document.getElementById("editId").value = "";
   document.getElementById("formTitle").textContent = "Nouvelle fiche";
-  ["fTitre","fDate","fMatiere","fTags","fFaits","fProcedure","fProbleme","fSolution","fAttendu","fPortee"].forEach(id => document.getElementById(id).value = "");
+  ["fTitre","fDate","fMatiere","fNiveau","fTags","fFaits","fProcedure","fProbleme","fSolution","fAttendu","fPortee"].forEach(id => document.getElementById(id).value = "");
   document.getElementById("fJuridiction").value = "Cour de cassation";
   document.getElementById("panneauFiche").hidden = true;
 }
@@ -323,6 +346,7 @@ function fillForm(f) {
   selJ.value = f.juridiction || "Cour de cassation";
   document.getElementById("fDate").value = f.date || "";
   document.getElementById("fMatiere").value = f.matiere || "";
+  document.getElementById("fNiveau").value = f.niveau || "";
   document.getElementById("fFaits").value = f.faits || "";
   document.getElementById("fProcedure").value = f.procedure || "";
   document.getElementById("fProbleme").value = f.probleme || "";
@@ -343,6 +367,7 @@ document.getElementById("saveBtn").addEventListener("click", () => {
     juridiction: document.getElementById("fJuridiction").value,
     date: document.getElementById("fDate").value,
     matiere: document.getElementById("fMatiere").value.trim(),
+    niveau: document.getElementById("fNiveau").value,
     faits: document.getElementById("fFaits").value.trim(),
     procedure: document.getElementById("fProcedure").value.trim(),
     probleme: document.getElementById("fProbleme").value.trim(),
@@ -391,6 +416,14 @@ function deleteFiche(id) {
   renderList();
 }
 
+document.getElementById("toutSupprimer").addEventListener("click", () => {
+  Commun.toutSupprimer({
+    cleDonnees: STORAGE_KEY, cleSupprimes: DELETED_SEEDS_KEY, exemples: SEED.concat(window.JURISPRUDENCE || []), nombre: fiches.length,
+    un: "fiches d'arrêt", des: "toutes vos fiches d'arrêt",
+    apres: () => { fiches = []; expanded.clear(); refreshFilters(); renderList(); }
+  });
+});
+
 function toggleExpand(id) {
   if (expanded.has(id)) expanded.delete(id); else expanded.add(id);
   renderList();
@@ -400,9 +433,10 @@ function toggleExpand(id) {
 function fichesFiltrees() {
   const valeur = id => document.getElementById(id).value;
   const search = valeur("searchBox").trim().toLowerCase();
-  const matiere = valeur("filterMatiere"), juridiction = valeur("filterJuridiction"), tag = valeur("filterTag");
+  const matiere = valeur("filterMatiere"), juridiction = valeur("filterJuridiction"), tag = valeur("filterTag"), niveau = valeur("filterNiveau");
   return fiches.filter(f =>
     (!matiere || f.matiere === matiere) &&
+    (!niveau || (f.niveau || "").split("-").includes(niveau)) &&
     (!juridiction || f.juridiction === juridiction) &&
     (!tag || (f.tags || []).includes(tag)) &&
     (!search || Object.values(f).join(" ").toLowerCase().includes(search)));
@@ -420,7 +454,7 @@ function renderList() {
   }
 
 
-  list.innerHTML = filtered.map(f => {
+  list.innerHTML = '<p class="muted" style="margin:0 0 0.6rem;">' + filtered.length + (filtered.length > 1 ? ' fiches' : ' fiche') + (filtered.length < fiches.length ? ' sur ' + fiches.length : '') + '</p>' + filtered.map(f => {
     const isOpen = expanded.has(f.id);
     return `
     <div class="card" style="margin-bottom:0.6rem;">
@@ -428,6 +462,7 @@ function renderList() {
         <div>
           <strong>${escapeHtml(f.titre)}</strong>
           <span class="badge" style="margin-left:0.5rem;">${escapeHtml(f.juridiction || "")}</span>
+          ${f.niveau ? `<span class="badge" style="margin-left:0.3rem;">${escapeHtml(f.niveau)}</span>` : ""}
           ${f.matiere ? `<span class="badge" style="margin-left:0.3rem;">${escapeHtml(f.matiere)}</span>` : ""}
           ${(f.tags || []).map(t => `<span class="badge etiquette">#${escapeHtml(t)}</span>`).join("")}
         </div>
@@ -460,6 +495,7 @@ document.getElementById("searchBox").addEventListener("input", renderList);
 document.getElementById("filterMatiere").addEventListener("change", renderList);
 document.getElementById("filterJuridiction").addEventListener("change", renderList);
 document.getElementById("filterTag").addEventListener("change", renderList);
+document.getElementById("filterNiveau").addEventListener("change", renderList);
 
 // --- Liens avec Codes & articles : articles qui citent cette fiche (champ « arrets » côté Codes) ---
 function articlesLies(id) {
@@ -554,6 +590,7 @@ FORMAT : un tableau JSON, un objet par décision.
     "juridiction": "Cour de cassation",
     "date": "2022-01-12",
     "matiere": "Droit des contrats",
+    "niveau": "L3",
     "faits": "",
     "procedure": "",
     "probleme": "",
@@ -575,9 +612,10 @@ RÈGLES
 - portee : ce que le document dit de la portée (revirement, confirmation, décision publiée au Bulletin…). Si le document n'en dit rien, laisse "" plutôt que de supposer.
 - attendu : le motif de principe (ou « attendu que » / « considérant que ») recopié mot pour mot entre guillemets, s'il existe ; sinon "".
 - matiere : la matière (« Responsabilité civile », « Droit du travail »…).
+- niveau : le niveau d'étude auquel l'arrêt est étudié, exactement "L1", "L2", "L3", "M1" ou "M2" (ou "" si tu ne sais pas).
 - tags : trois mots-clés au plus, courts, en minuscules.
 - Rédige en français juridique, avec des phrases complètes ; reste fidèle à la décision, sans ajouter de jurisprudence qui n'est pas dans le document.` + Commun.FIN_PROMPT("fiches-arret.json");
-const JURIDICTIONS = ["Cour de cassation", "Conseil d'État", "Conseil constitutionnel", "CJUE", "CEDH", "Cour d'appel", "Tribunal judiciaire", "Autre"];
+const JURIDICTIONS = ["Cour de cassation", "Conseil d'État", "Conseil constitutionnel", "Tribunal des conflits", "CJUE", "CIJ", "CEDH", "Cour d'appel", "Tribunal judiciaire", "Autre"];
 const IMPORT = {
   liste: () => fiches,
   valide: f => {
@@ -586,7 +624,7 @@ const IMPORT = {
     if (!Array.isArray(f.tags)) f.tags = String(f.tags || "").split(",").map(t => t.trim()).filter(Boolean);
     return true;
   },
-  defauts: () => ({ juridiction: "", date: "", matiere: "", faits: "", procedure: "", probleme: "", solution: "", portee: "", attendu: "", tags: [] }),
+  defauts: () => ({ juridiction: "", date: "", matiere: "", niveau: "", faits: "", procedure: "", probleme: "", solution: "", portee: "", attendu: "", tags: [] }),
   apres: n => { saveFiches(fiches); refreshFilters(); renderList(); alert(n + " fiche(s) importée(s)."); }
 };
 Commun.importerJSON(document.getElementById("importFile"), IMPORT);

@@ -7,12 +7,12 @@
    Le réseau est interrogé en « no-cache » : sans cela, le navigateur pouvait resservir
    un ancien commun.js avec une page récente, et la page plantait (boutons inertes).
    ═════════════════════════════════════════════════════════════════════ */
-const VERSION = "paraphe-v14";
+const VERSION = "paraphe-v16";
 
 const COQUILLE = [
   "./", "Hub.html", "index.html", "flashcards.html", "fiches-arret.html", "codes.html",
   "diligences.html", "Suivijuridique.html", "considerant.html", "quantieme.html", "decouvrir-diligences.html", "confidentialite.html",
-  "style.css", "theme.js", "taille.js", "clavier.js", "etiquettes.js", "navigation.js", "commun.js", "migration.js", "pwa.js", "recherche.js", "manifest.json",
+  "style.css", "theme.js", "taille.js", "donnees.js", "clavier.js", "etiquettes.js", "navigation.js", "commun.js", "jurisprudence.js", "migration.js", "pwa.js", "recherche.js", "manifest.json",
   "fonts/fonts.css",
   "fonts/Archivo-variable-latin.woff2", "fonts/Archivo-variable-latin-ext.woff2",
   "fonts/ZillaSlab-400-latin.woff2", "fonts/ZillaSlab-400-latin-ext.woff2",

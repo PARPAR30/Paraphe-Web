@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8"><script src="donnees.js"></script>
 <title>Paraphe — Du cours au cabinet</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="manifest" href="manifest.json">
@@ -60,7 +60,7 @@
   .lien:hover{background:none;color:var(--encre)}
 
   /* fenêtre « Sauvegarde » */
-  dialog.fenetre{border:3px solid var(--encre);background:var(--carte);color:var(--encre);padding:0;max-width:min(560px,calc(100vw - 32px));width:100%;box-shadow:12px 12px 0 rgb(var(--acc))}
+  dialog.fenetre{max-height:calc(100vh - 32px);overflow-y:auto;border:3px solid var(--encre);background:var(--carte);color:var(--encre);padding:0;max-width:min(560px,calc(100vw - 32px));width:100%;box-shadow:12px 12px 0 rgb(var(--acc))}
   dialog.fenetre::backdrop{background:rgba(19,19,22,.5)}
   .fenetre-tete{display:flex;align-items:center;justify-content:space-between;gap:var(--e3);padding:var(--e4) var(--e5);border-bottom:2px solid var(--encre)}
   .fenetre-tete h2{margin:0;font-size:calc(22px * var(--ech))}
@@ -72,6 +72,19 @@
   .fenetre-actions{display:grid;grid-template-columns:1fr;gap:var(--e3)}
   .fenetre-actions button{min-height:48px}
   .fenetre-corps > p.fenetre-note{margin:var(--e4) 0 0;color:var(--gris);font-size:calc(12.5px * var(--ech));line-height:1.5}
+  details.avance > summary{cursor:pointer;font-weight:700;margin-bottom:var(--e4);font-size:calc(14px * var(--ech))}
+  details.avance:not([open]) > summary{margin-bottom:0}
+  .copies-auto{margin-top:var(--e5);padding-top:var(--e5);border-top:2px solid var(--filet)}
+  .copies-auto[hidden]{display:none}
+  .copies-auto h3{margin:0 0 var(--e3);font-size:calc(17px * var(--ech))}
+  .copies-auto > p{margin:0 0 var(--e4);color:var(--encre-2);font-size:calc(14px * var(--ech));line-height:1.55}
+  .copies-auto .fenetre-actions{margin-bottom:var(--e4)}
+  .copies-auto label{display:block;margin-bottom:var(--e3);font-size:calc(13px * var(--ech));color:var(--encre-2)}
+  .copies-auto select{display:block;width:100%;margin-top:var(--e2);min-height:44px;font:inherit;color:var(--encre);background:var(--carte);border:2px solid var(--encre)}
+  #fenetreMdp label{display:block;font-size:calc(13px * var(--ech));color:var(--encre-2)}
+  #fenetreMdp label[hidden],#fenetreMdp input[hidden]{display:none}
+  #fenetreMdp input[type=password]{display:block;width:100%;min-height:46px;margin:var(--e2) 0 var(--e4);padding:0 var(--e3);font:inherit;color:var(--encre);background:var(--carte);border:2px solid var(--encre)}
+  #fenetreMdp .alerte-espace{margin:0 0 var(--e4)}
   .alerte-espace{margin:var(--e4) 0 0;padding:var(--e3) var(--e4);border:2px solid var(--alerte);color:var(--alerte);font-size:calc(13px * var(--ech))}
   /* premier lancement : trois écrans */
   dialog.bienvenue{max-width:min(640px,calc(100vw - 32px))}
@@ -139,6 +152,14 @@
       </div>
     </div>
 
+    <div class="rappel" id="bandeauMaj" hidden>
+      <span id="majTexte"></span>
+      <div class="row">
+        <button type="button" class="primary" id="majVoir">Voir la nouveauté</button>
+        <button type="button" id="majPlusTard">Plus tard</button>
+      </div>
+    </div>
+
     <section class="famille" aria-labelledby="t-etudier">
       <div class="famille-tete">
         <h2 id="t-etudier">Étudier</h2>
@@ -199,8 +220,9 @@
       <button type="button" id="fermerSauvegarde">Fermer</button>
     </div>
     <div class="fenetre-corps">
-      <p>Vos fiches, dossiers et réglages sont enregistrés sur cet appareil, et nulle part ailleurs. Une sauvegarde les réunit dans un seul fichier, pièces jointes comprises (vos clés d'IA n'y sont jamais)&nbsp;: rangez-le sur une clé USB ou dans votre cloud, ou servez-vous-en pour tout retrouver sur un autre ordinateur.</p>
+      <p id="introSauvegarde">Vos fiches, dossiers et réglages sont enregistrés sur cet appareil. Une sauvegarde les réunit dans un seul fichier, pièces jointes comprises (vos clés d'IA n'y sont jamais)&nbsp;: rangez-le sur une clé USB ou dans votre cloud, ou servez-vous-en pour tout retrouver sur un autre ordinateur.</p>
       <div class="etat-sauvegarde" id="etatSauvegarde"><i aria-hidden="true"></i><span id="derniereSauvegarde">Aucune sauvegarde pour l'instant.</span></div>
+      <details class="avance" id="avance"><summary id="avanceTitre">Sauvegarde manuelle</summary>
       <div class="fenetre-actions">
         <button type="button" class="primary" id="toutExporter">Créer une sauvegarde</button>
         <button type="button" id="toutRestaurer">Restaurer une sauvegarde…</button>
@@ -208,7 +230,48 @@
       <input type="file" id="fichierRestauration" accept="application/json,.json" hidden>
       <p class="fenetre-note">Restaurer remplace les données actuelles par celles du fichier choisi. Chaque outil garde aussi ses propres exports (PDF, fichiers de révision…) dans son menu.</p>
       <p class="alerte-espace" id="alerteEspace" hidden></p>
+
+      <div class="copies-auto" id="copiesAuto" hidden>
+        <h3>Copie automatique</h3>
+        <p id="copiesTexte"></p>
+        <div class="fenetre-actions">
+          <button type="button" id="copiesDossier">Choisir un dossier pour une seconde copie…</button>
+          <button type="button" id="copiesRetirer" hidden>Ne plus copier dans ce dossier</button>
+        </div>
+        <h3>Protection par mot de passe</h3>
+        <p id="mdpTexte"></p>
+        <div class="fenetre-actions">
+          <button type="button" id="mdpActiver">Protéger mes copies par un mot de passe…</button>
+          <button type="button" id="mdpRetirer" hidden>Retirer la protection</button>
+        </div>
+        <label for="copiesListe">Copies gardées par l'application
+          <select id="copiesListe"></select>
+        </label>
+        <div class="fenetre-actions">
+          <button type="button" id="copiesRestaurer">Restaurer cette copie…</button>
+          <button type="button" id="copiesMontrer">Afficher le dossier des copies</button>
+        </div>
+      </div>
+      </details>
     </div>
+  </dialog>
+
+  <dialog class="fenetre" id="fenetreMdp" aria-labelledby="mdpTitre">
+    <form id="formMdp" method="dialog">
+      <div class="fenetre-tete"><h2 id="mdpTitre">Mot de passe</h2></div>
+      <div class="fenetre-corps">
+        <p id="mdpExplication"></p>
+        <label for="mdpUn">Mot de passe</label>
+        <input type="password" id="mdpUn" autocomplete="off">
+        <label for="mdpDeux" id="mdpDeuxEt">Confirmez le mot de passe</label>
+        <input type="password" id="mdpDeux" autocomplete="off">
+        <p class="alerte-espace" id="mdpErreur" hidden></p>
+        <div class="fenetre-actions">
+          <button type="submit" class="primary" id="mdpValider">Valider</button>
+          <button type="button" id="mdpAnnuler">Annuler</button>
+        </div>
+      </div>
+    </form>
   </dialog>
 
   <dialog class="fenetre bienvenue" id="bienvenue" aria-labelledby="bv-titre-1">
@@ -237,11 +300,11 @@
       </section>
       <section class="etape" data-etape="3" hidden>
         <div class="etape-visuel" aria-hidden="true">
-          <div class="v-sauve"><span class="faux-bouton">Sauvegarde</span><span>en haut de l'accueil</span></div>
+          <div class="v-sauve"><span class="faux-bouton" id="bvFauxBouton">Sauvegarde</span><span id="bvFauxTexte">en haut de l'accueil</span></div>
         </div>
         <p class="eyebrow">Bienvenue · 3 sur 3</p>
         <h2 id="bv-titre-3">Pensez à faire une sauvegarde</h2>
-        <p>Comme vos données ne sont qu'ici, une panne ou un changement d'ordinateur peut les faire disparaître. Le bouton « Sauvegarde » les réunit dans un seul fichier, à ranger sur une clé USB ou dans votre cloud. Paraphe vous le rappellera si vous oubliez.</p>
+        <p id="bvTexte3">Comme vos données ne sont qu'ici, une panne ou un changement d'ordinateur peut les faire disparaître. Le bouton « Sauvegarde » les réunit dans un seul fichier, à ranger sur une clé USB ou dans votre cloud. Paraphe vous le rappellera si vous oubliez.</p>
       </section>
     </div>
     <div class="bienvenue-pied">
@@ -258,7 +321,7 @@
 (() => {
   const CLE_DERNIERE = 'paraphe_derniere_sauvegarde';
   const CLE_PLUS_TARD = 'paraphe_rappel_plus_tard';
-  const QUOTA = 5 * 1024 * 1024;             // ~5 millions de caractères par site
+  const QUOTA = window.parapheStockage ? Infinity : 5 * 1024 * 1024;   // ~5 millions de caractères par site (navigateur) ; aucun plafond dans l'application
   const $ = id => document.getElementById(id);
   const lire = k => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } };
   const pluriel = (n, un, plusieurs) => n + ' ' + (n > 1 ? plusieurs : un);
@@ -352,13 +415,16 @@
     const donnees = {};
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (k !== CLE_DERNIERE && k !== 'sj_ai_keys') donnees[k] = localStorage.getItem(k);   // les clés d'IA restent sur l'appareil
+      if (!['sj_ai_keys', CLE_DERNIERE, 'paraphe_auto_derniere', 'paraphe_maj_verifiee'].includes(k)) donnees[k] = localStorage.getItem(k);   // les clés d'IA restent sur l'appareil
     }
     const paquet = { format: 'paraphe-sauvegarde', version: 1, date: new Date().toISOString(),
                      localStorage: donnees, pieces: await lirePieces() };
-    const url = URL.createObjectURL(new Blob([JSON.stringify(paquet)], { type: 'application/json' }));
+    // protégée par mot de passe si l'utilisateur l'a demandé (application de bureau)
+    const contenu = window.parapheCoffre && window.parapheCoffre.proteger ? await window.parapheCoffre.proteger(paquet) : paquet;
+    const protegee = !!(window.parapheCoffre && window.parapheCoffre.estChiffre(contenu));
+    const url = URL.createObjectURL(new Blob([JSON.stringify(contenu)], { type: 'application/json' }));
     const a = document.createElement('a');
-    a.href = url; a.download = 'paraphe-sauvegarde-' + new Date().toLocaleDateString('sv-SE') + '.json';
+    a.href = url; a.download = 'paraphe-sauvegarde' + (protegee ? '-protegee-' : '-') + new Date().toLocaleDateString('sv-SE') + '.json';
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 4000);
     // dans l'application, le fichier n'existe qu'une fois le panneau « Enregistrer sous » validé :
@@ -378,10 +444,59 @@
     // FileReader plutôt que f.text() : compatible avec les anciennes vues web (Safari < 14)
     const lireFichier = () => new Promise((ok, ko) => { const fr = new FileReader(); fr.onload = () => ok(fr.result); fr.onerror = ko; fr.readAsText(f); });
     try { paquet = JSON.parse(await lireFichier()); } catch { alert('Ce fichier n\'est pas lisible.'); return; }
+    paquet = await ouvrirPaquet(paquet);
+    if (paquet === null) return;   // mot de passe non saisi
     if (!paquet || !['paraphe-sauvegarde', 'mes-logiciels-sauvegarde'].includes(paquet.format) || typeof paquet.localStorage !== 'object') {
       alert('Ce fichier n\'est pas une sauvegarde de Paraphe.\n(Les exports d\'un seul outil se réimportent depuis l\'outil lui-même.)');
       return;
     }
+    await restaurerPaquet(paquet);
+  });
+
+  // ── mot de passe : fenêtre de saisie ──
+  function demanderMdp({ titre, texte, confirmer = false, erreur = '' }) {
+    return new Promise(ok => {
+      const d = $('fenetreMdp'), un = $('mdpUn'), deux = $('mdpDeux'), err = $('mdpErreur');
+      $('mdpTitre').textContent = titre; $('mdpExplication').textContent = texte;
+      un.value = deux.value = ''; $('mdpDeuxEt').hidden = deux.hidden = !confirmer;
+      err.hidden = !erreur; err.textContent = erreur;
+      let fini = false;
+      const clore = v => {
+        if (fini) return; fini = true;
+        $('formMdp').onsubmit = null; $('mdpAnnuler').onclick = null; d.onclose = null;
+        if (d.open) d.close();
+        un.value = deux.value = ''; ok(v);
+      };
+      const refuser = m => { err.hidden = false; err.textContent = m; };
+      $('formMdp').onsubmit = e => {
+        e.preventDefault();
+        if (confirmer) {
+          if (un.value.length < 8) return refuser('Au moins 8 caractères.');
+          if (un.value !== deux.value) return refuser('Les deux saisies ne sont pas identiques.');
+        } else if (!un.value) return;
+        clore(un.value);
+      };
+      $('mdpAnnuler').onclick = () => clore(null);
+      d.onclose = () => clore(null);
+      d.showModal ? d.showModal() : d.setAttribute('open', '');
+      un.focus();
+    });
+  }
+  // Rend le contenu d'une sauvegarde : tel quel, ou déchiffré (mot de passe du trousseau, sinon demandé).
+  // null si l'utilisateur renonce à saisir le mot de passe.
+  async function ouvrirPaquet(objet) {
+    const coffre = window.parapheCoffre;
+    if (!coffre || !coffre.estChiffre(objet)) return objet;
+    try {
+      return await coffre.ouvrir(objet, erreur => demanderMdp({
+        titre: 'Sauvegarde protégée',
+        texte: 'Cette sauvegarde est protégée par un mot de passe. Saisissez celui que vous aviez choisi en la créant.',
+        erreur }));
+    } catch { alert('Cette sauvegarde n\'a pas pu être ouverte.'); return null; }
+  }
+
+  // remplace les données actuelles par celles d'une sauvegarde (fichier ou copie automatique)
+  async function restaurerPaquet(paquet) {
     const quand = new Date(paquet.date).toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' });
     if (!confirm('Restaurer la sauvegarde du ' + quand + ' ?\n\nLes données actuelles seront remplacées par celles du fichier.')) return;
     const echecs = [];
@@ -394,10 +509,100 @@
       ? 'Restauration incomplète (espace plein ?) pour : ' + echecs.join(', ')
       : 'Sauvegarde restaurée : vos six outils ont retrouvé leurs données.');
     location.reload();
-  });
+  }
+
+  // ── copie automatique (application de bureau) ──
+  const donneesApp = window.parapheDonnees;
+  if (!donneesApp) $('avance').open = true;   // site web : la sauvegarde manuelle est l'essentiel
+  if (donneesApp) {
+    const zone = $('copiesAuto');
+    zone.hidden = false;
+    const taille = o => o > 1048576 ? (o / 1048576).toFixed(1).replace('.', ',') + '\u00a0Mo' : Math.max(1, Math.round(o / 1024)) + '\u00a0Ko';
+    const dateDeNom = n => { const m = /(\d{4})-(\d{2})-(\d{2})/.exec(n); return m ? new Date(+m[1], m[2] - 1, +m[3]).toLocaleDateString('fr-FR', { dateStyle: 'long' }) : n; };
+    async function majCopies() {
+      const [dossier, liste] = await Promise.all([donneesApp.dossier().catch(() => null), donneesApp.copies().catch(() => [])]);
+      const derniere = donneesApp.derniere();
+      $('copiesTexte').textContent = 'Paraphe fait lui-même une copie de vos données, pièces jointes comprises, au plus toutes les six heures d’utilisation, et garde les sept derniers jours dans l’application'
+        + (derniere ? ' (dernière copie le ' + new Date(derniere).toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' }) + ')' : '') + '.'
+        + (dossier ? ' Une seconde copie est déposée dans « ' + dossier + ' ».' : ' Pour qu’une copie survive à la perte de cet ordinateur, choisissez un dossier de votre cloud ou d’une clé USB.');
+      $('copiesRetirer').hidden = !dossier;
+      $('copiesDossier').textContent = dossier ? 'Changer de dossier…' : 'Choisir un dossier pour une seconde copie…';
+      const sel = $('copiesListe');
+      sel.innerHTML = '';
+      liste.forEach(c => { const o = document.createElement('option'); o.value = c.nom; o.textContent = dateDeNom(c.nom) + ' — ' + taille(c.taille); sel.appendChild(o); });
+      $('copiesRestaurer').disabled = !liste.length;
+      if (!liste.length) { const o = document.createElement('option'); o.textContent = 'Aucune copie pour l’instant'; sel.appendChild(o); }
+    }
+    const baseAfficherEtat = afficherEtat;
+    afficherEtat = function () {
+      baseAfficherEtat(); majCopies(); majProtection();
+      const d = donneesApp.derniere();
+      $('derniereSauvegarde').textContent = d
+        ? 'Tout est enregistré. Dernière copie de sécurité le ' + new Date(d).toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' }) + '.'
+        : 'Tout est enregistré. La première copie de sécurité se fait dans quelques instants.';
+      $('etatSauvegarde').classList.remove('ancienne');
+    };
+    // vocabulaire de l'application : rien à faire, les options sont repliées
+    $('t-sauvegarde').textContent = 'Mes données';
+    $('ouvrirSauvegarde').firstChild.nodeValue = 'Mes données';
+    $('piedSauvegarde').hidden = true;
+    $('introSauvegarde').textContent = 'Paraphe enregistre tout automatiquement, à chaque modification, et fait lui-même une copie de sécurité chaque jour d\u2019utilisation. Vous n\u2019avez rien à faire. Les options ci-dessous servent à déménager vos données sur un autre ordinateur ou à en garder une copie ailleurs.';
+    $('avanceTitre').textContent = 'Options avancées';
+    $('bvFauxBouton').textContent = 'Mes données';
+    $('bvFauxTexte').textContent = 'en haut de l\u2019accueil';
+    document.getElementById('bv-titre-3').textContent = 'Vos données sont à l\u2019abri';
+    $('bvTexte3').textContent = 'Paraphe enregistre tout automatiquement sur cet ordinateur et en garde une copie de sécurité chaque jour. Vous n\u2019avez rien à faire. Si vous changez d\u2019ordinateur, le bouton « Mes données » vous aide à tout déménager.';
+    const prot = donneesApp.protection;
+    async function majProtection() {
+      const active = await prot.active();
+      $('mdpTexte').textContent = active
+        ? 'Vos copies, automatiques et manuelles, sont chiffrées avec votre mot de passe, gardé dans le trousseau de cet ordinateur. Pour les rouvrir ailleurs, il faudra le saisir : ne le perdez pas, personne ne peut le retrouver. Les copies faites avant restent telles qu\u2019elles étaient.'
+        : 'Vos copies contiennent vos dossiers en clair. Si vous les rangez dans un cloud ou sur une clé USB, protégez-les par un mot de passe : sans lui, elles sont illisibles.';
+      $('mdpActiver').textContent = active ? 'Changer le mot de passe…' : 'Protéger mes copies par un mot de passe…';
+      $('mdpRetirer').hidden = !active;
+    }
+    $('mdpActiver').addEventListener('click', async () => {
+      const mdp = await demanderMdp({
+        titre: 'Mot de passe des copies',
+        texte: 'Choisissez un mot de passe d\u2019au moins 8 caractères. Si vous l\u2019oubliez, les copies protégées seront définitivement illisibles : ni vous ni l\u2019éditeur ne pourrez les ouvrir. Notez-le en lieu sûr.',
+        confirmer: true });
+      if (!mdp) return;
+      try {
+        await prot.activer(mdp);
+        await donneesApp.copierMaintenant();   // la copie du jour est refaite, chiffrée
+        alert('Vos copies sont maintenant protégées.\n\nLes copies des jours précédents restent en clair jusqu\u2019à ce qu\u2019elles soient remplacées (sept jours dans l\u2019application, trente dans le dossier que vous avez choisi).');
+      } catch (e) { alert('La protection n\u2019a pas pu être activée.\n' + (e && e.message || e)); }
+      majProtection(); majCopies();
+    });
+    $('mdpRetirer').addEventListener('click', async () => {
+      if (!confirm('Retirer la protection par mot de passe ?\n\nLes prochaines copies seront de nouveau en clair. Celles déjà protégées resteront protégées.')) return;
+      try { await prot.retirer(); } catch (e) { alert('La protection n\u2019a pas pu être retirée.\n' + (e && e.message || e)); }
+      majProtection();
+    });
+    $('copiesDossier').addEventListener('click', async () => {
+      try {
+        const choisi = await donneesApp.choisirDossier();
+        if (choisi) { await donneesApp.copierMaintenant().then(r => { if (r && r.externe && r.externe !== 'ok' && r.externe !== 'aucun') alert('Le dossier a été retenu, mais la copie n\u2019y a pas pu être écrite.\n' + r.externe); }); }
+      } catch (e) { alert('Ce dossier n\u2019a pas pu être retenu.\n' + (e && e.message || e)); }
+      majCopies();
+    });
+    $('copiesRetirer').addEventListener('click', async () => { await donneesApp.oublierDossier(); majCopies(); });
+    $('copiesMontrer').addEventListener('click', () => donneesApp.montrer().catch(() => alert('Le dossier n\u2019a pas pu être ouvert.')));
+    $('copiesRestaurer').addEventListener('click', async () => {
+      const nom = $('copiesListe').value;
+      if (!nom) return;
+      let paquet;
+      try { paquet = await donneesApp.lireCopie(nom); } catch { alert('Cette copie n\u2019est pas lisible.'); return; }
+      paquet = await ouvrirPaquet(paquet);
+      if (paquet === null) return;
+      if (!paquet || !['paraphe-sauvegarde'].includes(paquet.format) || typeof paquet.localStorage !== 'object') { alert('Cette copie n\u2019est pas lisible.'); return; }
+      await restaurerPaquet(paquet);
+    });
+  }
 
   // ── rappel : aucune sauvegarde depuis plus de 14 jours (ou jamais) alors que des données existent ──
   function majRappel() {
+    if (window.parapheDonnees) { $('pastilleSauvegarde').hidden = true; $('rappelSauvegarde').hidden = true; return; }   // l'application sauvegarde seule
     let derniere = null, donnees = false, plusTard = null;
     try {
       derniere = localStorage.getItem(CLE_DERNIERE);
@@ -417,6 +622,27 @@
   $('rappelSauver').addEventListener('click', () => $('toutExporter').click());
   $('rappelPlusTard').addEventListener('click', () => { try { localStorage.setItem(CLE_PLUS_TARD, new Date().toISOString()); } catch {} majRappel(); });
   majRappel();
+
+  // ── nouvelle version (version téléchargée sur le site : parapheMaj n'existe pas ailleurs) ──
+  (() => {
+    if (!window.parapheMaj) return;
+    const CLE_VERIF = 'paraphe_maj_verifiee', CLE_REPORT = 'paraphe_maj_plus_tard';
+    const aujourdhui = new Date().toLocaleDateString('sv-SE');
+    if (location.hash === '#maj') { history.replaceState(null, '', location.pathname); window.parapheMaj(true).catch(() => {}); return; }
+    let deja = null;
+    try { deja = localStorage.getItem(CLE_VERIF); } catch {}
+    if (deja === aujourdhui) return;                       // une vérification par jour au plus
+    setTimeout(() => window.parapheMaj(false).then(r => {
+      if (!r || !r.nouvelle) return;
+      let reporte = null;
+      try { reporte = localStorage.getItem(CLE_REPORT); } catch {}
+      if (reporte === r.derniere) return;
+      $('majTexte').innerHTML = '<b>Paraphe ' + r.derniere + ' est disponible</b> (vous avez la ' + r.courante + ').';
+      $('bandeauMaj').hidden = false;
+      $('majPlusTard').onclick = () => { try { localStorage.setItem(CLE_REPORT, r.derniere); } catch {} $('bandeauMaj').hidden = true; };
+    }).catch(() => {}), 3000);
+    $('majVoir').addEventListener('click', () => window.parapheMaj(true).catch(() => {}));
+  })();
 
   // ── premier lancement : trois écrans, une seule fois, pour un nouvel utilisateur ──
   const CLE_BIENVENUE = 'paraphe_bienvenue_vue';

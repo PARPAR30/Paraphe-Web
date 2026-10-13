@@ -85,6 +85,8 @@ header.topnav a.brand{
   color:var(--encre);text-decoration:none;line-height:1;
 }
 header.topnav a.brand:hover{color:rgb(var(--acc))}
+/* « Accueil » toujours à gauche, à côté du nom, comme dans les autres outils */
+header.topnav .topnav-g{display:flex;align-items:center;flex-wrap:wrap;gap:var(--e2) var(--e4);min-width:0}
 .brand-mark{display:inline-flex;align-items:center;justify-content:center;flex:none;color:inherit}
 .brand-mark svg{display:block}
 

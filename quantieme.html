@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8"><script src="donnees.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#F7F6F2">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -5859,10 +5859,15 @@ const PROCEDURES = [
         texte: "art. R.511-7 CPCE", nature: "imperatif",
         note: "À peine de caducité de la saisie, le créancier introduit une procédure ou accomplit les formalités nécessaires à l'obtention d'un titre exécutoire dans le mois de l'exécution de la mesure (art. R.511-7 CPCE). Ici repéré à l'ordonnance : remplacez par la date de l'exécution de la saisie. Dans le cadre d'une convention d'arbitrage, la saisine du tribunal arbitral doit intervenir dans ce délai.",
         pieces: [] },
-      { id: "force-exec-2027", libelle: "Force exécutoire provisoire d'une mesure arbitrale (tribunal constitué après le 1er janvier 2027)",
+      { id: "force-exec-2027", libelle: "Force exécutoire provisoire d'une mesure arbitrale (à compter du 1er janvier 2027)",
         delai: 0, unite: "jours",
         texte: "art. 1468 CPC (décret n° 2026-741)", nature: "indicatif",
-        note: "Toute partie pourra saisir le juge d'appui pour conférer force exécutoire, à titre provisoire, à une mesure provisoire ou conservatoire du tribunal arbitral, sauf atteinte grave aux droits d'une partie ou contrariété à l'ordre public. Le jugement du juge d'appui est alors susceptible d'appel dans les quinze jours de sa signification (art. 1468, décret n° 2026-741 du 6 août 2026).",
+        note: "À compter du 1er janvier 2027, toute partie peut saisir le juge d'appui pour conférer force exécutoire, à titre provisoire, à une mesure provisoire ou conservatoire décidée par le tribunal arbitral ; il statue selon la procédure accélérée au fond et fait droit à la demande sauf si l'exécution est susceptible de léser gravement les droits d'une partie ou si la mesure est contraire à l'ordre public (art. 1468, décret n° 2026-741 du 6 août 2026, art. 8). Son jugement n'a pas autorité de chose jugée au principal. L'article 22 du décret ne prévoit pas de règle transitoire propre à l'article 1468 : à vérifier pour les mesures arbitrales ordonnées avant cette date.",
+        pieces: [] },
+      { id: "appel-force-exec", libelle: "Appel du jugement du juge d'appui sur la force exécutoire provisoire",
+        delai: 15, unite: "jours", depuis: "force-exec-2027", distance: true,
+        texte: "art. 1468 CPC (décret n° 2026-741)", nature: "imperatif",
+        note: "Par exception à l'article 1460, le juge d'appui statue par jugement susceptible d'appel dans les quinze jours de la SIGNIFICATION de la décision (art. 1468, dernier alinéa, créé par le décret n° 2026-741, art. 8). Ici repéré à la décision : remplacez par la date de la signification.",
         pieces: [] },
     ],
   },

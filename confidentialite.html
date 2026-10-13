@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8"><script src="donnees.js"></script>
 <title>Confidentialité et informations légales — Paraphe</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="taille.js"></script><script src="navigation.js" defer></script>
@@ -21,16 +21,18 @@
 <body>
 <script src="theme.js"></script>
 <header class="topnav">
-  <a class="brand" href="Hub.html"><span class="brand-mark" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 32 32"><rect x="5.25" y="4.25" width="18.5" height="21.5" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 9h4v20H9v-4h15z" fill="currentColor"/><rect x="9" y="9" width="11" height="2.2" fill="currentColor"/><rect x="9" y="13.4" width="7" height="2.2" fill="currentColor"/><rect x="15" y="18" width="5" height="4.5" fill="#8C84FF"/></svg></span>Paraphe</a>
-  <nav>
+  <div class="topnav-g">
+    <a class="brand" href="Hub.html"><span class="brand-mark" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 32 32"><rect x="5.25" y="4.25" width="18.5" height="21.5" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 9h4v20H9v-4h15z" fill="currentColor"/><rect x="9" y="9" width="11" height="2.2" fill="currentColor"/><rect x="9" y="13.4" width="7" height="2.2" fill="currentColor"/><rect x="15" y="18" width="5" height="4.5" fill="#8C84FF"/></svg></span>Paraphe</a>
     <span data-paraphe-nav></span>
+  </div>
+  <nav>
     <button id="theme-toggle" aria-pressed="false">Nuit</button>
   </nav>
 </header>
 <main class="legal">
-  <p class="eyebrow">Paraphe · version 1.0.0</p>
+  <p class="eyebrow">Paraphe · version 1.1.2</p>
   <h1>Confidentialité et informations légales</h1>
-  <p class="muted">Dernière mise à jour : 12 octobre 2026.</p>
+  <p class="muted">Dernière mise à jour : 13 octobre 2026.</p>
 
   <div class="encadre">
     <p><strong>En bref.</strong> Paraphe fonctionne entièrement sur votre appareil. Il n’y a ni compte, ni publicité, ni mesure d’audience, ni traceur. L’éditeur ne reçoit aucune de vos données. La seule fonction qui envoie du texte sur internet est l’Assistant IA de Diligences : elle est facultative, utilise votre propre clé et ne s’active qu’avec votre autorisation.</p>
@@ -38,8 +40,11 @@
 
   <h2 id="donnees">Vos données</h2>
   <p>Vos fiches, articles, dossiers, pièces jointes, arbres de raisonnement, délais et réglages sont enregistrés <strong>uniquement sur cet appareil</strong>, dans l’espace de stockage de l’application. L’éditeur n’y a pas accès et ne reçoit aucune information sur votre usage.</p>
-  <p>Vous en restez responsable : pensez à créer une sauvegarde depuis le bouton « Sauvegarde » de l’accueil. Désinstaller l’application ou changer d’ordinateur sans sauvegarde fait perdre ces données.</p>
+  <p>Dans l’application, Paraphe enregistre tout automatiquement et fait lui-même des copies de sécurité (voir plus bas) ; le bouton « Mes données » de l’accueil sert à déménager vos données ou à en garder une copie ailleurs. Désinstaller l’application ou changer d’ordinateur sans sauvegarde fait perdre ces données.</p>
   <p>Si vous y consignez des informations concernant des tiers (clients, parties à un dossier), il vous appartient de respecter la réglementation applicable, notamment le RGPD et le secret professionnel.</p>
+
+  <p>Dans l’application de bureau, vos données sont rangées dans des fichiers du dossier de l’application, sur votre appareil, et non dans le stockage du moteur web (limité à quelques mégaoctets). Paraphe en fait aussi une <strong>copie de sécurité</strong> au plus toutes les six heures d’utilisation, dont il conserve les sept derniers jours. Si vous choisissez un dossier de copies (votre cloud, une clé USB), une copie supplémentaire y est déposée ; Paraphe n’écrit que dans ce dossier, et vous pouvez l’oublier à tout moment depuis la fenêtre « Sauvegarde ». Ces copies restent chez vous : elles ne sont envoyées à personne par Paraphe.</p>
+  <p>Comme elles contiennent vos dossiers, vous pouvez les <strong>protéger par un mot de passe</strong> (chiffrement AES-256). Le mot de passe est gardé dans le trousseau sécurisé de votre ordinateur pour que les copies automatiques se chiffrent sans rien vous demander ; <strong>il n’est connu de personne d’autre</strong> : si vous l’oubliez et perdez le trousseau, les copies protégées sont définitivement illisibles.</p>
 
   <h2 id="fichiers">Fichiers que vous enregistrez ou importez</h2>
   <p>Paraphe n’écrit un fichier (sauvegarde, export, PDF, agenda) qu’à l’emplacement que vous choisissez dans la fenêtre « Enregistrer sous », et ne lit un fichier que si vous le choisissez dans la fenêtre « Ouvrir ».</p>
@@ -49,11 +54,16 @@
   <ul>
     <li><strong>Autorisation préalable.</strong> Avant le premier envoi vers un service, Paraphe vous indique ce qui sera transmis, à qui, et vous demande votre accord. Vous pouvez le retirer à tout moment sous la clé, dans le panneau de l’assistant.</li>
     <li><strong>Ce qui est envoyé.</strong> Le texte que vous écrivez dans l’assistant et les derniers échanges de la conversation, directement au service choisi. Paraphe n’ajoute jamais, de lui-même, le contenu de vos dossiers. Rien ne transite par un serveur de l’éditeur.</li>
-    <li><strong>Votre clé.</strong> Elle est conservée sur votre appareil et n’est transmise qu’au service concerné. Vous pouvez l’effacer en vidant le champ puis en enregistrant.</li>
+    <li><strong>Votre clé.</strong> Elle est conservée sur votre appareil, dans le trousseau sécurisé du système lorsque l’application en dispose, jamais dans une sauvegarde, et n’est transmise qu’au service concerné. Vous pouvez l’effacer en vidant le champ puis en enregistrant.</li>
     <li><strong>Ensuite.</strong> Le traitement de votre texte par le service est régi par ses propres conditions et sa politique de confidentialité, qui peuvent prévoir un traitement hors de l’Union européenne. Évitez d’y inscrire des informations confidentielles ou identifiantes.</li>
     <li><strong>Réponses.</strong> Générées automatiquement, elles peuvent être inexactes, incomplètes ou obsolètes. Elles ne constituent pas un conseil juridique : vérifiez-les.</li>
   </ul>
   <p>Les boutons « Copier un prompt » ne font que placer un texte dans votre presse-papiers : rien n’est envoyé.</p>
+
+  <div id="info-maj" hidden>
+    <h2 id="maj">Recherche de mise à jour</h2>
+    <p>Cette version de Paraphe, téléchargée depuis le site de Paraphe, consulte une fois par jour un petit fichier public de ce site pour savoir si une version plus récente existe, et vous le signale. Aucune donnée vous concernant n’est envoyée (le site voit seulement, comme pour toute page web, l’adresse internet de votre connexion), rien n’est téléchargé ni installé sans que vous le fassiez vous-même. Vous pouvez aussi lancer la recherche à la main depuis le menu Aide.</p>
+  </div>
 
   <h2 id="liens">Liens vers des sites extérieurs</h2>
   <p>Quelques liens (recherche sur Légifrance, pages où obtenir une clé d’IA) s’ouvrent dans votre navigateur. Les sites visités ont leur propre politique de confidentialité.</p>
@@ -75,5 +85,6 @@
   <h2 id="contact">Contact et mentions légales</h2>
   <p>Éditeur : Pierre-Antoine Ruat. Coordonnées, mentions légales et conditions d’utilisation : <a href="https://parpar30.github.io/Paraphe-Site/mentions-legales.html">site de Paraphe</a>.</p>
 </main>
+<script>if (window.__TAURI_INTERNALS__) window.__TAURI_INTERNALS__.invoke('maj_active').then(function (a) { if (a) document.getElementById('info-maj').hidden = false; }).catch(function () {});</script>
 </body>
 </html>
