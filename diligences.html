@@ -12,7 +12,7 @@
   <link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Diligences — Paraphe</title><script src="taille.js"></script><script src="migration.js"></script><script src="navigation.js" defer></script><link rel="stylesheet" href="fonts/fonts.css">
+<title>Diligences — Paraphe</title><script src="taille.js"></script><script src="clavier.js" defer></script><script src="etiquettes.js" defer></script><script src="migration.js"></script><script src="navigation.js" defer></script><link rel="stylesheet" href="fonts/fonts.css">
 <script src="pwa.js" defer></script>
 <link rel="manifest" href="manifest.json"><style id="sj-unified">
 /* ── DESIGN TOKENS ── */
@@ -6005,7 +6005,7 @@ body.light .kanban-card-aud.urgent{color:#B91C1C}
 <!-- FEATURE 2: Notes rapides FAB -->
 <button id="fab-note" title="Note rapide" class="no-print"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
 <div id="note-panel">
-  <div id="note-panel-head"><h4>Note rapide</h4><button onclick="document.getElementById('note-panel').classList.remove('open')" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:1rem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+  <div id="note-panel-head"><h4>Note rapide</h4><button onclick="document.getElementById('note-panel').classList.remove('open')" title="Fermer" aria-label="Fermer" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:1rem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
   <div id="note-panel-body">
     <textarea id="note-text" placeholder="Saisissez votre note..."></textarea>
     <select id="note-link">
@@ -6979,7 +6979,7 @@ body.light .kanban-card-aud.urgent{color:#B91C1C}
   <div id="ev-modal" style="background:var(--navy2);border:1px solid var(--gold);border-radius:0;padding:0;width:460px;max-width:95vw;box-shadow:0 24px 0 rgba(0,0,0,.6);animation:fmPopIn .2s cubic-bezier(.34,1.4,.64,1);">
     <div style="background:rgba(59,47,232,.08);border-bottom:1px solid var(--border);padding:14px 18px;border-radius:0;display:flex;justify-content:space-between;align-items:center;">
       <h4 id="ev-modal-title" style="color:var(--gold);font-size:.92rem;font-weight:700;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Modifier l'événement</h4>
-      <button onclick="closeEvModal()" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:1rem;padding:2px 6px;border-radius:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      <button onclick="closeEvModal()" title="Fermer" aria-label="Fermer" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:1rem;padding:2px 6px;border-radius:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
     <div style="padding:16px 18px;display:flex;flex-direction:column;gap:12px;">
       <div style="display:flex;gap:12px;">
@@ -7968,7 +7968,7 @@ document.getElementById('btn-soc-save').addEventListener('click', function() {
 
 function renderSoc() {
   document.getElementById('list-soc').innerHTML = DB.soc.length ? DB.soc.map(function(s, i) {
-    return '<tr class="clickable-row" data-act-row="soc" data-i="' + i + '"><td><strong>' + esc(s.nom) + '</strong></td><td>' + s.forme + '</td><td>' + (esc(s.siren) || '–') + '</td><td>' + s.pays + '</td><td>' + renderTagBadges(s.tags) + '</td><td>' + sb(s.stat) + '</td><td><div style="display:flex;gap:4px"><button class="btn btn-e btn-sm" data-act="edit-soc" data-i="' + i + '"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="btn btn-d btn-sm" data-act="del-soc" data-i="' + i + '"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1v2"/></svg></button></div></td></tr>';
+    return '<tr class="clickable-row" data-act-row="soc" data-i="' + i + '"><td><strong>' + esc(s.nom) + '</strong></td><td>' + s.forme + '</td><td>' + (esc(s.siren) || '–') + '</td><td>' + s.pays + '</td><td>' + renderTagBadges(s.tags) + '</td><td>' + sb(s.stat) + '</td><td><div style="display:flex;gap:4px"><button class="btn btn-e btn-sm" data-act="edit-soc" data-i="' + i + '" title="Modifier" aria-label="Modifier"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="btn btn-d btn-sm" data-act="del-soc" data-i="' + i + '" title="Supprimer" aria-label="Supprimer"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1v2"/></svg></button></div></td></tr>';
   }).join('') : emptyRow(7, 'Aucune société à afficher. Ajoutez la première avec « + Nouvelle société », ou modifiez vos filtres.');
   attachTableActions('list-soc');
 }
@@ -8080,7 +8080,7 @@ function renderCtr() {
   function getLit(ref) { return DB.lit.filter(function(l) { return l.ctr === ref; }).map(function(l) { return '<span class="lnk"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ' + l.ref + '</span>'; }).join(' ') || '–'; }
   document.getElementById('list-ctr').innerHTML = filtered.length ? filtered.map(function(c) {
     var i = DB.ctr.indexOf(c);
-    return '<tr class="clickable-row" data-act-row="ctr" data-i="' + i + '"><td><code style="color:var(--gold);font-size:.75rem">' + c.ref + '</code></td><td><strong>' + esc(c.titre) + '</strong></td><td>' + c.type + '</td><td>' + esc(c.partie) + '</td><td>' + fmtDate(c.fin) + jxBadge(c.fin) + '</td><td>' + renderTagBadges(c.tags) + '</td><td>' + getLit(c.ref) + '</td><td>' + sb(c.stat) + '</td><td><div style="display:flex;gap:4px"><button class="btn btn-e btn-sm" data-act="edit-ctr" data-i="' + i + '"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="btn btn-d btn-sm" data-act="del-ctr" data-i="' + i + '"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1v2"/></svg></button></div></td></tr>';
+    return '<tr class="clickable-row" data-act-row="ctr" data-i="' + i + '"><td><code style="color:var(--gold);font-size:.75rem">' + c.ref + '</code></td><td><strong>' + esc(c.titre) + '</strong></td><td>' + c.type + '</td><td>' + esc(c.partie) + '</td><td>' + fmtDate(c.fin) + jxBadge(c.fin) + '</td><td>' + renderTagBadges(c.tags) + '</td><td>' + getLit(c.ref) + '</td><td>' + sb(c.stat) + '</td><td><div style="display:flex;gap:4px"><button class="btn btn-e btn-sm" data-act="edit-ctr" data-i="' + i + '" title="Modifier" aria-label="Modifier"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="btn btn-d btn-sm" data-act="del-ctr" data-i="' + i + '" title="Supprimer" aria-label="Supprimer"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1v2"/></svg></button></div></td></tr>';
   }).join('') : emptyRow(9, 'Aucun contrat à afficher. Ajoutez le premier avec « + Nouveau contrat », ou modifiez vos filtres.');
   attachTableActions('list-ctr');
 }
@@ -8236,8 +8236,8 @@ function renderLit() {
       '<td>' + (parseFloat(l.risque) ? '<div class="lit-montant">' + (parseFloat(l.risque) || 0).toLocaleString('fr-FR').replace(/\u202f/g, '\u00a0') + ' €</div>' : '') + rb(l.niv) + '</td><td>' + sb(l.stat) + '</td>' +
       '<td><div style="display:flex;gap:4px">' +
       '<button class="pin-btn' + (pinned ? ' pinned' : '') + '" data-act="pin-lit" data-ref="' + l.ref + '" title="' + (pinned ? 'Désépingler' : 'Épingler') + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></button>' +
-      '<button class="btn btn-e btn-sm" data-act="edit-lit" data-i="' + i + '"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>' +
-      '<button class="btn btn-d btn-sm" data-act="del-lit" data-i="' + i + '"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1v2"/></svg></button>' +
+      '<button class="btn btn-e btn-sm" data-act="edit-lit" data-i="' + i + '" title="Modifier" aria-label="Modifier"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>' +
+      '<button class="btn btn-d btn-sm" data-act="del-lit" data-i="' + i + '" title="Supprimer" aria-label="Supprimer"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1v2"/></svg></button>' +
       '</div></td></tr>';
   }).join('') : emptyRow(9, 'Aucun litige à afficher. Ouvrez-en un avec « + Nouveau litige », ou modifiez vos filtres.');
   attachTableActions('list-lit');
@@ -8695,7 +8695,7 @@ document.getElementById('btn-cons-save').addEventListener('click', function() {
 
 function renderCons() {
   document.getElementById('list-cons').innerHTML = DB.cons.length ? DB.cons.map(function(c, i) {
-    return '<tr><td><code style="color:var(--gold);font-size:.75rem">' + c.ref + '</code></td><td>' + esc(c.obj) + '</td><td>' + esc(c.dem) + '</td><td>' + pb(c.pri) + '</td><td>' + renderTagBadges(c.tags) + '</td><td>' + fmtDate(c.date) + '</td><td>' + sb(c.stat) + '</td><td><div style="display:flex;gap:4px"><button class="btn btn-e btn-sm" data-act="edit-cons" data-i="' + i + '"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="btn btn-d btn-sm" data-act="del-cons" data-i="' + i + '"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1v2"/></svg></button></div></td></tr>';
+    return '<tr><td><code style="color:var(--gold);font-size:.75rem">' + c.ref + '</code></td><td>' + esc(c.obj) + '</td><td>' + esc(c.dem) + '</td><td>' + pb(c.pri) + '</td><td>' + renderTagBadges(c.tags) + '</td><td>' + fmtDate(c.date) + '</td><td>' + sb(c.stat) + '</td><td><div style="display:flex;gap:4px"><button class="btn btn-e btn-sm" data-act="edit-cons" data-i="' + i + '" title="Modifier" aria-label="Modifier"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="btn btn-d btn-sm" data-act="del-cons" data-i="' + i + '" title="Supprimer" aria-label="Supprimer"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1v2"/></svg></button></div></td></tr>';
   }).join('') : emptyRow(8, 'Aucune consultation à afficher. Notez la première avec « + Nouvelle demande », ou modifiez vos filtres.');
   attachTableActions('list-cons');
 }
@@ -9193,7 +9193,8 @@ document.getElementById('btn-export-json').addEventListener('click', function() 
     a.download = 'diligences-sauvegarde-' + new Date().toLocaleDateString('sv-SE') + '.json';
     a.click();
     setTimeout(function() { URL.revokeObjectURL(a.href); }, 4000);
-    toast('Sauvegarde JSON exportée avec succès');
+    // dans l'application, « exportée » seulement une fois le fichier réellement enregistré
+    Promise.resolve(window.parapheSortie || true).then(function(ok) { if (ok) toast('Sauvegarde JSON exportée avec succès'); });
   });
 });
 
@@ -9762,6 +9763,8 @@ renderDash = function() {
 document.getElementById('btn-pplx').addEventListener('click', function() {
   if (currentLitIdx < 0) return;
   var l = DB.lit[currentLitIdx];
+  // les informations du litige partent chez un tiers : le dire avant, et laisser renoncer
+  if (!confirm('Ce bouton ouvre Perplexity dans votre navigateur et lui transmet, dans l\'adresse de la recherche : l\'objet, l\'adversaire, la juridiction, le niveau de risque, les étapes et les notes de ce litige.\n\nÉvitez-le si ces informations sont confidentielles. Continuer ?')) return;
   var evsSummary = (l.events||[]).map(function(e){ return e.type+(e.date?' ('+e.date+')':'')+(e.desc?': '+e.desc:''); }).join(', ');
   var query = 'Je suis juriste et j’analyse le litige suivant. '
     + 'Objet : ' + (l.obj||'N/A') + '. '
@@ -9793,24 +9796,15 @@ document.getElementById('btn-copilot').addEventListener('click', function() {
     + (evsSummary ? 'Événements: ' + evsSummary + ' --- ' : '')
     + (l.notes ? 'Notes: ' + l.notes.substring(0,300) + ' --- ' : '')
     + 'Question : quels sont les fondements juridiques applicables, les risques principaux et la stratégie recommandée en droit français ?';
-  /* 1. Copie dans le presse-papier */
+  /* 1. Copie dans le presse-papier : rien n'est envoyé, l'utilisateur colle lui-même */
+  var raccourci = /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘V' : 'Ctrl+V';
   navigator.clipboard.writeText(prompt).then(function() {
-    toast('Question copiée : collez-la dans Copilot (Ctrl+V)');
+    toast('Question copiée : collez-la dans Copilot (' + raccourci + ')');
   }).catch(function() {
-    toast('Question copiée : ouvrez Copilot et collez-la (Ctrl+V)');
+    toast('Copie impossible : sélectionnez et copiez la question vous-même');
   });
-  /* 2. Ouvre l application Copilot via le protocole Windows */
-  var appOpened = false;
-  try {
-    window.location.href = 'ms-copilot://';
-    appOpened = true;
-  } catch(e) {}
-  /* Fallback : si l app n est pas installee, ouvre le site */
-  setTimeout(function() {
-    if (!document.hidden) {
-      window.open('https://copilot.microsoft.com/', '_blank');
-    }
-  }, 1500);
+  /* 2. Ouvre le site de Copilot (sans aucune donnée dans l'adresse) */
+  window.open('https://copilot.microsoft.com/', '_blank');
 });;;;;
 
 // ---- CTRL+K PALETTE ----
@@ -12333,7 +12327,7 @@ renderSoc = function() {
 
   document.getElementById('list-soc').innerHTML = filtered.length ? filtered.map(function(s) {
     var i = DB.soc.indexOf(s);
-    return '<tr class="clickable-row" data-act-row="soc" data-i="' + i + '"><td><strong>' + esc(s.nom) + '</strong></td><td>' + s.forme + '</td><td>' + (esc(s.siren) || '–') + '</td><td>' + s.pays + '</td><td>' + renderTagBadges(s.tags) + '</td><td>' + sb(s.stat) + '</td><td><div style="display:flex;gap:4px"><button class="btn btn-e btn-sm" data-act="edit-soc" data-i="' + i + '"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="btn btn-d btn-sm" data-act="del-soc" data-i="' + i + '"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1v2"/></svg></button></div></td></tr>';
+    return '<tr class="clickable-row" data-act-row="soc" data-i="' + i + '"><td><strong>' + esc(s.nom) + '</strong></td><td>' + s.forme + '</td><td>' + (esc(s.siren) || '–') + '</td><td>' + s.pays + '</td><td>' + renderTagBadges(s.tags) + '</td><td>' + sb(s.stat) + '</td><td><div style="display:flex;gap:4px"><button class="btn btn-e btn-sm" data-act="edit-soc" data-i="' + i + '" title="Modifier" aria-label="Modifier"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="btn btn-d btn-sm" data-act="del-soc" data-i="' + i + '" title="Supprimer" aria-label="Supprimer"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1v2"/></svg></button></div></td></tr>';
   }).join('') : emptyRow(7, 'Aucune société trouvée');
   attachTableActions('list-soc');
 
@@ -13167,29 +13161,13 @@ function openPdf(pj) {
 function _openPdfNow(pj) {
   try {
     if (!pj || !pj.data) { toast('Pièce jointe corrompue', 'err'); return; }
-    if (isTauri()) {
-      try {
-        var b64 = pj.data.indexOf(',') >= 0 ? pj.data.split(',')[1] : pj.data;
-        if (window.__TAURI_INTERNALS__ && window.__TAURI_INTERNALS__.invoke) {
-          var bytes = _b64ToUint8(b64);
-          window.__TAURI_INTERNALS__.invoke('plugin:fs|write_file', {
-            path: 'pj_temp_' + Date.now() + '.pdf', contents: Array.from(bytes), options: { baseDir: 16 }
-          }).then(function(r) {
-            return window.__TAURI_INTERNALS__.invoke('plugin:opener|open_path', { path: r || ('pj_temp_' + Date.now() + '.pdf'), options: { baseDir: 16 } });
-          }).catch(function() { _openPdfIframe(pj); });
-          return;
-        }
-        if (window.__TAURI__ && window.__TAURI__.invoke) {
-          window.__TAURI__.invoke('open_pdf', { name: pj.name, data: b64 }).catch(function() { _openPdfIframe(pj); });
-          return;
-        }
-      } catch(e) { console.warn('Tauri PDF:', e); }
-    }
     _openPdfWindow(pj);
   } catch(e) { console.error('openPdf:', e); toast('Erreur ouverture PDF', 'err'); }
 }
 
 function _openPdfWindow(pj) {
+  // dans l'application, pas de nouvelle fenêtre : le lecteur intégré s'ouvre par-dessus la page
+  if (isTauri()) { _openPdfIframe(pj); return; }
   try {
     var blob = _pjToBlob(pj);
     var url = URL.createObjectURL(blob);
@@ -13236,20 +13214,6 @@ function downloadPdf(pj) {
 function _downloadPdfNow(pj) {
   try {
     if (!pj || !pj.data) { toast('Pièce jointe corrompue', 'err'); return; }
-    if (isTauri()) {
-      try {
-        var b64 = pj.data.indexOf(',') >= 0 ? pj.data.split(',')[1] : pj.data;
-        if (window.__TAURI_INTERNALS__ && window.__TAURI_INTERNALS__.invoke) {
-          window.__TAURI_INTERNALS__.invoke('plugin:dialog|save', {
-            defaultPath: pj.name, filters: [{ name: 'PDF', extensions: ['pdf'] }]
-          }).then(function(savePath) {
-            if (!savePath) return;
-            return window.__TAURI_INTERNALS__.invoke('plugin:fs|write_file', { path: savePath, contents: Array.from(_b64ToUint8(b64)) });
-          }).then(function() { toast('PDF enregistré : ' + pj.name); }).catch(function() { _downloadPdfBrowser(pj); });
-          return;
-        }
-      } catch(e) { console.warn('Tauri DL:', e); }
-    }
     _downloadPdfBrowser(pj);
   } catch(e) { console.error('downloadPdf:', e); toast('Erreur téléchargement', 'err'); }
 }
@@ -14099,12 +14063,12 @@ var aiConversationHistory = [];
 
 // Un fournisseur = une clé de l'utilisateur ; le modèle conseillé peut être remplacé (« Modèle précis »)
 var aiProviders = {
-  anthropic: { name: 'Claude', defaut: 'claude-sonnet-5-5', validate: function(k){ return k.startsWith('sk-ant-'); } },
-  openai: { name: 'ChatGPT', defaut: 'gpt-5', validate: function(k){ return k.startsWith('sk-'); } },
-  google: { name: 'Gemini', defaut: 'gemini-flash-latest', validate: function(k){ return k.startsWith('AIza'); } },
-  mistral: { name: 'Mistral', defaut: 'mistral-large-latest', validate: function(k){ return k.length > 20; } },
-  deepseek: { name: 'DeepSeek', defaut: 'deepseek-chat', validate: function(k){ return k.startsWith('sk-'); } },
-  perplexity: { name: 'Perplexity', defaut: 'sonar-pro', validate: function(k){ return k.startsWith('pplx-'); } }
+  anthropic: { name: 'Claude', soc: 'Anthropic', lieu: 'société établie aux États-Unis', defaut: 'claude-sonnet-5-5', validate: function(k){ return k.startsWith('sk-ant-'); } },
+  openai: { name: 'ChatGPT', soc: 'OpenAI', lieu: 'société établie aux États-Unis', defaut: 'gpt-5', validate: function(k){ return k.startsWith('sk-'); } },
+  google: { name: 'Gemini', soc: 'Google', lieu: 'société établie aux États-Unis', defaut: 'gemini-flash-latest', validate: function(k){ return k.startsWith('AIza'); } },
+  mistral: { name: 'Mistral', soc: 'Mistral AI', lieu: 'société établie en France', defaut: 'mistral-large-latest', validate: function(k){ return k.length > 20; } },
+  deepseek: { name: 'DeepSeek', soc: 'DeepSeek', lieu: 'société établie en Chine', defaut: 'deepseek-chat', validate: function(k){ return k.startsWith('sk-'); } },
+  perplexity: { name: 'Perplexity', soc: 'Perplexity AI', lieu: 'société établie aux États-Unis', defaut: 'sonar-pro', validate: function(k){ return k.startsWith('pplx-'); } }
 };
 var aiModeles = {};   // modèle précis choisi par fournisseur (sj_ai_modeles)
 function aiModeleDe(p) { return aiModeles[p] || (aiProviders[p] ? aiProviders[p].defaut : ''); }
@@ -14127,6 +14091,7 @@ function aiLoadSavedSettings() {
   } catch(e) {}
 }
 document.addEventListener('DOMContentLoaded', aiLoadSavedSettings);
+document.addEventListener('DOMContentLoaded', function() { aiMajAccord(); });
 document.addEventListener('DOMContentLoaded', function(){
   var clrBtn = document.getElementById('ai-clear-btn');
   if(clrBtn) clrBtn.addEventListener('click', function(){
@@ -14156,6 +14121,7 @@ function aiSelectModel(el) {
   if (lbl) lbl.textContent = aiProviders[provider] ? aiProviders[provider].name : provider;
   ['ai-model-badge', 'ai-model-badge-2'].forEach(function(id) { var b = document.getElementById(id); if (b) b.textContent = aiProviders[provider] ? aiProviders[provider].name : provider; });
   try { localStorage.setItem('sj_ai_model', JSON.stringify(aiCurrentModel)); } catch(e) {}
+  if (typeof aiMajAccord === 'function') aiMajAccord();
 }
 // « Modèle précis » : vide = modèle conseillé du fournisseur
 document.addEventListener('input', function(e) {
@@ -14200,6 +14166,74 @@ function aiSaveKey() {
   btn.textContent = 'Sauvegardée !';
   btn.style.background = 'var(--success)';
   setTimeout(function() { btn.textContent = orig; btn.style.background = ''; }, 2000);
+}
+
+// ── Accord avant tout envoi à un service d'IA ──
+// Rien ne part sur internet sans que l'utilisateur ait dit, pour ce service, qu'il l'accepte
+// en sachant ce qui est envoyé et à qui (retirable à tout moment : « Retirer mon autorisation »).
+function aiEsc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function(c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+var aiAccords = {};
+try { aiAccords = JSON.parse(localStorage.getItem('sj_ai_accords') || '{}') || {}; } catch(e) { aiAccords = {}; }
+
+function aiAccord(provider) {
+  return new Promise(function(resolve) {
+    if (aiAccords[provider]) { resolve(true); return; }
+    var p = aiProviders[provider] || { name: provider, soc: provider, lieu: '' };
+    var voile = document.createElement('div');
+    voile.id = 'ai-accord';
+    voile.setAttribute('role', 'dialog'); voile.setAttribute('aria-modal', 'true'); voile.setAttribute('aria-labelledby', 'ai-accord-titre');
+    voile.style.cssText = 'position:fixed;inset:0;z-index:100001;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px';
+    var nom = aiEsc(p.name), soc = aiEsc(p.soc);
+    voile.innerHTML =
+      '<div style="background:var(--card);color:var(--text);border:2px solid var(--text);box-shadow:8px 8px 0 var(--gold);max-width:520px;width:100%;max-height:92vh;overflow:auto;padding:22px;font-size:.88rem;line-height:1.55">' +
+      '<h3 id="ai-accord-titre" style="margin:0 0 12px;font-size:1.1rem">Envoyer votre question à ' + nom + ' ?</h3>' +
+      '<p style="margin:0 0 10px">L\'assistant n\'est pas dans Paraphe : votre question part <strong>par internet</strong> vers ' + soc + ' (' + aiEsc(p.lieu) + '), avec votre propre clé, pour qu\'il rédige une réponse.</p>' +
+      '<ul style="margin:0 0 10px;padding-left:1.2em">' +
+      '<li><strong>Ce qui est envoyé :</strong> le texte que vous écrivez et les derniers échanges de la conversation. Paraphe n\'ajoute jamais, de lui-même, le contenu de vos dossiers.</li>' +
+      '<li><strong>Ce qui reste chez vous :</strong> votre clé, qui n\'est transmise qu\'à ' + soc + ', et toutes vos données. L\'éditeur de Paraphe ne reçoit rien.</li>' +
+      '<li><strong>Prudence :</strong> n\'écrivez pas d\'informations confidentielles ou permettant d\'identifier un client (secret professionnel, RGPD). Leur traitement dépend des conditions de ' + soc + '.</li>' +
+      '<li><strong>Réponses :</strong> générées automatiquement, elles peuvent être inexactes et ne constituent pas un conseil juridique. Vérifiez-les.</li>' +
+      '</ul>' +
+      '<p style="margin:0 0 14px"><a href="confidentialite.html#ia" style="color:var(--gold)">Lire la politique de confidentialité</a></p>' +
+      '<div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap">' +
+      '<button type="button" class="btn btn-o" id="ai-accord-non">Annuler</button>' +
+      '<button type="button" class="btn btn-g" id="ai-accord-oui">J\'autorise l\'envoi à ' + nom + '</button>' +
+      '</div></div>';
+    var fin = function(ok) {
+      document.removeEventListener('keydown', touche, true);
+      voile.remove();
+      if (ok) {
+        aiAccords[provider] = new Date().toISOString().slice(0, 10);
+        try { localStorage.setItem('sj_ai_accords', JSON.stringify(aiAccords)); } catch(e) {}
+        aiMajAccord();
+      }
+      resolve(ok);
+    };
+    var touche = function(e) { if (e.key === 'Escape') { e.stopPropagation(); fin(false); } };
+    document.addEventListener('keydown', touche, true);
+    document.body.appendChild(voile);
+    voile.querySelector('#ai-accord-non').onclick = function() { fin(false); };
+    voile.querySelector('#ai-accord-oui').onclick = function() { fin(true); };
+    voile.querySelector('#ai-accord-non').focus();
+  });
+}
+
+function aiRetirerAccord() {
+  var p = aiCurrentModel.provider;
+  delete aiAccords[p];
+  try { localStorage.setItem('sj_ai_accords', JSON.stringify(aiAccords)); } catch(e) {}
+  aiMajAccord();
+  if (typeof toast === 'function') toast('Autorisation retirée : Paraphe vous la redemandera avant le prochain envoi à ' + (aiProviders[p] ? aiProviders[p].name : p));
+}
+
+// affiche, sous la clé, l'état de l'autorisation du service choisi
+function aiMajAccord() {
+  var el = document.getElementById('ai-accord-etat');
+  if (!el) return;
+  var p = aiCurrentModel.provider, nom = aiProviders[p] ? aiProviders[p].name : p;
+  el.innerHTML = aiAccords[p]
+    ? 'Envoi à ' + aiEsc(nom) + ' autorisé le ' + aiEsc(aiAccords[p]) + '. <a href="#" onclick="aiRetirerAccord();return false" style="color:var(--gold)">Retirer mon autorisation</a>'
+    : 'Rien n\'est envoyé à ' + aiEsc(nom) + ' tant que vous ne l\'avez pas autorisé.';
 }
 
 async function aiCallAPI(messages) {
@@ -14282,6 +14316,12 @@ async function aiSendMsg() {
   var inp = document.getElementById('ai-input-2');
   var msg = inp.value.trim();
   if (!msg) return;
+  if (aiApiKeys[aiCurrentModel.provider] && !aiAccords[aiCurrentModel.provider]) {
+    aiSending = true;
+    var accord = await aiAccord(aiCurrentModel.provider);
+    aiSending = false;
+    if (!accord) return;   // la question reste dans le champ
+  }
   inp.value = ''; inp.style.height = '';
 
   var apiKey = aiApiKeys[aiCurrentModel.provider];
@@ -14681,7 +14721,7 @@ window.addEventListener('DOMContentLoaded', function() {
   <div id="kb-help-box">
     <div style="background:rgba(59,47,232,.08);border-bottom:1px solid var(--border);padding:14px 18px;border-radius:0;display:flex;justify-content:space-between;align-items:center;">
       <h4 style="color:var(--gold);font-size:.92rem;font-weight:700;">⌨️ Raccourcis clavier</h4>
-      <button onclick="document.getElementById('kb-help-overlay').classList.remove('show')" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:1rem;padding:2px 6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      <button onclick="document.getElementById('kb-help-overlay').classList.remove('show')" title="Fermer" aria-label="Fermer" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:1rem;padding:2px 6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
     <div style="padding:8px 0;">
       <div class="kb-row"><span>Aller au tableau de bord</span><kbd>D</kbd></div>
@@ -14774,6 +14814,7 @@ window.addEventListener('DOMContentLoaded', function() {
           <div style="margin-top:4px">Laissez vide pour le modèle conseillé. Utile si le fournisseur renomme ses modèles.</div>
         </details>
         <div style="font-size:.75rem;color:var(--text2);margin-top:6px;opacity:.7"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:3px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Stockée localement uniquement.</div>
+        <div id="ai-accord-etat" style="font-size:.75rem;color:var(--text2);margin-top:6px;line-height:1.5"></div>
       </div>
     </div>
 
@@ -14788,15 +14829,15 @@ window.addEventListener('DOMContentLoaded', function() {
       <div id="ai-msgs" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px">
         <div style="padding:16px;background:rgba(59,47,232,.06);border:1px solid rgba(59,47,232,.15);border-radius:0;font-size:.82rem;color:var(--text2);line-height:1.6">
           <strong style="color:var(--gold)">Assistant juridique IA</strong><br>
-          Choisissez un service à gauche (Claude, ChatGPT, Gemini, Mistral, DeepSeek ou Perplexity), collez votre clé API, puis posez vos questions. L'assistant peut analyser vos litiges, rédiger des actes, calculer des délais de prescription et conseiller sur la stratégie procédurale.
+          Choisissez un service à gauche (Claude, ChatGPT, Gemini, Mistral, DeepSeek ou Perplexity), collez votre clé API, puis posez vos questions. L'assistant peut vous aider à analyser un litige, rédiger un acte ou réfléchir à une stratégie. Votre question est envoyée par internet au service choisi, avec votre clé, et seulement après votre autorisation. Les réponses sont générées par une IA : elles peuvent être inexactes et ne remplacent pas l'avis d'un professionnel du droit.
         </div>
       </div>
       <!-- Input -->
       <div class="ai-input-bar">
         <textarea id="ai-input-2" placeholder="Posez votre question juridique..." style="flex:1;background:var(--navy);border:1px solid var(--border);border-radius:0;padding:10px 12px;color:var(--text);font-size:.84rem;font-family:inherit;resize:none;min-height:40px;max-height:120px;outline:none" rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();aiSendMsg()}" oninput="this.style.height='';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
-        <button class="btn btn-g" onclick="aiSendMsg()" style="height:40px;padding:0 16px;border-radius:0;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+        <button class="btn btn-g" onclick="aiSendMsg()" title="Envoyer" aria-label="Envoyer" style="height:40px;padding:0 16px;border-radius:0;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
       </div>
-      <div class="ai-footer">Entrée pour envoyer · Shift+Entrée pour nouvelle ligne</div>
+      <div class="ai-footer">Entrée pour envoyer · Shift+Entrée pour nouvelle ligne · Réponses générées par une IA : vérifiez-les</div>
     </div>
 
   </div>

@@ -122,7 +122,7 @@
     });
     if (!res.length) html += '<div class="rg-vide">Rien trouvé dans vos données.</div>';
     html += '<div class="rg-groupe">Quantième</div><a class="rg-l" role="option" href="quantieme.html?q=' + encodeURIComponent(q) + '">' +
-            '<span class="rg-titre">Chercher « ' + echapper(q) + " » dans les 125 procédures</span>" +
+            '<span class="rg-titre">Chercher « ' + echapper(q) + " » dans toutes les procédures</span>" +
             '<span class="rg-detail">délais, fondements, pièces</span></a>';
     if (verrouilles.length)
       html += '<div class="rg-vide">Profil' + (verrouilles.length > 1 ? "s" : "") + " verrouillé" + (verrouilles.length > 1 ? "s" : "") +

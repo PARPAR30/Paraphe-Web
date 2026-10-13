@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-title" content="Paraphe">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#131316">
-<script src="taille.js"></script>
+<script src="taille.js"></script><script src="clavier.js" defer></script>
 <script src="migration.js"></script>
 <link rel="stylesheet" href="fonts/fonts.css">
 <script src="pwa.js" defer></script>
@@ -188,8 +188,8 @@
     </section>
 
     <footer class="hub-pied">
-      <span>Vos données restent sur cet appareil. Aucun compte, aucun envoi sur internet.</span>
-      <span class="row" style="gap:var(--e4)"><button type="button" class="lien" id="revoirBienvenue">Revoir la présentation</button><button type="button" class="lien" id="piedSauvegarde">Mettre mes données à l'abri</button></span>
+      <span>Vos données restent sur cet appareil. Aucun compte, aucun envoi sur internet — sauf si vous utilisez l'assistant IA de Diligences, avec votre clé et votre accord.</span>
+      <span class="row" style="gap:var(--e4)"><button type="button" class="lien" id="revoirBienvenue">Revoir la présentation</button><a class="lien" href="confidentialite.html">Confidentialité et informations légales</a><button type="button" class="lien" id="piedSauvegarde">Mettre mes données à l'abri</button></span>
     </footer>
   </main>
 
@@ -199,7 +199,7 @@
       <button type="button" id="fermerSauvegarde">Fermer</button>
     </div>
     <div class="fenetre-corps">
-      <p>Vos fiches, dossiers et réglages sont enregistrés sur cet appareil, et nulle part ailleurs. Une sauvegarde les réunit dans un seul fichier, pièces jointes comprises&nbsp;: rangez-le sur une clé USB ou dans votre cloud, ou servez-vous-en pour tout retrouver sur un autre ordinateur.</p>
+      <p>Vos fiches, dossiers et réglages sont enregistrés sur cet appareil, et nulle part ailleurs. Une sauvegarde les réunit dans un seul fichier, pièces jointes comprises (vos clés d'IA n'y sont jamais)&nbsp;: rangez-le sur une clé USB ou dans votre cloud, ou servez-vous-en pour tout retrouver sur un autre ordinateur.</p>
       <div class="etat-sauvegarde" id="etatSauvegarde"><i aria-hidden="true"></i><span id="derniereSauvegarde">Aucune sauvegarde pour l'instant.</span></div>
       <div class="fenetre-actions">
         <button type="button" class="primary" id="toutExporter">Créer une sauvegarde</button>
@@ -352,7 +352,7 @@
     const donnees = {};
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (k !== CLE_DERNIERE) donnees[k] = localStorage.getItem(k);
+      if (k !== CLE_DERNIERE && k !== 'sj_ai_keys') donnees[k] = localStorage.getItem(k);   // les clés d'IA restent sur l'appareil
     }
     const paquet = { format: 'paraphe-sauvegarde', version: 1, date: new Date().toISOString(),
                      localStorage: donnees, pieces: await lirePieces() };
@@ -361,6 +361,9 @@
     a.href = url; a.download = 'paraphe-sauvegarde-' + new Date().toLocaleDateString('sv-SE') + '.json';
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 4000);
+    // dans l'application, le fichier n'existe qu'une fois le panneau « Enregistrer sous » validé :
+    // annuler ne doit pas compter comme une sauvegarde faite
+    if (window.parapheSortie && !(await window.parapheSortie)) return;
     try { localStorage.setItem(CLE_DERNIERE, paquet.date); } catch {}
     afficherEtat(); majRappel();
   });
